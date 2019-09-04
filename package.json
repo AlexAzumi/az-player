@@ -1,0 +1,19 @@
+{
+  "name": "osu-player",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "sass": "sass scss/styles.scss assets/css/styles.css --style compressed",
+    "sass:dev": "sass scss/styles.scss assets/css/styles.css --watch"
+  },
+  "keywords": [],
+  "author": "AlexAzumi",
+  "license": "ISC",
+  "devDependencies": {
+    "bootstrap": "^4.3.1",
+    "electron": "^6.0.7",
+    "sass": "^1.23.0-module.beta.1"
+  }
+}
