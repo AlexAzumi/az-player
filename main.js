@@ -6,6 +6,9 @@ const path = require('path');
 // Variables
 const databaseLocation = 'database.json'
 let gameLocation
+let songsLocation
+
+let songList
 
 // Ventana
 let win
@@ -39,6 +42,13 @@ function createWindow () {
 		do {
 			gameLocation = selectFolder()
 		} while (!searchSongsFolder())
+
+		// Liste de carpetas
+		songList = listSongs()
+
+		for (let song of songList) {
+			console.log(song)
+		}
 	}
 }
 
@@ -81,13 +91,24 @@ const selectFolder = () => {
  * Buscar carpeta llamada 'Songs'
  */
 const searchSongsFolder = () => {
+	// Nunca se seleccionó carpeta
 	if (gameLocation === undefined) {
 		app.exit(-1)
 	}
+	// Se seleccionó la carpeta correcta
 	else if (fs.existsSync(path.join(gameLocation, 'Songs'))) {
+		songsLocation = path.join(gameLocation, 'Songs')
 		return true
 	}
+	// Se seleccionó la carpeta incorrecta
 	else {
 		return false
 	}
+}
+
+/**
+ * Analizar carpeta de 'Songs'
+ */
+const listSongs = () => {
+	return songs = fs.readdirSync(songsLocation)
 }
