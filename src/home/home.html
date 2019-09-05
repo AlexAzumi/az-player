@@ -8,14 +8,36 @@
 
 	<!-- Estilos -->
 	<link rel="stylesheet" href="../../assets/css/styles.css">
+	<link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css">
 </head>
 <body>
 	<div class="container-fluid">
 		<!-- App -->
 		<div class="row">
 			<!-- Reproducción -->
-			<div id="player" class="col-md-8 px-0">
+			<div id="player" class="col-md-8 px-0 position-relative">
 				<h2 class="p-3" id="songTitle">osu! player | By AlexAzumi</h2>
+
+				<!-- Panel -->
+				<div id="playerPanel">
+					<!-- Controles -->
+					<div id="controls" class="d-flex h-100 justify-content-center align-items-center">
+						<div class="text-primary">
+							<!-- Anterior -->
+							<div class="d-inline-block" id="previousBtn">
+								<i class="fas fa-backward fa-2x"></i>
+							</div>
+							<!-- Reproducir/pausar -->
+							<div class="d-inline-block mx-4" id="playPauseBtn">
+								<i class="fas fa-play fa-2x"></i>
+							</div>
+							<!-- Siguiente -->
+							<div class="d-inline-block" id="nextBtn">
+								<i class="fas fa-forward fa-2x"></i>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<!-- Lista de canciones -->
 			<div class="col-md-4 px-0">

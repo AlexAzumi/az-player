@@ -5,7 +5,7 @@
  * Copyright 2011-2019 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
-@import url("https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Nunito+Sans|Source+Sans+Pro&display=swap");
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -9681,9 +9681,9 @@ h3 {
   overflow-y: auto;
   border-left: 3px solid #adb5bd;
 }
-
 #songList > div {
   transition: background-color 250ms;
+  font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
 }
 #songList > div:hover {
   cursor: pointer;
@@ -9698,6 +9698,9 @@ h3 {
 }
 #songList > div.active {
   background-color: #ffc107;
+}
+#songList > p {
+  font-family: "Nunito Sans", sans-serif;
 }
 
 #songTitle {
@@ -9723,6 +9726,15 @@ h3 {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+}
+
+#playerPanel {
+  background-color: rgba(0, 0, 0, 0.7);
+  bottom: 0;
+  height: 65px;
+  left: 0;
+  position: absolute;
+  width: 100%;
 }
 
 /*# sourceMappingURL=styles.css.map */
