@@ -20,19 +20,21 @@
 
 				<!-- Panel -->
 				<div id="playerPanel">
+					<!-- Timespan -->
+					<input id="playerRange" type="range" max="100" min="0" value="0">
 					<!-- Controles -->
 					<div id="controls" class="d-flex h-100 justify-content-center align-items-center">
 						<div class="text-primary">
 							<!-- Anterior -->
-							<div class="d-inline-block" id="previousBtn">
+							<div class="d-inline-block controlButton" id="previousBtn">
 								<i class="fas fa-backward fa-2x"></i>
 							</div>
 							<!-- Reproducir/pausar -->
-							<div class="d-inline-block mx-4" id="playPauseBtn">
+							<div class="d-inline-block mx-4 controlButton" id="playPauseBtn">
 								<i class="fas fa-play fa-2x"></i>
 							</div>
 							<!-- Siguiente -->
-							<div class="d-inline-block" id="nextBtn">
+							<div class="d-inline-block controlButton" id="nextBtn">
 								<i class="fas fa-forward fa-2x"></i>
 							</div>
 						</div>
@@ -42,7 +44,7 @@
 			<!-- Lista de canciones -->
 			<div class="col-md-4 px-0">
 				<div id="songList">
-					<p class="h2 text-center sticky-top bg-dark mb-0 py-2 text-light">Lista de canciones</p>
+					<p class="h2 text-center sticky-top bg-dark mb-0 py-2 text-light font-weight-bold">Lista de canciones</p>
 				</div>
 			</div>
 		</div>

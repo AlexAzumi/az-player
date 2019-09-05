@@ -3,13 +3,20 @@ const ipc = require('electron').ipcRenderer
 const path = require('path')
 const slash = require('slash')
 
-// Elementos
+/*
+ * Elementos
+ */
 const playerElement = document.getElementById('player')
 const songTitle = document.getElementById('songTitle')
 const songList = document.getElementById('songList')
 
+// Controles
+const playPauseBtn = document.getElementById('playPauseBtn')
+const playerRange = document.getElementById('playerRange')
+
 // Variables
 let songs
+let currentSongDuration
 
 // Reproductor
 let musicPlayer = new Audio()
@@ -98,13 +105,26 @@ const playSelectedSong = (event) => {
 	musicPlayer.src = songPath
 
 	// Establecer imagen de fondo
-	console.log(slash(songBackground))
 	playerElement.style.backgroundImage = `url("${slash(songBackground)}")`
 
 	// Renderizar título
 	updateMusicInfo(songTitle, songArtist)
 
+	// Reproducir
 	musicPlayer.play()
+}
+
+/**
+ * Pausar/reproducir canción
+ */
+const playPauseSong = () => {
+	// ¿La canción está pausada?
+	if (musicPlayer.paused) {
+		musicPlayer.play()
+	}
+	else {
+		musicPlayer.pause()
+	}
 }
 
 /**
@@ -121,3 +141,58 @@ const updateMusicInfo = (title, artist) => {
 	// Unir elementos
 	songTitle.appendChild(artistElement)
 }
+
+/**
+ * Estado del reproductor ha cambiado
+ */
+const changePlayerStatus = (event) => {
+	if (event.type === 'play') {
+		playPauseBtn.innerHTML = '<i class="fas fa-pause fa-2x"></i>'
+	}
+	else if (event.type === 'pause') {
+		playPauseBtn.innerHTML = '<i class="fas fa-play fa-2x"></i>'
+	}
+}
+
+/**
+ * Establecer tiempo actual de la canción
+ */
+const changePlayTime = () => {
+	if (!musicPlayer.ended) {
+		const currentTime = musicPlayer.currentTime
+		playerRange.value = currentTime
+	}
+}
+
+/*
+ * Eventos de los controles
+ */
+// Botón de pausa
+playPauseBtn.addEventListener('click', playPauseSong)
+
+playerRange.addEventListener('input', (event) => {
+	console.log(playerRange.value)
+	musicPlayer.currentTime = playerRange.value
+})
+
+/*
+ * Eventos del reproductor
+ */
+// Reproducir música
+musicPlayer.addEventListener('play', changePlayerStatus)
+// Pausar música
+musicPlayer.addEventListener('pause', changePlayerStatus)
+// Metadata cargada
+musicPlayer.addEventListener('loadedmetadata', () => {
+	currentSongDuration = musicPlayer.duration
+	playerRange.max = currentSongDuration
+})
+// Canción terminada
+musicPlayer.addEventListener('ended', () => {
+	playerRange.value = 0
+})
+
+/**
+ * Timers
+ */
+setInterval(changePlayTime, 500)

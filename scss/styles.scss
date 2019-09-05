@@ -3,11 +3,21 @@
 @import '../node_modules/bootstrap/scss/variables';
 @import '../node_modules/bootstrap/scss/mixins';
 
+// Colores
+$primary: #E91E63;
+$secondary: #FF9800;
+
+// Tema
+$theme-colors: (
+	"primary": $primary,
+	"secondary": $secondary
+);
+
 // Bootstrap
 @import '../node_modules/bootstrap/scss/bootstrap';
 
 // Fuentes
-@import url('https://fonts.googleapis.com/css?family=Nunito+Sans|Source+Sans+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap');
 
 /*
  * Lista de canciones
@@ -36,7 +46,7 @@
 		}
 
 		&.active {
-			background-color: $yellow;
+			background-color: $secondary;
 		}
 	}
 
@@ -78,5 +88,37 @@
 	height: 65px;
 	left: 0;
 	position: absolute;
+	user-select: none;
 	width: 100%;
+}
+
+#playerRange {
+	-webkit-appearance: none;
+	background-color: rgba($color: $gray-500, $alpha: 0.7);
+	height: 15px;
+	outline: none;
+	position: absolute;
+	top: -15px;
+	transition: 200ms;
+	width: 100%;
+
+	&:hover::-webkit-slider-thumb {
+		height: 20px;
+	}
+
+	&::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		appearance: none;
+		background-color: $primary;
+		cursor: pointer;
+		height: 15px;
+		transition: 150ms;
+		width: 15px;
+	}
+}
+
+.controlButton {
+	&:hover {
+		cursor: pointer;
+	}
 }
