@@ -1,8 +1,10 @@
 // Dependencias
 const ipc = require('electron').ipcRenderer
 const path = require('path')
+const slash = require('slash')
 
 // Elementos
+const playerElement = document.getElementById('player')
 const songTitle = document.getElementById('songTitle')
 const songList = document.getElementById('songList')
 
@@ -57,6 +59,12 @@ const addSong = () => {
 		songElement.setAttribute('song-path', path.join(song.path, song.musicFile))
 		songElement.setAttribute('song-title', song.title)
 		songElement.setAttribute('song-artist', song.artist)
+		if (song.background !== 'NONE') {
+			songElement.setAttribute('song-background', path.join(song.path, song.background))
+		}
+		else {
+			songElement.setAttribute('song-background', 'NONE')
+		}
 
 		// Agregar listener
 		songElement.addEventListener('click', playSelectedSong)
@@ -76,8 +84,22 @@ const playSelectedSong = (event) => {
 	const songTitle = songElement.getAttribute('song-title')
 	const songArtist= songElement.getAttribute('song-artist')
 	const songPath = songElement.getAttribute('song-path')
+	const songBackground = songElement.getAttribute('song-background')
 
+	// Eliminar clase activo
+	event.target.parentElement.querySelectorAll('.active').forEach((element) => {
+		element.classList.remove('active')
+	})
+
+	// Establecer como activo
+	songElement.classList.add('active')
+
+	// Establecer ruta
 	musicPlayer.src = songPath
+
+	// Establecer imagen de fondo
+	console.log(slash(songBackground))
+	playerElement.style.backgroundImage = `url("${slash(songBackground)}")`
 
 	// Renderizar título
 	updateMusicInfo(songTitle, songArtist)
@@ -91,11 +113,10 @@ const playSelectedSong = (event) => {
 const updateMusicInfo = (title, artist) => {
 	// Establecer título
 	songTitle.innerText = `${title} - `
-	
+
 	// Crear subtítulo con artista y establecer valores
 	const artistElement = document.createElement('span')
 	artistElement.innerHTML = artist
-	artistElement.classList.add('text-muted')
 
 	// Unir elementos
 	songTitle.appendChild(artistElement)

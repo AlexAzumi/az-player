@@ -16,6 +16,7 @@
     "electron": "^6.0.7",
     "electron-reload": "^1.5.0",
     "n-readlines": "^1.0.0",
-    "sass": "^1.23.0-module.beta.1"
+    "sass": "^1.23.0-module.beta.1",
+    "slash": "^3.0.0"
   }
 }

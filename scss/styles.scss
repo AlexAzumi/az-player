@@ -6,6 +6,9 @@
 // Bootstrap
 @import '../node_modules/bootstrap/scss/bootstrap';
 
+// Fuentes
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
+
 
 /*
  * Lista de canciones
@@ -18,8 +21,33 @@
 }
 
 #songList > div {
+	transition: background-color 250ms;
 	&:hover {
 		cursor: pointer;
+		color: $light;
+		background-color: $primary;
+
+		span {
+			color: $gray-300 !important;
+		}
+	}
+
+	span {
+		pointer-events: none;
+	}
+
+	&.active {
+		background-color: $yellow;
+	}
+}
+
+#songTitle {
+	background-color: rgba($color: $black, $alpha: 0.7);
+	color: $light;
+	font-family: 'Nunito Sans', sans-serif;
+	
+	span {
+		color: $gray-500;
 	}
 }
 
@@ -29,4 +57,13 @@
 	&-not {
 		background-color: $gray-200;
 	}
+}
+
+/*
+ * Reproductor
+ */
+#player {
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
 }

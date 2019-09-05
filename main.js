@@ -136,6 +136,7 @@ const getSongData = () => {
 	let tempMusics = []
 	let tempTitles = []
 	let tempArtists = []
+	let tempBgs = []
 
 	// Pasar canción por canción encontrada
 	for (let song of songList) {
@@ -152,6 +153,9 @@ const getSongData = () => {
 				let foundMusic = false
 				let foundTitle = false
 				let foundArtist = false
+				let foundBg = false
+
+				let nextIsBg = false
 
 				// Dirección del archivo
 				let filePath = path.join(songsLocation, song, file)
@@ -167,7 +171,6 @@ const getSongData = () => {
 					// Título encontrado
 					if (line.includes('Title:')) {
 						line = line.replace('Title:', '')
-						console.log(`Titulo: ${line}`)
 						tempTitles.push(line)
 						foundTitle = true
 					}
@@ -181,15 +184,34 @@ const getSongData = () => {
 					// Nombre de audio encontrado
 					else if (line.includes('AudioFilename:')) {
 						line = line.replace('AudioFilename: ', '')
-						console.log(`Archivo: ${line}`)
 						tempMusics.push(line)
 						foundMusic = true
 					}
+					else if (nextIsBg) {
+						// Crear regex
+						const checkRegex = RegExp('\"(.)+.(jpg|png)\"', 'i')
+						// Probar regex
+						if (checkRegex.test(line)) {
+							line = line.split('"')
+							tempBgs.push(line[1])
+
+							foundBg = true
+							nextIsBg = false
+						}
+					}
+					else if (line.includes('//Background and Video events'))
+					{
+						nextIsBg = true
+					}
 
 					// Toda la información necesaria fue encontrada
-					if (foundMusic && foundArtist && foundTitle) {
+					if (foundMusic && foundArtist && foundTitle && foundBg) {
 						break
 					}
+				}
+
+				if (nextIsBg) {
+					tempBgs.push('NONE')
 				}
 
 				// Dejar de buscar archivos en carpeta
@@ -206,7 +228,8 @@ const getSongData = () => {
 			path: tempPath[i],
 			musicFile: tempMusics[i].replace(/\r/, ''),
 			title: tempTitles[i].replace(/\r/, ''),
-			artist: tempArtists[i].replace(/\r/, '')
+			artist: tempArtists[i].replace(/\r/, ''),
+			background: tempBgs[i].replace(/\r/, '')
 		})
 	}
 
