@@ -5,3 +5,28 @@
 
 // Bootstrap
 @import '../node_modules/bootstrap/scss/bootstrap';
+
+
+/*
+ * Lista de canciones
+ */
+#songList {
+	height: 100vh;
+	list-style: none;
+	overflow-y: auto;
+	border-left: 3px solid $gray-500;
+}
+
+#songList > div {
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+.list-pair {
+	background-color: $gray-400;
+
+	&-not {
+		background-color: $gray-200;
+	}
+}

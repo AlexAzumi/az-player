@@ -1,14 +1,19 @@
 // Dependencias
-const { app, BrowserWindow, dialog } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const fs = require('fs')
-const path = require('path');
+const path = require('path')
+const lineByLine = require('n-readlines')
+// Live reload
+require('electron-reload')(__dirname)
 
 // Variables
 const databaseLocation = 'database.json'
 let gameLocation
 let songsLocation
 
+// Información
 let songList
+let songsData
 
 // Ventana
 let win
@@ -16,8 +21,8 @@ let win
 function createWindow () {
   // Crear ventana
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 720,
     webPreferences: {
       nodeIntegration: true
     }
@@ -33,9 +38,16 @@ function createWindow () {
   win.on('closed', () => {
     win = null
 	})
+
+	// Enviar contenido cuando termine de cargar el contenido
+	win.webContents.on('did-finish-load', () => {
+		sendDataToPlayer()
+	})
 	
+	// Si la base de datos existe
 	if (fs.existsSync(databaseLocation)) {
-		console.log('Existe')
+		// Cargar base de datos
+		loadDatabase()
 	}
 	else {
 		// Repetir hasta seleccionar carpeta correcta
@@ -46,9 +58,11 @@ function createWindow () {
 		// Liste de carpetas
 		songList = listSongs()
 
-		for (let song of songList) {
-			console.log(song)
-		}
+		// Obtener información
+		songsData = getSongData()
+
+		// Escribir a archivo
+		createDatabase()
 	}
 }
 
@@ -110,5 +124,118 @@ const searchSongsFolder = () => {
  * Analizar carpeta de 'Songs'
  */
 const listSongs = () => {
-	return songs = fs.readdirSync(songsLocation)
+	return fs.readdirSync(songsLocation)
+}
+
+/**
+ * Obtener información del beatmap
+ */
+const getSongData = () => {
+	// Información alamacenada temporalmente
+	let tempPath = []
+	let tempMusics = []
+	let tempTitles = []
+	let tempArtists = []
+
+	// Pasar canción por canción encontrada
+	for (let song of songList) {
+		const folderPath = path.join(songsLocation, song);
+		// Leer directorio
+		const files = fs.readdirSync(folderPath)
+		// Almacenar dirección
+		tempPath.push(folderPath)
+		// Buscar archivos
+		for (let file of files) {
+			if (file.includes('.osu') || file.includes('.OSU')) {
+				console.log(`Archivo .osu encontrado! ${file}`)
+				// Banderas
+				let foundMusic = false
+				let foundTitle = false
+				let foundArtist = false
+
+				// Dirección del archivo
+				let filePath = path.join(songsLocation, song, file)
+
+				// Crear instancia
+				const liner = new lineByLine(filePath)
+
+				// Leer lineas
+				let line
+
+				while (line = liner.next()) {
+					line = line.toString('ascii')
+					// Título encontrado
+					if (line.includes('Title:')) {
+						line = line.replace('Title:', '')
+						console.log(`Titulo: ${line}`)
+						tempTitles.push(line)
+						foundTitle = true
+					}
+					// Artista encontrado
+					else if (line.includes('Artist:')) {
+						line = line.replace('Artist:', '')
+						console.log(`Artista: ${line}`)
+						tempArtists.push(line)
+						foundArtist = true
+					}
+					// Nombre de audio encontrado
+					else if (line.includes('AudioFilename:')) {
+						line = line.replace('AudioFilename: ', '')
+						console.log(`Archivo: ${line}`)
+						tempMusics.push(line)
+						foundMusic = true
+					}
+
+					// Toda la información necesaria fue encontrada
+					if (foundMusic && foundArtist && foundTitle) {
+						break
+					}
+				}
+
+				// Dejar de buscar archivos en carpeta
+				break
+			}
+		}
+	}
+
+	// Almacenar información temporalmente
+	let tempMusicInfo = []
+
+	for (let i = 0; i < tempMusics.length; i++) {
+		tempMusicInfo.push({
+			path: tempPath[i],
+			musicFile: tempMusics[i].replace(/\r/, ''),
+			title: tempTitles[i].replace(/\r/, ''),
+			artist: tempArtists[i].replace(/\r/, '')
+		})
+	}
+
+	return tempMusicInfo
+}
+
+/**
+ * Crear base de datos
+ */
+const createDatabase = () => {
+	// Dar formato apropiado
+	let content = JSON.stringify(songsData, null, 2)
+	// Escribir archivo
+	fs.writeFileSync('database.json', content, 'utf-8')
+}
+
+/**
+ * Enviar datos al reproductor
+ */
+const sendDataToPlayer = () => {
+	win.webContents.send('loaded-songs', songsData)
+}
+
+/**
+ * Cargar base de datos
+ */
+const loadDatabase = () => {
+	// Cargar archivo
+	const load = fs.readFileSync(databaseLocation)
+	// Almacenar en variable
+	songsData = JSON.parse(load)
 }

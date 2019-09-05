@@ -9671,5 +9671,25 @@ h3 {
     border-color: #dee2e6;
   }
 }
+/*
+ * Lista de canciones
+ */
+#songList {
+  height: 100vh;
+  list-style: none;
+  overflow-y: auto;
+  border-left: 3px solid #adb5bd;
+}
+
+#songList > div:hover {
+  cursor: pointer;
+}
+
+.list-pair {
+  background-color: #ced4da;
+}
+.list-pair-not {
+  background-color: #e9ecef;
+}
 
 /*# sourceMappingURL=styles.css.map */
