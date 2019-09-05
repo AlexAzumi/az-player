@@ -9679,7 +9679,6 @@ h3 {
   height: 100vh;
   list-style: none;
   overflow-y: auto;
-  border-left: 3px solid #adb5bd;
 }
 #songList > div {
   transition: background-color 250ms;
@@ -9703,13 +9702,8 @@ h3 {
   font-family: "Nunito Sans", sans-serif;
 }
 
-#songTitle {
-  background-color: rgba(0, 0, 0, 0.7);
-  color: #f8f9fa;
-  font-family: "Nunito Sans", sans-serif;
-}
-#songTitle span {
-  color: #adb5bd;
+#songListTitle {
+  background-color: #6c757d;
 }
 
 .list-pair {
@@ -9722,6 +9716,15 @@ h3 {
 /*
  * Reproductor
  */
+#songTitle {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #f8f9fa;
+  font-family: "Nunito Sans", sans-serif;
+}
+#songTitle span {
+  color: #adb5bd;
+}
+
 #player {
   background-repeat: no-repeat;
   background-size: cover;
@@ -9743,26 +9746,40 @@ h3 {
   background-color: rgba(173, 181, 189, 0.7);
   height: 15px;
   outline: none;
+  overflow: hidden;
   position: absolute;
   top: -15px;
   transition: 200ms;
   width: 100%;
 }
-#playerRange:hover::-webkit-slider-thumb {
-  height: 20px;
-}
 #playerRange::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  background-color: #E91E63;
+  box-shadow: -100vw 0 0 100vw #E91E63;
   cursor: pointer;
-  height: 15px;
   transition: 150ms;
-  width: 15px;
+  width: 0;
+}
+#playerRange:hover {
+  cursor: pointer;
+}
+
+#controls {
+  color: #ced4da;
 }
 
 .controlButton:hover {
   cursor: pointer;
+}
+
+.playIcon {
+  display: none !important;
+  margin-top: -8px;
+  right: 8px;
+  top: 50%;
+}
+.playIcon-show {
+  display: block !important;
 }
 
 /*# sourceMappingURL=styles.css.map */

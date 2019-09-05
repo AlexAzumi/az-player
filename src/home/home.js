@@ -41,6 +41,7 @@ const addSong = () => {
 	for (let song of songs) {
 		// Crear elemento
 		const songElement = document.createElement('div')
+		songElement.classList.add('pl-1', 'py-1', 'pr-4', 'position-relative')
 		songElement.innerText = `${song.title} - `
 		// Crear subelemento de artista
 		const songArtist = document.createElement('span')
@@ -48,8 +49,10 @@ const addSong = () => {
 		songArtist.classList.add('text-muted')
 		// Combinar elementos
 		songElement.appendChild(songArtist)
-		// Agregar clases
-		songElement.classList.add('px-1', 'py-1')
+
+		// Icono de reproducción
+		const playIcon = document.createElement('i')
+		playIcon.classList.add('fa', 'fa-play', 'position-absolute', 'playIcon')
 
 		// Elemento par
 		if (pair) {
@@ -76,6 +79,9 @@ const addSong = () => {
 		// Agregar listener
 		songElement.addEventListener('click', playSelectedSong)
 
+		// Agregar en elemento
+		songElement.appendChild(playIcon)
+
 		// Agregar en lista
 		songList.appendChild(songElement)
 	}
@@ -98,8 +104,14 @@ const playSelectedSong = (event) => {
 		element.classList.remove('active')
 	})
 
+	event.target.parentElement.querySelectorAll('.playIcon').forEach((element) => {
+		element.classList.remove('playIcon-show')
+	})
+
 	// Establecer como activo
 	songElement.classList.add('active')
+
+	songElement.childNodes[2].classList.add('playIcon-show')
 
 	// Establecer ruta
 	musicPlayer.src = songPath
@@ -195,4 +207,4 @@ musicPlayer.addEventListener('ended', () => {
 /**
  * Timers
  */
-setInterval(changePlayTime, 500)
+setInterval(changePlayTime, 250)

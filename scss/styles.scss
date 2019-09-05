@@ -26,7 +26,7 @@ $theme-colors: (
 	height: 100vh;
 	list-style: none;
 	overflow-y: auto;
-	border-left: 3px solid $gray-500;
+	//border-left: 3px solid $gray-500;
 
 	> div {
 		transition: background-color 250ms;
@@ -55,14 +55,8 @@ $theme-colors: (
 	}
 }
 
-#songTitle {
-	background-color: rgba($color: $black, $alpha: 0.7);
-	color: $light;
-	font-family: 'Nunito Sans', sans-serif;
-
-	span {
-		color: $gray-500;
-	}
+#songListTitle {
+	background-color: $gray-600;
 }
 
 .list-pair {
@@ -73,9 +67,20 @@ $theme-colors: (
 	}
 }
 
+
 /*
  * Reproductor
  */
+#songTitle {
+	background-color: rgba($color: $black, $alpha: 0.7);
+	color: $light;
+	font-family: 'Nunito Sans', sans-serif;
+
+	span {
+		color: $gray-500;
+	}
+}
+
 #player {
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -97,28 +102,43 @@ $theme-colors: (
 	background-color: rgba($color: $gray-500, $alpha: 0.7);
 	height: 15px;
 	outline: none;
+	overflow: hidden;
 	position: absolute;
 	top: -15px;
 	transition: 200ms;
 	width: 100%;
 
-	&:hover::-webkit-slider-thumb {
-		height: 20px;
-	}
-
 	&::-webkit-slider-thumb {
 		-webkit-appearance: none;
 		appearance: none;
-		background-color: $primary;
+		box-shadow: -100vw 0 0 100vw $primary;
 		cursor: pointer;
-		height: 15px;
 		transition: 150ms;
-		width: 15px;
+		width: 0;
 	}
+
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+#controls {
+	color: $gray-400;
 }
 
 .controlButton {
 	&:hover {
 		cursor: pointer;
+	}
+}
+
+.playIcon {
+	display: none !important;
+	margin-top: -8px;
+	right: 8px;
+	top: 50%;
+
+	&-show {
+		display: block !important;
 	}
 }
