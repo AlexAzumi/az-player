@@ -3,3 +3,6 @@
 
 # Base de datos de prueba
 /database.json
+
+# Estilos pre-compilados
+/assets/css/
