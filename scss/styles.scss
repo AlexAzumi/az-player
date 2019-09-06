@@ -16,9 +16,6 @@ $theme-colors: (
 // Bootstrap
 @import '../node_modules/bootstrap/scss/bootstrap';
 
-// Fuentes
-@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap');
-
 /*
  * Lista de canciones
  */
@@ -57,6 +54,7 @@ $theme-colors: (
 
 #songListTitle {
 	background-color: $gray-600;
+	height: 70px;
 }
 
 .list-pair {
@@ -67,14 +65,27 @@ $theme-colors: (
 	}
 }
 
+@include media-breakpoint-down(md) {
+	#songList {
+		height: 60vh;
+	}
+}
 
 /*
  * Reproductor
  */
-#songTitle {
+#songTitleContainer {
 	background-color: rgba($color: $black, $alpha: 0.7);
+	height: 70px;
+	white-space: nowrap;
+	width: 100%;
+}
+
+#songTitle {
 	color: $light;
+	float: left;
 	font-family: 'Nunito Sans', sans-serif;
+	position: relative;
 
 	span {
 		color: $gray-500;
@@ -85,6 +96,7 @@ $theme-colors: (
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
+	min-height: 40vh;
 }
 
 #playerPanel {
@@ -110,7 +122,6 @@ $theme-colors: (
 
 	&::-webkit-slider-thumb {
 		-webkit-appearance: none;
-		appearance: none;
 		box-shadow: -100vw 0 0 100vw $primary;
 		cursor: pointer;
 		transition: 150ms;
@@ -122,11 +133,38 @@ $theme-colors: (
 	}
 }
 
+#playerVolumeContainer {
+	height: 25px;
+	left: 25px;
+	margin-top: -10px;
+	overflow: hidden;
+	position: absolute;
+	top: 50%;
+	width: 250px;
+
+	> #playerVolume {
+		-webkit-appearance: none;
+		background: $gray-600;
+		cursor: pointer;
+		height: 25px;
+		outline: none;
+		width: 80%;
+
+		&::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			box-shadow: -100vw 0 0 100vw $info;
+			cursor: pointer;
+			transition: 150ms;
+			width: 0;
+		}
+	}
+}
+
 #controls {
 	color: $gray-400;
 }
 
-.controlButton {
+.control-btn {
 	&:hover {
 		cursor: pointer;
 	}

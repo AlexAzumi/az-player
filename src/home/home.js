@@ -9,14 +9,18 @@ const slash = require('slash')
 const playerElement = document.getElementById('player')
 const songTitle = document.getElementById('songTitle')
 const songList = document.getElementById('songList')
+const songTitleContainer = document.getElementById('songTitleContainer')
 
 // Controles
 const playPauseBtn = document.getElementById('playPauseBtn')
 const playerRange = document.getElementById('playerRange')
+const playerVolume = document.getElementById('playerVolume')
+const volumeText = document.getElementById('volumeText')
 
 // Variables
 let songs
 let currentSongDuration
+let titleAnimation
 
 // Reproductor
 let musicPlayer = new Audio()
@@ -28,6 +32,8 @@ ipc.on('loaded-songs', (event, args) => {
 	
 	// Mostrar en lista
 	addSong()
+
+	volumeText.innerText = `${playerVolume.value}%`
 })
 
 /**
@@ -93,7 +99,7 @@ const addSong = () => {
 const playSelectedSong = (event) => {
 	// Obtener elemento
 	const songElement = event.srcElement
-	// Extraer información
+	// Extraer información del DOM
 	const songTitle = songElement.getAttribute('song-title')
 	const songArtist= songElement.getAttribute('song-artist')
 	const songPath = songElement.getAttribute('song-path')
@@ -152,15 +158,40 @@ const updateMusicInfo = (title, artist) => {
 
 	// Unir elementos
 	songTitle.appendChild(artistElement)
+
+	// Verificar si el título es más grande que el contenedor
+	if (songTitle.clientWidth > songTitleContainer.offsetWidth) {
+		// Obtener diferencia
+		let diff = (songTitle.clientWidth - songTitleContainer.offsetWidth) + 32 /* TODO: Cambiar 32 a un calculo del padding */
+		// Crear animación
+		titleAnimation = songTitle.animate([
+			{ transform: 'translateX(0px)' },
+			{ transform: `translateX(-${diff}px)` },
+			{ transform: 'translateX(0px)' }
+		], {
+			duration: 8000 * (diff / 70), /* TODO: Ajustar valores */
+			iterations: Infinity
+		})
+	}
+	// El texto es más pequeño que el contenedor
+	else {
+		// ¿La animación se está reproduciendo?
+		if (titleAnimation != undefined && titleAnimation.playState === 'running') {
+			// Cancelar la animación
+			titleAnimation.cancel()
+		}
+	}
 }
 
 /**
  * Estado del reproductor ha cambiado
  */
 const changePlayerStatus = (event) => {
+	// ¿Está reproduciendo?
 	if (event.type === 'play') {
 		playPauseBtn.innerHTML = '<i class="fas fa-pause fa-2x"></i>'
 	}
+	// ¿Está pausado?
 	else if (event.type === 'pause') {
 		playPauseBtn.innerHTML = '<i class="fas fa-play fa-2x"></i>'
 	}
@@ -170,7 +201,9 @@ const changePlayerStatus = (event) => {
  * Establecer tiempo actual de la canción
  */
 const changePlayTime = () => {
+	// ¿El reproductor terminó una canción?
 	if (!musicPlayer.ended) {
+		// Regrear la barra al inicio
 		const currentTime = musicPlayer.currentTime
 		playerRange.value = currentTime
 	}
@@ -179,26 +212,36 @@ const changePlayTime = () => {
 /*
  * Eventos de los controles
  */
+
 // Botón de pausa
 playPauseBtn.addEventListener('click', playPauseSong)
 
-playerRange.addEventListener('input', (event) => {
-	console.log(playerRange.value)
+// Cambiar punto de reproducción
+playerRange.addEventListener('input', () => {
 	musicPlayer.currentTime = playerRange.value
+})
+// Cambiar volumen
+playerVolume.addEventListener('input', () => {
+	musicPlayer.volume = playerVolume.value / 100
+	volumeText.innerText = `${playerVolume.value}%`
 })
 
 /*
  * Eventos del reproductor
  */
+
 // Reproducir música
 musicPlayer.addEventListener('play', changePlayerStatus)
+
 // Pausar música
 musicPlayer.addEventListener('pause', changePlayerStatus)
+
 // Metadata cargada
 musicPlayer.addEventListener('loadedmetadata', () => {
 	currentSongDuration = musicPlayer.duration
 	playerRange.max = currentSongDuration
 })
+
 // Canción terminada
 musicPlayer.addEventListener('ended', () => {
 	playerRange.value = 0
@@ -207,4 +250,6 @@ musicPlayer.addEventListener('ended', () => {
 /**
  * Timers
  */
+
+// Actualizar barra de reproducción
 setInterval(changePlayTime, 250)

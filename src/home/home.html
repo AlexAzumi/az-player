@@ -9,6 +9,7 @@
 	<!-- Estilos -->
 	<link rel="stylesheet" href="../../assets/css/styles.css">
 	<link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css">
+	<link rel="stylesheet" href="../../fonts/fonts.css">
 </head>
 <body>
 	<div class="container-fluid">
@@ -16,24 +17,30 @@
 		<div class="row">
 			<!-- Reproducción -->
 			<div id="player" class="col-md-8 px-0 position-relative">
-				<h2 class="p-3" id="songTitle">osu! player | By AlexAzumi</h2>
-
+				<div id="songTitleContainer" class="p-3">
+					<h2 class="mb-0" id="songTitle">osu! player | By AlexAzumi</h2>
+				</div>
 				<!-- Panel -->
 				<div id="playerPanel">
 					<!-- Timespan -->
 					<input id="playerRange" type="range" max="100" min="0" value="0">
+					<!-- Volumen -->
+					<div id="playerVolumeContainer">
+						<input id="playerVolume" type="range" min="0" max="100" value="100" step="1">
+						<p id="volumeText" class="float-right text-light"></p>
+					</div>
 					<!-- Controles -->
 					<div id="controls" class="d-flex h-100 justify-content-center align-items-center">
 						<!-- Anterior -->
-						<div class="d-inline-block controlButton" id="previousBtn">
+						<div class="d-inline-block control-btn" id="previousBtn">
 							<i class="fas fa-backward fa-2x"></i>
 						</div>
 						<!-- Reproducir/pausar -->
-						<div class="d-inline-block mx-4 controlButton" id="playPauseBtn">
+						<div class="d-inline-block mx-4 control-btn" id="playPauseBtn">
 							<i class="fas fa-play fa-2x"></i>
 						</div>
 						<!-- Siguiente -->
-						<div class="d-inline-block controlButton" id="nextBtn">
+						<div class="d-inline-block control-btn" id="nextBtn">
 							<i class="fas fa-forward fa-2x"></i>
 						</div>
 					</div>
@@ -42,7 +49,9 @@
 			<!-- Lista de canciones -->
 			<div class="col-md-4 px-0">
 				<div id="songList">
-					<p id="songListTitle" class="h2 text-center sticky-top mb-0 py-2 text-light">Lista de canciones</p>
+					<p
+						id="songListTitle"
+						class="h2 text-center sticky-top mb-0 py-2 text-light d-flex align-items-center justify-content-center">Lista de canciones</p>
 				</div>
 			</div>
 		</div>

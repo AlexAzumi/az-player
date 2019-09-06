@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron .",
     "sass": "sass scss/styles.scss assets/css/styles.css --style compressed",
-    "sass:dev": "sass scss/styles.scss assets/css/styles.css --watch"
+    "sass:dev": "sass scss/styles.scss assets/css/styles.css --watch",
+    "get-fonts": "get-google-fonts -i \"https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap\""
   },
   "keywords": [],
   "author": "AlexAzumi",
@@ -19,5 +20,8 @@
     "n-readlines": "^1.0.0",
     "sass": "^1.23.0-module.beta.1",
     "slash": "^3.0.0"
+  },
+  "dependencies": {
+    "get-google-fonts": "^1.2.0"
   }
 }
