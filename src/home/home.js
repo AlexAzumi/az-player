@@ -20,6 +20,8 @@ const songTitleContainer = document.getElementById('songTitleContainer')
 
 // Controles
 const playPauseBtn = document.getElementById('playPauseBtn')
+const nextBtn = document.getElementById('nextBtn')
+const previousBtn = document.getElementById('previousBtn')
 const playerRange = document.getElementById('playerRange')
 const playerVolume = document.getElementById('playerVolume')
 const volumeText = document.getElementById('volumeText')
@@ -28,6 +30,8 @@ const volumeText = document.getElementById('volumeText')
 let songs
 let currentSongDuration
 let titleAnimation
+
+let currentSong = 0
 
 // Reproductor
 let musicPlayer = new Audio()
@@ -49,6 +53,8 @@ ipc.on('loaded-songs', (event, args) => {
 const addSong = () => {
 	// Par
 	let pair = false
+	// ID
+	let songID = 0
 
 	// Pasar por cada canción
 	for (let song of songs) {
@@ -82,6 +88,8 @@ const addSong = () => {
 		songElement.setAttribute('song-path', path.join(song.path, song.musicFile))
 		songElement.setAttribute('song-title', song.title)
 		songElement.setAttribute('song-artist', song.artist)
+		songElement.id = songID;
+		
 		if (song.background !== 'NONE') {
 			songElement.setAttribute('song-background', path.join(song.path, song.background))
 		}
@@ -97,6 +105,9 @@ const addSong = () => {
 
 		// Agregar en lista
 		songList.appendChild(songElement)
+
+		// Aumentar id
+		songID++;
 	}
 }
 
@@ -104,20 +115,41 @@ const addSong = () => {
  * Reproducir canción selecionada
  */
 const playSelectedSong = (event) => {
+	// Establecer canción actual
+	currentSong = event.srcElement.id
+
+	// Iniciar canción
+	startSong(event.srcElement);
+}
+
+/**
+ * Obtener elemento de canción actual
+ */
+const getCurrentSongElement = () => {
 	// Obtener elemento
-	const songElement = event.srcElement
+	return document.getElementById(currentSong)
+}
+
+/**
+ * Iniciar canción
+ */
+const startSong = () => {
+	// Obtener elemento
+	const songElement = getCurrentSongElement()
+
 	// Extraer información del DOM
 	const songTitle = songElement.getAttribute('song-title')
 	const songArtist= songElement.getAttribute('song-artist')
 	const songPath = songElement.getAttribute('song-path')
 	const songBackground = songElement.getAttribute('song-background')
+	currentSong = songElement.id
 
 	// Eliminar clase activo
-	event.target.parentElement.querySelectorAll('.active').forEach((element) => {
+	songList.querySelectorAll('.active').forEach((element) => {
 		element.classList.remove('active')
 	})
 
-	event.target.parentElement.querySelectorAll('.playIcon').forEach((element) => {
+	songList.querySelectorAll('.playIcon').forEach((element) => {
 		element.classList.remove('playIcon-show')
 	})
 
@@ -143,6 +175,15 @@ const playSelectedSong = (event) => {
  * Pausar/reproducir canción
  */
 const playPauseSong = () => {
+	if (musicPlayer.readyState == 0) {
+		// Obtener elemento de la canción actual
+		const song = getCurrentSongElement()
+
+		// Iniciar canción
+		startSong(song)
+
+		return;
+	}
 	// ¿La canción está pausada?
 	if (musicPlayer.paused) {
 		musicPlayer.play()
@@ -166,7 +207,7 @@ const updateMusicInfo = (title, artist) => {
 	// Unir elementos
 	songTitle.appendChild(artistElement)
 
-	console.warn(`${songTitle.clientWidth} - ${songTitleContainer.offsetWidth}`)
+	//console.warn(`${songTitle.clientWidth} - ${songTitleContainer.offsetWidth}`)
 
 	// Verificar si el título es más grande que el contenedor
 	if (songTitle.clientWidth > songTitleContainer.offsetWidth) {
@@ -225,6 +266,40 @@ const changePlayTime = () => {
 	}
 }
 
+/**
+ * Siguiente canción
+ */
+const playNextSong = () => {
+ // Verificar si hay más canciones
+	if (currentSong < songs.length - 1) {
+		if (musicPlayer.readyState != 0) {
+			currentSong++
+		}
+	}
+	else {
+		currentSong = 0
+	}
+
+	// Iniciar canción
+	startSong()
+}
+
+/**
+ * Canción anterior
+ */
+const playPreviousSong = () => {
+	// Verificar si hay más canciones
+	if (currentSong > 0) {
+		currentSong--
+	}
+	else {
+		currentSong = songs.length - 1
+	}
+
+	// Iniciar canción
+	startSong()
+}
+
 /*
  * Eventos de los controles
  */
@@ -236,11 +311,18 @@ playPauseBtn.addEventListener('click', playPauseSong)
 playerRange.addEventListener('input', () => {
 	musicPlayer.currentTime = playerRange.value
 })
+
 // Cambiar volumen
 playerVolume.addEventListener('input', () => {
 	musicPlayer.volume = playerVolume.value / 100
 	volumeText.innerText = `${playerVolume.value}%`
 })
+
+// Siguiente canción
+nextBtn.addEventListener('click', playNextSong)
+
+// Canción anterior
+previousBtn.addEventListener('click', playPreviousSong)
 
 /*
  * Eventos del reproductor
@@ -260,7 +342,11 @@ musicPlayer.addEventListener('loadedmetadata', () => {
 
 // Canción terminada
 musicPlayer.addEventListener('ended', () => {
+	// Regresar rango a cero
 	playerRange.value = 0
+
+	// Reproducir la siguiente canción
+	playNextSong()
 })
 
 /**

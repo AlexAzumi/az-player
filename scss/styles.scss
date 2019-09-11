@@ -20,10 +20,11 @@ $theme-colors: (
  * Lista de canciones
  */
 #songList {
+	//border-left: 3px solid $gray-500;
 	height: 100vh;
 	list-style: none;
 	overflow-y: auto;
-	//border-left: 3px solid $gray-500;
+	user-select: none;
 
 	> div {
 		transition: background-color 250ms;
@@ -54,7 +55,9 @@ $theme-colors: (
 
 #songListTitle {
 	background-color: $gray-600;
+	font-family: 'Nunito Sans', sans-serif;
 	height: 70px;
+	user-select: none;
 }
 
 .list-pair {
@@ -86,6 +89,7 @@ $theme-colors: (
 	float: left;
 	font-family: 'Nunito Sans', sans-serif;
 	position: relative;
+	user-select: none;
 
 	span {
 		color: $gray-500;
@@ -165,8 +169,10 @@ $theme-colors: (
 }
 
 .control-btn {
+	transition: color 200ms;
 	&:hover {
 		cursor: pointer;
+		color: $primary;
 	}
 }
 
