@@ -4,6 +4,13 @@ const path = require('path')
 const slash = require('slash')
 
 /*
+ * Configuración
+ */
+const config = {
+	tickTime: 250
+}
+
+/*
  * Elementos
  */
 const playerElement = document.getElementById('player')
@@ -159,10 +166,19 @@ const updateMusicInfo = (title, artist) => {
 	// Unir elementos
 	songTitle.appendChild(artistElement)
 
+	console.warn(`${songTitle.clientWidth} - ${songTitleContainer.offsetWidth}`)
+
 	// Verificar si el título es más grande que el contenedor
 	if (songTitle.clientWidth > songTitleContainer.offsetWidth) {
 		// Obtener diferencia
 		let diff = (songTitle.clientWidth - songTitleContainer.offsetWidth) + 32 /* TODO: Cambiar 32 a un calculo del padding */
+
+		// Verificar si la animación ya está corriendo
+		if (titleAnimation != undefined && titleAnimation.playState === 'running') {
+			// Cancelar la animación
+			titleAnimation.cancel()
+		}
+
 		// Crear animación
 		titleAnimation = songTitle.animate([
 			{ transform: 'translateX(0px)' },
@@ -252,4 +268,4 @@ musicPlayer.addEventListener('ended', () => {
  */
 
 // Actualizar barra de reproducción
-setInterval(changePlayTime, 250)
+setInterval(changePlayTime, config.tickTime)
