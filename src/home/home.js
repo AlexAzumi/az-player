@@ -36,7 +36,9 @@ let currentSong = 0
 // Reproductor
 let musicPlayer = new Audio()
 
-// Recibir datos del main
+/*
+ * Recibir canciones del main thread
+ */
 ipc.on('loaded-songs', (event, args) => {
 	// Asignar a variable
 	songs = args
@@ -44,7 +46,14 @@ ipc.on('loaded-songs', (event, args) => {
 	// Mostrar en lista
 	addSong()
 
-	volumeText.innerText = `${playerVolume.value}%`
+	// Asignar volumen
+	const volume = localStorage.getItem('volume')
+	if (volume != undefined) {
+		musicPlayer.volume = volume
+	}
+
+	volumeText.innerText = `${musicPlayer.volume * 100}%`
+	playerVolume.value = musicPlayer.volume * 100
 })
 
 /**
@@ -314,8 +323,12 @@ playerRange.addEventListener('input', () => {
 
 // Cambiar volumen
 playerVolume.addEventListener('input', () => {
+	// Obtener valor y aplicarlo
 	musicPlayer.volume = playerVolume.value / 100
 	volumeText.innerText = `${playerVolume.value}%`
+
+	// Almacenar volumen
+	localStorage.setItem('volume', musicPlayer.volume)
 })
 
 // Siguiente canción
