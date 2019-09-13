@@ -214,9 +214,6 @@ const startSong = () => {
 	// Renderizar título
 	updateMusicInfo(songTitle, songArtist)
 
-	// Mostrar elemento
-	songElement.scrollIntoViewIfNeeded()
-
 	// Reproducir
 	musicPlayer.play()
 }
@@ -259,8 +256,6 @@ const updateMusicInfo = (title, artist) => {
 
 	// Unir elementos
 	songTitle.appendChild(artistElement)
-
-	//console.warn(`${songTitle.clientWidth} - ${songTitleContainer.offsetWidth}`)
 
 	// Verificar si el título es más grande que el contenedor
 	if (songTitle.clientWidth > songTitleContainer.offsetWidth) {
