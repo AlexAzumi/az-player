@@ -207,6 +207,9 @@ const startSong = () => {
 	if (songBackground !== 'NONE') {
 		playerElement.style.backgroundImage = `url("${slash(songBackground)}")`
 	}
+	else {
+		playerElement.style.backgroundImage = 'url("../../assets/img/placeholder.jpg")'
+	}
 
 	// Renderizar título
 	updateMusicInfo(songTitle, songArtist)

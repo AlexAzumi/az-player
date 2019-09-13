@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const lineByLine = require('n-readlines')
 // Live reload
-//require('electron-reload')(__dirname)
+require('electron-reload')(__dirname)
 
 // Variables
 const databaseLocation = 'database.json'
