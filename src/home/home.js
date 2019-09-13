@@ -2,13 +2,15 @@
 const ipc = require('electron').ipcRenderer
 const path = require('path')
 const slash = require('slash')
+const { dialog } = require('electron').remote
 
 /*
  * Configuración
  */
 const config = {
 	tickTime: 250,
-	playerVolume: 100
+	playerVolume: 100,
+	randomSong: false
 }
 
 /*
@@ -35,6 +37,8 @@ const playerSeekBar = document.getElementById('playerRange')
 const volumeBar = document.getElementById('playerVolume')
 // Texto de volumen
 const volumeText = document.getElementById('volumeText')
+// Botón azar
+const randomBtn = document.getElementById('randomBtn')
 
 // Lista de canciones
 let songsList
@@ -42,6 +46,8 @@ let songsList
 let currentSongDuration
 // Animación del título
 let titleAnimation
+// Canciones ya reproducidas
+let endedSongs = []
 
 // ID de la canción actual
 let currentSong = 0
@@ -65,8 +71,19 @@ ipc.on('loaded-songs', (event, args) => {
 		musicPlayer.volume = config.playerVolume
 	}
 
+	// Establecer valores del volumen
 	volumeText.innerText = `${musicPlayer.volume * 100}%`
 	volumeBar.value = musicPlayer.volume * 100
+
+	// Establecer valores de azar
+	if (localStorage.getItem('random')) {
+		// Asignar valor
+		config.randomSong = localStorage.getItem('random')
+		// Verificar si activado
+		if (config.randomSong) {
+			randomBtn.classList.add('active')
+		}
+	}
 })
 
 /**
@@ -140,6 +157,9 @@ const playSelectedSong = (event) => {
 	// Establecer canción actual
 	currentSong = event.srcElement.id
 
+	// Vaciar lista de canciones ya reproducidas
+	endedSongs = []
+
 	// Iniciar canción
 	startSong(event.srcElement);
 }
@@ -184,10 +204,15 @@ const startSong = () => {
 	musicPlayer.src = songPath
 
 	// Establecer imagen de fondo
-	playerElement.style.backgroundImage = `url("${slash(songBackground)}")`
+	if (songBackground !== 'NONE') {
+		playerElement.style.backgroundImage = `url("${slash(songBackground)}")`
+	}
 
 	// Renderizar título
 	updateMusicInfo(songTitle, songArtist)
+
+	// Mostrar elemento
+	songElement.scrollIntoViewIfNeeded()
 
 	// Reproducir
 	musicPlayer.play()
@@ -294,8 +319,42 @@ const changePlayTime = () => {
 const playNextSong = () => {
  // Verificar si hay más canciones
 	if (currentSong < songsList.length - 1) {
+		// Reproductor listo
 		if (musicPlayer.readyState != 0) {
-			currentSong++
+			// ¿Está azar activado?
+			if (config.randomSong) {
+				console.log(endedSongs)
+				endedSongs.push(currentSong)
+				if (endedSongs.length < songsList.length) {
+					let nextSong
+					while (nextSong === undefined) {
+						// Bandera
+						let alreadyPlayed = false
+						// Número al azar
+						let selectedSong = Math.floor(Math.random() * songsList.length)
+						// Verificar numero por número
+						for (let song of endedSongs) {
+							if (song === selectedSong) {
+								alreadyPlayed = true
+							}
+						}
+						// Asignar valores
+						if (!alreadyPlayed) {
+							nextSong = selectedSong
+						}
+					}
+					currentSong = nextSong
+				} 
+				else {
+					// Vaciar lista de canciones
+					endedSongs = []
+					// Número al azar
+					currentSong = Math.floor(Math.random() * songsList.length)
+				}
+			}
+			else {
+				currentSong++
+			}
 		}
 	}
 	else {
@@ -352,6 +411,21 @@ nextBtn.addEventListener('click', playNextSong)
 // Canción anterior
 previousBtn.addEventListener('click', playPreviousSong)
 
+// Botón azar
+randomBtn.addEventListener('click', (event) => {
+	// Activar/desactivar bandera
+	if (config.randomSong) {
+		config.randomSong = false
+		event.srcElement.parentElement.classList.remove('active')
+	}
+	else {
+		config.randomSong = true
+		event.srcElement.parentElement.classList.add('active')
+	}
+
+	localStorage.setItem('random', config.randomSong)
+})
+
 /*
  * Eventos del reproductor
  */
@@ -375,6 +449,15 @@ musicPlayer.addEventListener('ended', () => {
 
 	// Reproducir la siguiente canción
 	playNextSong()
+})
+
+// Error al reproducir
+musicPlayer.addEventListener('error', (err) => {
+	dialog.showMessageBox({
+		title: 'Error',
+		message: 'Se ha producido un error al reproducir el audio',
+		type: 'error'
+	})
 })
 
 /*

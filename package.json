@@ -1,5 +1,6 @@
 {
-  "name": "osu-player",
+	"name": "osu-player",
+	"productName": "osu! player by AlexAzumi",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",

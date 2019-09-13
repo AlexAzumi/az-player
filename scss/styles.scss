@@ -53,7 +53,7 @@ $theme-colors: (
 	}
 }
 
-#songListTitle {
+#songsListTitle {
 	background-color: $gray-600;
 	font-family: 'Nunito Sans', sans-serif;
 	height: 70px;
@@ -142,7 +142,7 @@ $theme-colors: (
 #playerVolumeContainer {
 	height: 25px;
 	left: 25px;
-	margin-top: -10px;
+	margin-top: -12.5px;
 	overflow: hidden;
 	position: absolute;
 	top: 50%;
@@ -172,7 +172,18 @@ $theme-colors: (
 	}
 }
 
-#controls {
+#otherControls {
+	position: absolute;
+	top: 0;
+	right: 25px;
+	height: 100%;
+
+	.active {
+		color: $secondary;
+	}
+}
+
+.controls {
 	color: $gray-400;
 }
 
@@ -180,7 +191,10 @@ $theme-colors: (
 	transition: color 200ms;
 	&:hover {
 		cursor: pointer;
-		color: $primary;
+
+		&:not(.not-hover-color) {
+			color: $primary;
+		}
 	}
 }
 
