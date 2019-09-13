@@ -9,3 +9,6 @@
 
 # Fuentes descargadas
 /fonts
+
+# Versiones pre-compiladas
+/release-builds

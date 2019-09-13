@@ -7,21 +7,25 @@
     "start": "electron .",
     "sass": "sass scss/styles.scss assets/css/styles.css --style compressed",
     "sass:dev": "sass scss/styles.scss assets/css/styles.css --watch",
-    "get-fonts": "get-google-fonts -i \"https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap\""
+    "get-fonts": "get-google-fonts -i \"https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap\"",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . osu-player --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=AlexAzumi --version-string.FileDescription=CE --version-string.ProductName=\"osu! player by AlexAzumi\"",
+    "package-linux": "electron-packager . osu-player --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
   },
   "keywords": [],
   "author": "AlexAzumi",
   "license": "ISC",
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.10.2",
     "bootstrap": "^4.3.1",
     "electron": "^6.0.7",
+    "electron-packager": "^14.0.6",
     "electron-reload": "^1.5.0",
-    "n-readlines": "^1.0.0",
-    "sass": "^1.23.0-module.beta.1",
-    "slash": "^3.0.0"
+    "sass": "^1.23.0-module.beta.1"
   },
   "dependencies": {
-    "get-google-fonts": "^1.2.0"
+		"@fortawesome/fontawesome-free": "^5.10.2",
+    "get-google-fonts": "^1.2.0",
+    "n-readlines": "^1.0.0",
+    "slash": "^3.0.0"
   }
 }
