@@ -18,32 +18,7 @@ let songsData
 // Ventana
 let win
 
-function createWindow () {
-  // Crear ventana
-  win = new BrowserWindow({
-    width: 1280,
-    height: 720,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
-
-	// Cargar el archivo
-  win.loadFile('src/home/home.html')
-
-  // Abrir herramientas de desarrollador
-  //win.webContents.openDevTools()
-
-  // Emitido cuando la ventana es cerrada
-  win.on('closed', () => {
-    win = null
-	})
-
-	// Enviar contenido cuando termine de cargar el contenido
-	win.webContents.on('did-finish-load', () => {
-		sendDataToPlayer()
-	})
-	
+function startApp () {
 	// Si la base de datos existe
 	if (fs.existsSync(databaseLocation)) {
 		// Cargar base de datos
@@ -64,9 +39,36 @@ function createWindow () {
 		// Escribir a archivo
 		createDatabase()
 	}
+	
+	/* Crear ventana */
+
+	// Crear ventana
+  win = new BrowserWindow({
+    width: 1280,
+    height: 720,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
+	
+	// Cargar el archivo
+  win.loadFile('src/home/home.html')
+
+  // Abrir herramientas de desarrollador
+  //win.webContents.openDevTools()
+
+  // Emitido cuando la ventana es cerrada
+  win.on('closed', () => {
+    win = null
+	})
+
+	// Enviar contenido cuando termine de cargar el contenido
+	win.webContents.on('did-finish-load', () => {
+		sendDataToPlayer()
+	})
 }
 
-app.on('ready', createWindow)
+app.on('ready', startApp)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -76,7 +78,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (win === null) {
-    createWindow()
+    startApp()
   }
 })
 

@@ -7,30 +7,43 @@ const slash = require('slash')
  * Configuración
  */
 const config = {
-	tickTime: 250
+	tickTime: 250,
+	playerVolume: 100
 }
 
 /*
- * Elementos
+ * Reproductor
  */
+// Fondo del reproductor
 const playerElement = document.getElementById('player')
+// Título de la canción
 const songTitle = document.getElementById('songTitle')
-const songList = document.getElementById('songList')
+// Contenedor del título
 const songTitleContainer = document.getElementById('songTitleContainer')
+// Elementos de lista de canciones
+const songsListElement = document.getElementById('songList')
 
-// Controles
+/*
+ * Controles del reproductor
+ */
 const playPauseBtn = document.getElementById('playPauseBtn')
 const nextBtn = document.getElementById('nextBtn')
 const previousBtn = document.getElementById('previousBtn')
-const playerRange = document.getElementById('playerRange')
-const playerVolume = document.getElementById('playerVolume')
+// Barra de reproducción
+const playerSeekBar = document.getElementById('playerRange')
+// Barra de volumen
+const volumeBar = document.getElementById('playerVolume')
+// Texto de volumen
 const volumeText = document.getElementById('volumeText')
 
-// Variables
-let songs
+// Lista de canciones
+let songsList
+// Duración de la canción actual
 let currentSongDuration
+// Animación del título
 let titleAnimation
 
+// ID de la canción actual
 let currentSong = 0
 
 // Reproductor
@@ -41,19 +54,19 @@ let musicPlayer = new Audio()
  */
 ipc.on('loaded-songs', (event, args) => {
 	// Asignar a variable
-	songs = args
+	songsList = args
 	
 	// Mostrar en lista
 	addSong()
 
 	// Asignar volumen
-	const volume = localStorage.getItem('volume')
-	if (volume != undefined) {
-		musicPlayer.volume = volume
+	config.playerVolume = localStorage.getItem('volume')
+	if (config.playerVolume != undefined) {
+		musicPlayer.volume = config.playerVolume
 	}
 
 	volumeText.innerText = `${musicPlayer.volume * 100}%`
-	playerVolume.value = musicPlayer.volume * 100
+	volumeBar.value = musicPlayer.volume * 100
 })
 
 /**
@@ -66,7 +79,7 @@ const addSong = () => {
 	let songID = 0
 
 	// Pasar por cada canción
-	for (let song of songs) {
+	for (let song of songsList) {
 		// Crear elemento
 		const songElement = document.createElement('div')
 		songElement.classList.add('pl-1', 'py-1', 'pr-4', 'position-relative')
@@ -113,7 +126,7 @@ const addSong = () => {
 		songElement.appendChild(playIcon)
 
 		// Agregar en lista
-		songList.appendChild(songElement)
+		songsListElement.appendChild(songElement)
 
 		// Aumentar id
 		songID++;
@@ -154,11 +167,11 @@ const startSong = () => {
 	currentSong = songElement.id
 
 	// Eliminar clase activo
-	songList.querySelectorAll('.active').forEach((element) => {
+	songsListElement.querySelectorAll('.active').forEach((element) => {
 		element.classList.remove('active')
 	})
 
-	songList.querySelectorAll('.playIcon').forEach((element) => {
+	songsListElement.querySelectorAll('.playIcon').forEach((element) => {
 		element.classList.remove('playIcon-show')
 	})
 
@@ -271,7 +284,7 @@ const changePlayTime = () => {
 	if (!musicPlayer.ended) {
 		// Regrear la barra al inicio
 		const currentTime = musicPlayer.currentTime
-		playerRange.value = currentTime
+		playerSeekBar.value = currentTime
 	}
 }
 
@@ -280,7 +293,7 @@ const changePlayTime = () => {
  */
 const playNextSong = () => {
  // Verificar si hay más canciones
-	if (currentSong < songs.length - 1) {
+	if (currentSong < songsList.length - 1) {
 		if (musicPlayer.readyState != 0) {
 			currentSong++
 		}
@@ -302,7 +315,7 @@ const playPreviousSong = () => {
 		currentSong--
 	}
 	else {
-		currentSong = songs.length - 1
+		currentSong = songsList.length - 1
 	}
 
 	// Iniciar canción
@@ -317,17 +330,19 @@ const playPreviousSong = () => {
 playPauseBtn.addEventListener('click', playPauseSong)
 
 // Cambiar punto de reproducción
-playerRange.addEventListener('input', () => {
-	musicPlayer.currentTime = playerRange.value
+playerSeekBar.addEventListener('input', () => {
+	musicPlayer.currentTime = playerSeekBar.value
 })
 
 // Cambiar volumen
-playerVolume.addEventListener('input', () => {
-	// Obtener valor y aplicarlo
-	musicPlayer.volume = playerVolume.value / 100
-	volumeText.innerText = `${playerVolume.value}%`
+volumeBar.addEventListener('input', () => {
+	// Obtener valor
+	config.playerVolume = volumeBar.value / 100
+	// Almacenar en configuración
+	musicPlayer.volume = config.playerVolume
+	volumeText.innerText = `${volumeBar.value}%`
 
-	// Almacenar volumen
+	// Guardar localmente
 	localStorage.setItem('volume', musicPlayer.volume)
 })
 
@@ -350,19 +365,19 @@ musicPlayer.addEventListener('pause', changePlayerStatus)
 // Metadata cargada
 musicPlayer.addEventListener('loadedmetadata', () => {
 	currentSongDuration = musicPlayer.duration
-	playerRange.max = currentSongDuration
+	playerSeekBar.max = currentSongDuration
 })
 
 // Canción terminada
 musicPlayer.addEventListener('ended', () => {
 	// Regresar rango a cero
-	playerRange.value = 0
+	playerSeekBar.value = 0
 
 	// Reproducir la siguiente canción
 	playNextSong()
 })
 
-/**
+/*
  * Timers
  */
 
