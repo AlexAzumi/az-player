@@ -201,7 +201,7 @@ const getSongData = () => {
 							nextIsBg = false
 						}
 					}
-					else if (line.includes('//Background and Video events'))
+					else if (line.includes('[Events]'))
 					{
 						nextIsBg = true
 					}
