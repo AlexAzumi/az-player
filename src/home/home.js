@@ -181,7 +181,7 @@ const startSong = () => {
 
 	// Extraer información del DOM
 	const songTitle = songElement.getAttribute('song-title')
-	const songArtist= songElement.getAttribute('song-artist')
+	const songArtist = songElement.getAttribute('song-artist')
 	const songPath = songElement.getAttribute('song-path')
 	const songBackground = songElement.getAttribute('song-background')
 	currentSong = songElement.id
@@ -247,6 +247,9 @@ const playPauseSong = () => {
  * Actualizar información mostrada
  */
 const updateMusicInfo = (title, artist) => {
+	// Establecer título de la ventana
+	changeWindowTitle(`${title} - ${artist}`)
+
 	// Establecer título
 	songTitle.innerText = `${title} - `
 
@@ -382,6 +385,13 @@ const playPreviousSong = () => {
 
 	// Iniciar canción
 	startSong()
+}
+
+/**
+ * Cambiar título de la ventana
+ */
+const changeWindowTitle = (title) => {
+	ipc.send('change-player-title', title)
 }
 
 /*

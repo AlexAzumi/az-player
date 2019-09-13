@@ -82,6 +82,10 @@ app.on('activate', () => {
   }
 })
 
+ipcMain.on('change-player-title', (event, title) => {
+	win.setTitle(`${title} | osu! player by AlexAzumi`)
+})
+
 /**
  * Selecionar carpeta
  */
