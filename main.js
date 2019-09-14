@@ -3,12 +3,14 @@ const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const fs = require('fs')
 const path = require('path')
 const lineByLine = require('n-readlines')
+
 // Reporte de errores
 const sentryConfig = require('./config')
 const sentry = require('@sentry/electron')
 sentry.init({ dsn: sentryConfig.sentryDNS })
+
 // Live reload
-require('electron-reload')(__dirname)
+//require('electron-reload')(__dirname)
 
 // Variables
 const databaseLocation = 'database.json'
