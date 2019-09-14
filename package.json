@@ -9,7 +9,13 @@
     "sass": "sass assets/scss/styles.scss assets/css/styles.css --style compressed",
     "sass:dev": "sass assets/scss/styles.scss assets/css/styles.css --watch",
     "get-fonts": "get-google-fonts -i \"https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap\"",
-    "build:win": "electron-builder --win"
+    "build:win": "electron-builder --win",
+    "publish": "electron-builder --publish always"
+	},
+	"build": {
+		"win": {
+			"publish": [ "github" ]
+		}
 	},
   "keywords": [],
   "author": "AlexAzumi",

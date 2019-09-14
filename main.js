@@ -10,10 +10,14 @@ const sentry = require('@sentry/electron')
 sentry.init({ dsn: sentryConfig.sentryDNS })
 
 // Live reload
-if (process.env.ELECTRON_ENV.toString().trim() == 'development') {
+if (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV.toString().trim() == 'development') {
 	console.warn('Live reload activado')
 	require('electron-reload')(__dirname)
 }
+
+// Actualizaciones automáticas
+const { autoUpdater } = require('electron-updater')
+autoUpdater.checkForUpdatesAndNotify()
 
 // Variables
 const databaseLocation = 'database.json'
