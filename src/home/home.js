@@ -4,6 +4,7 @@ const path = require('path')
 const fs = require('fs')
 const slash = require('slash')
 const { dialog } = require('electron').remote
+
 // Reporte de errores
 const sentryConfig = require('../../config')
 const sentry = require('@sentry/electron')
