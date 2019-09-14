@@ -1,6 +1,6 @@
 {
-	"name": "osu-player",
-	"productName": "osu! player by AlexAzumi",
+  "name": "osu-player",
+  "productName": "osu! player by AlexAzumi",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -24,7 +24,8 @@
     "sass": "^1.23.0-module.beta.1"
   },
   "dependencies": {
-		"@fortawesome/fontawesome-free": "^5.10.2",
+    "@fortawesome/fontawesome-free": "^5.10.2",
+    "@sentry/electron": "^0.17.3",
     "get-google-fonts": "^1.2.0",
     "n-readlines": "^1.0.0",
     "slash": "^3.0.0"

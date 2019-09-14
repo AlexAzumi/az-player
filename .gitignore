@@ -12,3 +12,6 @@
 
 # Versiones pre-compiladas
 /release-builds
+
+# Configuraciones
+/config.js

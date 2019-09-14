@@ -3,6 +3,10 @@ const ipc = require('electron').ipcRenderer
 const path = require('path')
 const slash = require('slash')
 const { dialog } = require('electron').remote
+// Reporte de errores
+const sentryConfig = require('../../config')
+const sentry = require('@sentry/electron')
+sentry.init({ dsn: sentryConfig.sentryDNS })
 
 /*
  * Configuración
