@@ -219,13 +219,7 @@ const startSong = () => {
 			message: 'No existe el audio de la canción',
 			type: 'error'
 		})
-
-		sentry.configureScope((scope) => {
-			scope.setExtra('audio-src', songPath)
-		})
-
-		sentry.captureMessage('El audio de la canción no fue encontrado', 'warning')
-
+		
 		return;
 	}
 
@@ -510,12 +504,6 @@ musicPlayer.addEventListener('error', (err) => {
 		title: 'Error',
 		message: 'Se ha producido un error al reproducir el audio',
 		type: 'error'
-	})
-
-	sentry.configureScope((scope) => {
-		scope.setTag('player-error-code', musicPlayer.error.code)
-		scope.setExtra('player-error-message', musicPlayer.error.message)
-		scope.setExtra('audio-src', musicPlayer.src)
 	})
 })
 
