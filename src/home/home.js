@@ -1,6 +1,7 @@
 // Dependencias
 const ipc = require('electron').ipcRenderer
 const path = require('path')
+const fs = require('fs')
 const slash = require('slash')
 const { dialog } = require('electron').remote
 // Reporte de errores
@@ -206,6 +207,27 @@ const startSong = () => {
 	const songBackground = songElement.getAttribute('song-background')
 	currentSong = songElement.id
 
+	// Verificar ruta
+	if (fs.existsSync(songPath)) {
+		// Establecer ruta
+		musicPlayer.src = songPath	
+	}
+	else {
+		dialog.showMessageBox({
+			title: 'Error',
+			message: 'No existe el audio de la canción',
+			type: 'error'
+		})
+
+		sentry.configureScope((scope) => {
+			scope.setExtra('audio-src', songPath)
+		})
+
+		sentry.captureMessage('El audio de la canción no fue encontrado', 'warning')
+
+		return;
+	}
+
 	// Eliminar clase activo
 	songsListElement.querySelectorAll('.active').forEach((element) => {
 		element.classList.remove('active')
@@ -220,12 +242,14 @@ const startSong = () => {
 
 	songElement.childNodes[2].classList.add('playIcon-show')
 
-	// Establecer ruta
-	musicPlayer.src = songPath
-
 	// Establecer imagen de fondo
 	if (songBackground !== 'NONE') {
-		playerElement.style.backgroundImage = `url("${slash(songBackground)}")`
+		if (fs.existsSync(songBackground)) {
+			playerElement.style.backgroundImage = `url("${slash(songBackground)}")`
+		}
+		else {
+			playerElement.style.backgroundImage = 'url("../../assets/img/placeholder.jpg")'
+		}
 	}
 	else {
 		playerElement.style.backgroundImage = 'url("../../assets/img/placeholder.jpg")'
@@ -485,6 +509,12 @@ musicPlayer.addEventListener('error', (err) => {
 		title: 'Error',
 		message: 'Se ha producido un error al reproducir el audio',
 		type: 'error'
+	})
+
+	sentry.configureScope((scope) => {
+		scope.setTag('player-error-code', musicPlayer.error.code)
+		scope.setExtra('player-error-message', musicPlayer.error.message)
+		scope.setExtra('audio-src', musicPlayer.src)
 	})
 })
 

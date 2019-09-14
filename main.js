@@ -8,7 +8,7 @@ const sentryConfig = require('./config')
 const sentry = require('@sentry/electron')
 sentry.init({ dsn: sentryConfig.sentryDNS })
 // Live reload
-//require('electron-reload')(__dirname)
+require('electron-reload')(__dirname)
 
 // Variables
 const databaseLocation = 'database.json'
