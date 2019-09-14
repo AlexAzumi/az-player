@@ -1,38 +1,40 @@
 {
-  "name": "osu-player",
-  "productName": "osu! player",
-  "version": "0.1.0",
-  "description": "Reproductor de beatmaps de osu!",
-  "main": "main.js",
-  "scripts": {
-    "start": "set ELECTRON_ENV=development && electron .",
-    "sass": "sass assets/scss/styles.scss assets/css/styles.css --style compressed",
-    "sass:dev": "sass assets/scss/styles.scss assets/css/styles.css --watch",
-    "get-fonts": "get-google-fonts -i \"https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap\"",
-    "build:win": "electron-builder --win",
-    "publish": "electron-builder --publish always"
+	"name": "osu-player",
+	"productName": "osu! player",
+	"version": "0.1.0",
+	"description": "Reproductor de beatmaps de osu!",
+	"main": "main.js",
+	"scripts": {
+		"start": "set ELECTRON_ENV=development && electron .",
+		"sass": "sass assets/scss/styles.scss assets/css/styles.css --style compressed",
+		"sass:dev": "sass assets/scss/styles.scss assets/css/styles.css --watch",
+		"get-fonts": "get-google-fonts -i \"https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap\"",
+		"build:win": "electron-builder --win",
+		"publish": "electron-builder --publish always"
 	},
 	"build": {
 		"win": {
-			"publish": [ "github" ]
+			"publish": [
+				"github"
+			]
 		}
 	},
-  "keywords": [],
-  "author": "AlexAzumi",
-  "license": "ISC",
-  "devDependencies": {
-    "bootstrap": "^4.3.1",
-    "electron": "^6.0.7",
-    "electron-builder": "^21.2.0",
-    "electron-reload": "^1.5.0",
-    "sass": "^1.23.0-module.beta.1"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.10.2",
-    "@sentry/electron": "^0.17.3",
-    "electron-updater": "^4.1.2",
-    "get-google-fonts": "^1.2.0",
-    "n-readlines": "^1.0.0",
-    "slash": "^3.0.0"
-  }
+	"keywords": [],
+	"author": "AlexAzumi",
+	"license": "ISC",
+	"devDependencies": {
+		"bootstrap": "^4.3.1",
+		"electron": "^6.0.7",
+		"electron-builder": "^21.2.0",
+		"electron-reload": "^1.5.0",
+		"sass": "^1.23.0-module.beta.1"
+	},
+	"dependencies": {
+		"@fortawesome/fontawesome-free": "^5.10.2",
+		"@sentry/electron": "^0.17.3",
+		"electron-updater": "^4.1.2",
+		"get-google-fonts": "^1.2.0",
+		"n-readlines": "^1.0.0",
+		"slash": "^3.0.0"
+	}
 }

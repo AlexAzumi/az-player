@@ -26,27 +26,39 @@
 					<input id="playerRange" type="range" max="100" min="0" value="0">
 					<!-- Volumen -->
 					<div id="playerVolumeContainer">
-						<input id="playerVolume" type="range" min="0" max="100" value="100" step="1">
+						<input id="playerVolume" type="range" min="0" max="100" value="100" step="1" title="Volumen">
 						<p id="volumeText" class="float-right text-light"></p>
 					</div>
 					<!-- Controles -->
 					<div class="controls d-flex h-100 justify-content-center align-items-center">
 						<!-- Anterior -->
-						<div class="d-inline-block control-btn" id="previousBtn">
+						<div
+							id="previousBtn"
+							class="d-inline-block control-btn"
+							title="Canción anterior">
 							<i class="fas fa-step-backward fa-2x"></i>
 						</div>
 						<!-- Reproducir/pausar -->
-						<div class="d-inline-block mx-4 control-btn" id="playPauseBtn">
+						<div
+							id="playPauseBtn"
+							class="d-inline-block mx-4 control-btn"
+							title="Reproducir/pausar">
 							<i class="fas fa-play fa-2x"></i>
 						</div>
 						<!-- Siguiente -->
-						<div class="d-inline-block control-btn" id="nextBtn">
+						<div
+							id="nextBtn"
+							class="d-inline-block control-btn"
+							title="Siguiente canción">
 							<i class="fas fa-step-forward fa-2x"></i>
 						</div>
 					</div>
 					<!-- Otros controles -->
 					<div id="otherControls" class="controls d-flex align-items-center">
-						<div id="randomBtn" class="d-inline-block control-btn not-hover-color">
+						<div
+							id="randomBtn"
+							class="d-inline-block control-btn not-hover-color"
+							title="Reproducción aleatoria">
 							<i class="fas fa-random fa-2x"></i>
 						</div>
 					</div>
