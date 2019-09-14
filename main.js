@@ -59,7 +59,35 @@ function startApp () {
   win.loadFile('src/home/home.html')
 
   // Abrir herramientas de desarrollador
-  //win.webContents.openDevTools()
+	//win.webContents.openDevTools()
+
+	// Establecer iconos
+	win.setThumbarButtons([
+		{
+			tooltip: 'Anterior',
+			icon: path.join(__dirname, 'assets/img/previous.png'),
+			click () {
+				win.webContents.send('previous-button')
+			}
+		},
+		{
+			tooltip: 'Reproducir',
+			icon: path.join(__dirname, `assets/img/play.png`),
+			click () {
+				win.webContents.send('play-button')
+			}
+		},
+		{
+			tooltip: 'Siguiente',
+			icon: path.join(__dirname, 'assets/img/next.png'),
+			click () {
+				win.webContents.send('next-button')
+			}
+		}
+	])
+
+	// Establecer icono
+	win.setIcon(path.join(__dirname, 'assets/icons/win/icon.ico'))
 
   // Emitido cuando la ventana es cerrada
   win.on('closed', () => {

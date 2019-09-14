@@ -90,6 +90,22 @@ ipc.on('loaded-songs', (event, args) => {
 	}
 })
 
+/* Botones */
+// Anterior
+ipc.on('previous-button', () => {
+	playPreviousSong()
+})
+
+// Reproducir/pausar
+ipc.on('play-button', () => {
+	playPauseSong()
+})
+
+// Siguiente
+ipc.on('next-button', () => {
+	playNextSong()
+})
+
 /**
  * Agregar canciones a la lista
  */
@@ -328,7 +344,7 @@ const playNextSong = () => {
 		if (musicPlayer.readyState != 0) {
 			// ¿Está azar activado?
 			if (config.randomSong) {
-				console.log(endedSongs)
+				// Agregar a lista de canciones reproducidas
 				endedSongs.push(currentSong)
 				if (endedSongs.length < songsList.length) {
 					let nextSong
