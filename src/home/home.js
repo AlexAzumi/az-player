@@ -243,11 +243,11 @@ const startSong = () => {
 			playerElement.style.backgroundImage = `url("${slash(songBackground)}")`
 		}
 		else {
-			playerElement.style.backgroundImage = 'url("../../assets/img/placeholder.jpg")'
+			playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")'
 		}
 	}
 	else {
-		playerElement.style.backgroundImage = 'url("../../assets/img/placeholder.jpg")'
+		playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")'
 	}
 
 	// Renderizar título

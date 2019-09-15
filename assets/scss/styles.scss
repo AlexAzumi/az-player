@@ -6,11 +6,16 @@
 // Colores
 $primary: #E91E63;
 $secondary: #FF9800;
+$info: #1976D2;
+
+$row-pair: $gray-400;
+$row: $gray-200;
 
 // Tema
 $theme-colors: (
 	"primary": $primary,
-	"secondary": $secondary
+	"secondary": $secondary,
+	"info": $info
 );
 
 // Bootstrap
@@ -44,7 +49,7 @@ $theme-colors: (
 		}
 
 		&.active {
-			background-color: $secondary;
+			background: $secondary;
 		}
 	}
 
@@ -54,7 +59,7 @@ $theme-colors: (
 }
 
 #songsListTitle {
-	background-color: $gray-600;
+	background: $gray-600;
 	font-family: 'Nunito Sans', sans-serif;
 	height: 70px;
 	user-select: none;
@@ -62,10 +67,10 @@ $theme-colors: (
 }
 
 .list-pair {
-	background-color: $gray-400;
+	background: $row-pair;
 
 	&-not {
-		background-color: $gray-200;
+		background: $row;
 	}
 }
 
@@ -79,11 +84,11 @@ $theme-colors: (
  * Reproductor
  */
 #player {
-	background: url('../img/placeholder.jpg');
+	background: url('../img/background.jpg');
 }
 
 #songTitleContainer {
-	background-color: rgba($color: $black, $alpha: 0.7);
+	background: rgba($color: $black, $alpha: 0.7);
 	height: 70px;
 	white-space: nowrap;
 	width: 100%;
@@ -109,7 +114,7 @@ $theme-colors: (
 }
 
 #playerPanel {
-	background-color: rgba($color: $black, $alpha: 0.7);
+	background: rgba($color: $black, $alpha: 0.7);
 	bottom: 0;
 	height: 65px;
 	left: 0;
@@ -120,12 +125,12 @@ $theme-colors: (
 
 #playerRange {
 	-webkit-appearance: none;
-	background-color: $gray-500;
-	height: 15px;
+	background: $gray-500;
+	height: 8px;
 	outline: none;
 	overflow: hidden;
 	position: absolute;
-	top: -15px;
+	top: -8px;
 	transition: 200ms;
 	width: 100%;
 
@@ -139,14 +144,19 @@ $theme-colors: (
 
 	&:hover {
 		cursor: pointer;
+		height: 15px;
+		top: -15px;
 	}
 }
 
+#volumeText {
+	line-height: 20px;
+}
+
 #playerVolumeContainer {
-	border-radius: 3px;
-	height: 25px;
+	height: 20px;
 	left: 25px;
-	margin-top: -12.5px;
+	margin-top: -10px;
 	overflow: hidden;
 	position: absolute;
 	top: 50%;
@@ -155,24 +165,20 @@ $theme-colors: (
 	> #playerVolume {
 		-webkit-appearance: none;
 		background: $gray-600;
-		border-radius: 3px;
 		cursor: pointer;
-		height: 25px;
-		opacity: 0.7;
+		height: 20px;
 		outline: none;
 		transition: opacity 200ms;
 		width: 80%;
 
 		&::-webkit-slider-thumb {
 			-webkit-appearance: none;
-			box-shadow: -100vw 0 0 100vw $info;
+			box-shadow: -100vw 0 0 100vw $secondary;
 			cursor: pointer;
 			transition: 150ms;
-			width: 0;
-		}
-
-		&:hover {
-			opacity: 1.0;
+			background: $light;
+			height: 25px;
+			width: 10px;
 		}
 	}
 }
@@ -193,13 +199,9 @@ $theme-colors: (
 }
 
 .control-btn {
-	transition: color 150ms;
+	transition: color 250ms;
 	&:hover {
 		cursor: pointer;
-
-		&:not(.not-hover-color) {
-			color: $info;
-		}
 	}
 }
 

@@ -74,21 +74,21 @@ function startApp () {
 	win.setThumbarButtons([
 		{
 			tooltip: 'Anterior',
-			icon: path.join(__dirname, 'assets/img/previous.png'),
+			icon: path.join(__dirname, 'assets/icons/previous.png'),
 			click () {
 				win.webContents.send('previous-button')
 			}
 		},
 		{
 			tooltip: 'Reproducir',
-			icon: path.join(__dirname, `assets/img/play.png`),
+			icon: path.join(__dirname, `assets/icons/play.png`),
 			click () {
 				win.webContents.send('play-button')
 			}
 		},
 		{
 			tooltip: 'Siguiente',
-			icon: path.join(__dirname, 'assets/img/next.png'),
+			icon: path.join(__dirname, 'assets/icons/next.png'),
 			click () {
 				win.webContents.send('next-button')
 			}
