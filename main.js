@@ -3,6 +3,7 @@ const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const fs = require('fs')
 const path = require('path')
 const lineByLine = require('n-readlines')
+const { autoUpdater } = require('electron-updater')
 
 // Reporte de errores
 const sentryConfig = require('./config')
@@ -14,10 +15,6 @@ if (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV.toString().trim() == 'd
 	console.warn('Live reload activado')
 	require('electron-reload')(__dirname)
 }
-
-// Actualizaciones automáticas
-const { autoUpdater } = require('electron-updater')
-autoUpdater.checkForUpdatesAndNotify()
 
 // Variables
 const databaseLocation = 'database.json'
@@ -309,3 +306,33 @@ const loadDatabase = () => {
 	// Almacenar en variable
 	songsData = JSON.parse(load)
 }
+
+/*
+ * Eventos de actualizaciones automáticas
+ */
+
+// Actualización disponible
+autoUpdater.on('update-available', () => {
+	win.webContents.send('update-available')
+})
+
+// Error al actualizar
+autoUpdater.on('error', (error) => {
+	win.webContents.send('update-error', error)
+})
+
+// Actualización descargada
+autoUpdater.on('update-downloaded', () => {
+	win.webContents.send('update-downloaded')
+})
+
+/*
+ * Acciones recibidas desde render
+ */
+ipcMain.on('update-accepted', () => {
+	autoUpdater.downloadUpdate()
+})
+
+ipcMain.on('quit-and-install', () => {
+	autoUpdater.quitAndInstall()
+})

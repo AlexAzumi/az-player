@@ -513,3 +513,52 @@ musicPlayer.addEventListener('error', (err) => {
 
 // Actualizar barra de reproducción
 setInterval(changePlayTime, config.tickTime)
+
+/*
+ * Actualizaciones automáticas
+ */
+const updateBox = document.getElementById('updateBox')
+
+// Botones de actualización
+const acceptUpdateBtn = document.getElementById('acceptUpdateBtn')
+const declineUpdateBtn = document.getElementById('declineUpdateBtn')
+
+/*
+ * Eventos de botones
+ */
+acceptUpdateBtn.addEventListener('click', () => {
+	ipc.send('update-accepted')
+})
+
+declineUpdateBtn.addEventListener('click', () => {
+	// Ocultar caja
+	updateBox.classList.remove('show')
+})
+
+// Actualización disponible
+ipc.on('update-available', () => {
+	updateBox.classList.add('show')
+})
+
+// Error al actualizar
+ipc.on('update-error', () => {
+	dialog.showMessageBoxSync({
+		title: 'Error de descarga',
+		message: 'Hubo un error al descargar la aplicación',
+		type: 'error'
+	})
+})
+
+// Actualización descargada
+ipc.on('update-downloaded', () => {
+	const response = dialog.showMessageBoxSync({
+		title: 'Actualización descargada',
+		message: '¿Desea aplicar la actualización? (Se cerrará la aplicación)',
+		type: 'question',
+		buttons: ['Aceptar', 'Cancelar']
+	})
+
+	if (response == 0) {
+		ipc.send('quit-and-install')
+	}
+})

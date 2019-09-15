@@ -215,3 +215,32 @@ $theme-colors: (
 		display: block !important;
 	}
 }
+
+/*
+ * Cuadro de actualizaciones
+ */
+.update-box {
+	left: 5px;
+	overflow: hidden;
+	position: absolute;
+	top: 5px;
+	transition: opacity 500ms;
+	z-index: 2;
+
+	&.show {
+		display: inline-flex !important;
+		animation: show-update-box;
+		animation-duration: 500ms;
+	}
+}
+
+@keyframes show-update-box {
+	0% {
+		transform: translateY(-1000px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
