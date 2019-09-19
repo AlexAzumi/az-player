@@ -136,6 +136,8 @@ function startApp () {
 		if (process.env.ELECTRON_ENV === undefined) {
 			win.webContents.send('activate-sentry')
 		}
+		// Verificar actualizaciones
+		autoUpdater.checkForUpdates()
 	})
 }
 
