@@ -116,6 +116,15 @@ function startApp () {
 					click() { app.quit() }
 				}
 			]
+		},
+		{
+			label: 'Ayuda',
+			submenu: [
+				{
+					label: 'Acerca de osu! player',
+					click() { openAbout() }
+				}
+			]
 		}
 	])
 	Menu.setApplicationMenu(menu)
@@ -137,7 +146,9 @@ function startApp () {
 			win.webContents.send('activate-sentry')
 		}
 		// Verificar actualizaciones
-		autoUpdater.checkForUpdates()
+		if (!process.env.ELECTRON_ENV) {
+			autoUpdater.checkForUpdates()
+		}
 	})
 }
 
@@ -155,9 +166,27 @@ app.on('activate', () => {
   }
 })
 
+// Cambiar título
 ipcMain.on('change-player-title', (event, title) => {
 	win.setTitle(`${title} | osu! player by AlexAzumi`)
 })
+
+/**
+ * Abrir ventana de información
+ */
+const openAbout = () => {
+	let about = new BrowserWindow({
+		parent: win,
+		height: 200,
+		width: 300,
+		frame: false,
+		webPreferences: {
+			nodeIntegration: true
+		}
+	})
+
+	about.loadFile('src/about/about.html')
+}
 
 /**
  * Refrescar lista
