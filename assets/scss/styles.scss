@@ -58,6 +58,7 @@ $theme-colors: (
 	}
 }
 
+// Título "Lista de canciones"
 #songsListTitle {
 	background: $gray-600;
 	font-family: 'Nunito Sans', sans-serif;
@@ -66,6 +67,7 @@ $theme-colors: (
 	z-index: 1;
 }
 
+// Lista de canciones
 .list-pair {
 	background: $row-pair;
 
@@ -87,6 +89,7 @@ $theme-colors: (
 	background: url('../img/background.jpg');
 }
 
+// Contenedor del título
 #songTitleContainer {
 	background: rgba($color: $black, $alpha: 0.7);
 	height: 70px;
@@ -94,6 +97,7 @@ $theme-colors: (
 	width: 100%;
 }
 
+// Título de la canción
 #songTitle {
 	color: $light;
 	float: left;
@@ -101,11 +105,13 @@ $theme-colors: (
 	position: relative;
 	user-select: none;
 
+	// Artista
 	span {
 		color: $gray-500;
 	}
 }
 
+// Reproductor
 #player {
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -113,6 +119,7 @@ $theme-colors: (
 	min-height: 40vh;
 }
 
+// Panel de controles
 #playerPanel {
 	background: rgba($color: $black, $alpha: 0.7);
 	bottom: 0;
@@ -123,6 +130,7 @@ $theme-colors: (
 	width: 100%;
 }
 
+// Tiempo de reproducción
 #playerRange {
 	-webkit-appearance: none;
 	background: $gray-500;

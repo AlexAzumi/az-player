@@ -1,19 +1,20 @@
 // Dependencias
-const { app, BrowserWindow, dialog, ipcMain } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron')
 const fs = require('fs')
 const path = require('path')
 const lineByLine = require('n-readlines')
 const { autoUpdater } = require('electron-updater')
 
-// Reporte de errores
 const sentryConfig = require('./config')
 const sentry = require('@sentry/electron')
-sentry.init({ dsn: sentryConfig.sentryDNS })
 
 // Live reload
 if (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV.toString().trim() == 'development') {
 	console.warn('Live reload activado')
 	require('electron-reload')(__dirname)
+}
+else {
+	sentry.init({ dsn: sentryConfig.sentryDNS })
 }
 
 // Variables
@@ -23,7 +24,7 @@ let songsLocation
 
 // Información
 let songList
-let songsData
+let songsData = {}
 
 // Ventana
 let win
@@ -44,10 +45,14 @@ function startApp () {
 		songList = listSongs()
 
 		// Obtener información
-		songsData = getSongData()
+		songsData.gameLocation = gameLocation
+		songsData.songs = getSongData()
 
 		// Escribir a archivo
 		createDatabase()
+
+		// Cargar base de datos
+		loadDatabase()
 	}
 	
 	/* Crear ventana */
@@ -64,8 +69,10 @@ function startApp () {
 	// Cargar el archivo
   win.loadFile('src/home/home.html')
 
-  // Abrir herramientas de desarrollador
-	//win.webContents.openDevTools()
+	// Abrir herramientas de desarrollador
+	if (process.env.ELECTRON_ENV) {
+		win.webContents.openDevTools()
+	}
 
 	// Establecer iconos
 	win.setThumbarButtons([
@@ -92,6 +99,27 @@ function startApp () {
 		}
 	])
 
+	// Establecer menú
+	const menu = Menu.buildFromTemplate([
+		{
+			label: 'Inicio',
+			submenu: [
+				{
+					label: 'Actualizar lista de canciones',
+					click() { refreshDatabase() }
+				},
+				{
+					type: 'separator'
+				},
+				{
+					label: 'Salir',
+					click() { app.quit() }
+				}
+			]
+		}
+	])
+	Menu.setApplicationMenu(menu)
+
 	// Establecer icono
 	win.setIcon(path.join(__dirname, 'assets/icons/win/icon.ico'))
 
@@ -102,7 +130,12 @@ function startApp () {
 
 	// Enviar contenido cuando termine de cargar el contenido
 	win.webContents.on('did-finish-load', () => {
+		// Enviar información
 		sendDataToPlayer()
+		// Establecer Sentry
+		if (process.env.ELECTRON_ENV === undefined) {
+			win.webContents.send('activate-sentry')
+		}
 	})
 }
 
@@ -123,6 +156,42 @@ app.on('activate', () => {
 ipcMain.on('change-player-title', (event, title) => {
 	win.setTitle(`${title} | osu! player by AlexAzumi`)
 })
+
+/**
+ * Refrescar lista
+ */
+const refreshDatabase = () => {
+	// Cargar dirección
+	const database = fs.readFileSync(databaseLocation)
+	gameLocation = JSON.parse(database).gameLocation
+	console.log(gameLocation)
+
+	// Verificar carpeta
+	if (searchSongsFolder()) {
+		// Liste de carpetas
+		songList = listSongs()
+
+		// Obtener información
+		songsData = {}
+		songsData.gameLocation = gameLocation
+		songsData.songs = getSongData()
+
+		// Escribir a archivo
+		createDatabase()
+
+		// Cargar
+		loadDatabase()
+
+		// Enviar datos
+		sendDataToPlayer()
+	}
+	else {
+		dialog.showErrorBox(
+			'Error #AZ002',
+			'La carpeta "Songs" no existe o fue cambiada de dirección'
+		)
+	}
+}
 
 /**
  * Selecionar carpeta
@@ -284,6 +353,10 @@ const getSongData = () => {
  * Crear base de datos
  */
 const createDatabase = () => {
+	// Verificar si existe la base de datos
+	if (fs.existsSync(databaseLocation)) {
+		fs.unlinkSync(databaseLocation)
+	}
 	// Dar formato apropiado
 	let content = JSON.stringify(songsData, null, 2)
 	// Escribir archivo
@@ -294,7 +367,7 @@ const createDatabase = () => {
  * Enviar datos al reproductor
  */
 const sendDataToPlayer = () => {
-	win.webContents.send('loaded-songs', songsData)
+	win.webContents.send('loaded-songs', songsList)
 }
 
 /**
@@ -304,7 +377,7 @@ const loadDatabase = () => {
 	// Cargar archivo
 	const load = fs.readFileSync(databaseLocation)
 	// Almacenar en variable
-	songsData = JSON.parse(load)
+	songsList = JSON.parse(load).songs
 }
 
 /*

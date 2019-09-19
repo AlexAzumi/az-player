@@ -112,6 +112,13 @@ ipc.on('next-button', () => {
  * Agregar canciones a la lista
  */
 const addSong = () => {
+	// Vaciar lista
+	for (let child of songsListElement.children) {
+		if (child.tagName === 'div') {
+			songsListElement.removeChild(child)
+		}
+	}
+
 	// Par
 	let pair = false
 	// ID
@@ -254,6 +261,7 @@ const startSong = () => {
 	updateMusicInfo(songTitle, songArtist)
 
 	// Reproducir
+	musicPlayer.currentTime = 0
 	musicPlayer.play()
 }
 
