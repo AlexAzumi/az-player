@@ -452,7 +452,19 @@ const searchSongs = () => {
 		}
 	})
 	// Mostrar canciones
-	addSong(searchResults)
+	//addSong(searchResults)
+	for (let element of songsListElement.children) {
+		for (let song of searchResults) {
+			//console.log(`${element.getAttribute('song-title')} - ${song.title}`)
+			if (song.title !== element.getAttribute('song-title')) {
+				element.setAttribute('hidden', '')
+			}
+			else {
+				element.removeAttribute('hidden')
+				break
+			}
+		}
+	}
 	// Vaciar resultados
 	searchResults = []
 }

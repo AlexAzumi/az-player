@@ -8,9 +8,6 @@ $primary: #E91E63;
 $secondary: #FF9800;
 $info: #1976D2;
 
-$row-pair: $gray-400;
-$row: $gray-200;
-
 // Tema
 $theme-colors: (
 	"primary": $primary,
@@ -25,7 +22,8 @@ $theme-colors: (
  * Lista de canciones
  */
 #songList {
-	//border-left: 3px solid $gray-500;
+	border: 2px solid $gray-600;
+	border-top: 0;
 	height: calc(100vh - 70px);
 	list-style: none;
 	overflow-y: auto;
@@ -56,6 +54,16 @@ $theme-colors: (
 	> p {
 		font-family: 'Nunito Sans', sans-serif;
 	}
+
+	// Canciones
+	.song {
+		background-color: $gray-200;
+		margin-bottom: 0.2rem;
+	
+		&:last-of-type {
+			margin-bottom: 0;
+		}
+	}
 }
 
 // Título "Lista de canciones"
@@ -78,17 +86,6 @@ $theme-colors: (
 		left: 2rem;
 		padding-right: 0.3rem;
 		border-right: 1px solid $gray-500;
-	}
-}
-
-// Lista de canciones
-.song {
-	&:nth-of-type(even) {
-		background-color: $row-pair;
-	}
-
-	&:nth-of-type(odd) {
-		background-color: $row;
 	}
 }
 
