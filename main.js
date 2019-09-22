@@ -128,6 +128,9 @@ function startApp () {
 					}
 				},
 				{
+					type: 'separator'
+				},
+				{
 					label: 'Acerca de osu! player',
 					click() { openAbout() }
 				}
