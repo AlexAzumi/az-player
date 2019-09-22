@@ -1,4 +1,6 @@
 # osu! player hecho con Electron
+[![CodeFactor](https://www.codefactor.io/repository/github/alexazumi/osu-player-v2/badge)](https://www.codefactor.io/repository/github/alexazumi/osu-player-v2)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/alexazumi/osu-player-v2)
 
 Puedes decargar la última versión haciendo clic [aquí](https://github.com/AlexAzumi/osu-player-v2/releases/latest) (Sólo Windows)
 
