@@ -67,6 +67,16 @@ let musicPlayer = new Audio()
 ipc.on('loaded-songs', (event, args) => {
 	// Asignar a variable
 	songsList = args
+
+	// Ordenar
+	args.sort((a, b) => {
+		if (a.title > b.title) {
+			return 1
+		}
+		else {
+			return -1
+		}
+	})
 	
 	// Mostrar en lista
 	addSong()
