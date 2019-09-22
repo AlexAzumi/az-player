@@ -436,9 +436,11 @@ const searchSongs = () => {
 	// Filtrar
 	let searchResults = songsList.filter((song) => {
 		const title = song.title.toLowerCase()
-		if (title.includes(searchInput.value.toLowerCase())) {
+		const artist = song.artist.toLowerCase()
+		if (title.includes(searchInput.value.toLowerCase()) || artist.includes(searchInput.value.toLowerCase())) {
 			return true
-		} else {
+		}
+		else {
 			return false
 		}
 	})
