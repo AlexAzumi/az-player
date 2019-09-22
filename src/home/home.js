@@ -583,7 +583,7 @@ musicPlayer.addEventListener('ended', () => {
 })
 
 // Error al reproducir
-musicPlayer.addEventListener('error', (err) => {
+musicPlayer.addEventListener('error', () => {
 	dialog.showMessageBox({
 		title: 'Error',
 		message: 'Se ha producido un error al reproducir el audio',

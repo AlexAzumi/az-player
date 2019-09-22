@@ -126,7 +126,11 @@ $theme-colors: (
  * Reproductor
  */
 #player {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
 	background: url('../img/background.jpg');
+	min-height: 40vh;
 }
 
 // Contenedor del título
@@ -149,14 +153,6 @@ $theme-colors: (
 	span {
 		color: $gray-500;
 	}
-}
-
-// Reproductor
-#player {
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-position: center;
-	min-height: 40vh;
 }
 
 // Panel de controles
