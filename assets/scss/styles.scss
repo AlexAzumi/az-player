@@ -8,6 +8,9 @@ $primary: #E91E63;
 $secondary: #FF9800;
 $info: #1976D2;
 
+// Variables
+$scrollbar-width: 15px;
+
 // Tema
 $theme-colors: (
 	"primary": $primary,
@@ -19,11 +22,26 @@ $theme-colors: (
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
 /*
+ * Scrollbar
+ */
+::-webkit-scrollbar {
+	width: $scrollbar-width;
+}
+
+::-webkit-scrollbar-track {
+	border-left: 2px solid $primary;
+}
+
+::-webkit-scrollbar-thumb {
+	background: $primary;
+}
+
+/*
  * Lista de canciones
  */
 #songList {
-	border: 2px solid $gray-600;
-	border-top: 0;
+	border-bottom: 2px solid $gray-600;
+	border-left: 2px solid $gray-600;
 	height: calc(100vh - 70px);
 	list-style: none;
 	overflow-y: auto;
@@ -66,6 +84,15 @@ $theme-colors: (
 	}
 }
 
+// No resultados
+.search-no-results {
+	font-size: 1.5em;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 80px;
+}
+
 // Título "Lista de canciones"
 #songsListTitle {
 	background: $gray-600;
@@ -76,7 +103,7 @@ $theme-colors: (
 	z-index: 1;
 
 	#searchInput {
-		border: 2px solid $secondary;
+		border: 2px solid $gray-800;
 		padding-left: 2.5rem;
 	}
 

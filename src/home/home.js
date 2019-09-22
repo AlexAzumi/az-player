@@ -47,6 +47,8 @@ const volumeText = document.getElementById('volumeText')
 const randomBtn = document.getElementById('randomBtn')
 // Búsqueda
 const searchInput = document.getElementById('searchInput')
+// Sin resultados
+const noResults = document.getElementById('noResults')
 
 // Lista de canciones
 let songsList
@@ -71,13 +73,7 @@ ipc.on('loaded-songs', (event, args) => {
 	songsList = args
 
 	// Ordenar
-	songsList.sort((a, b) => {
-		if (a.title > b.title) {
-			return 1
-		} else {
-			return -1
-		}
-	})
+	songsList = sortList(songsList)
 	
 	// Mostrar en lista
 	addSong(songsList)
@@ -432,6 +428,9 @@ const changeWindowTitle = (title) => {
 	ipc.send('change-player-title', title)
 }
 
+/**
+ * Buscar canciones
+ */
 const searchSongs = () => {
 	// Filtrar
 	let searchResults = songsList.filter((song) => {
@@ -444,29 +443,48 @@ const searchSongs = () => {
 			return false
 		}
 	})
-	searchResults.sort((a, b) => {
-		if (a.title > b.title) {
+
+	searchResults = sortList(searchResults)
+	
+	// Verificar resultados
+	if (searchResults.length > 0) {
+		noResults.classList.add('d-none')
+	} else {
+		noResults.classList.remove('d-none')
+	}
+
+	// Ocultar elementos
+	for (let element of songsListElement.children) {
+		// Verificar resultados
+		if (searchResults.length > 0) {
+			for (let song of searchResults) {
+				if (song.title !== element.getAttribute('song-title')) {
+					element.setAttribute('hidden', '')
+				}
+				else {
+					element.removeAttribute('hidden')
+					break
+				}
+			}
+		} else {
+			element.setAttribute('hidden', '')
+		}
+	}
+	// Vaciar resultados
+	searchResults = []
+}
+
+/**
+ * Ordernar lista
+ */
+const sortList = (list) => {
+	return list.sort((a, b) => {
+		if (a.title.toLowerCase() > b.title.toLowerCase) {
 			return 1
 		} else {
 			return -1
 		}
 	})
-	// Mostrar canciones
-	//addSong(searchResults)
-	for (let element of songsListElement.children) {
-		for (let song of searchResults) {
-			//console.log(`${element.getAttribute('song-title')} - ${song.title}`)
-			if (song.title !== element.getAttribute('song-title')) {
-				element.setAttribute('hidden', '')
-			}
-			else {
-				element.removeAttribute('hidden')
-				break
-			}
-		}
-	}
-	// Vaciar resultados
-	searchResults = []
 }
 
 /*
