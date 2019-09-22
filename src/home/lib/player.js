@@ -146,7 +146,7 @@ class Player {
 	addSongsToContainer(playlist) {
 		// Vaciar lista
 		while (this.songsListElement.firstChild) {
-			this.songsListElement.removeChild(this.songsListElement.firstChild);
+			this.songsListElement.removeChild(this.songsListElement.firstChild)
 		}
 
 		// Asignar ID
@@ -173,7 +173,7 @@ class Player {
 			songElement.setAttribute('song-path', path.join(song.path, song.musicFile))
 			songElement.setAttribute('song-title', song.title)
 			songElement.setAttribute('song-artist', song.artist)
-			songElement.id = songID;
+			songElement.id = songID
 			
 			if (song.background !== 'NONE') {
 				songElement.setAttribute('song-background', path.join(song.path, song.background))
@@ -192,7 +192,7 @@ class Player {
 			this.songsListElement.appendChild(songElement)
 
 			// Aumentar id
-			songID++;
+			songID++
 		}
 	}
 
@@ -220,7 +220,7 @@ class Player {
 				message: 'No existe el audio de la canción',
 				type: 'error'
 			})
-			return;
+			return
 		}
 		// Eliminar otras clases activas
 		this.songsListElement.querySelectorAll('.active').forEach((element) => {
@@ -332,7 +332,7 @@ class Player {
 		// Vaciar lista de canciones ya reproducidas
 		this.endedSongs = []
 		// Iniciar canción
-		this.startSong(event.srcElement.id);
+		this.startSong(event.srcElement.id)
 	}
 
 	/**
@@ -459,7 +459,7 @@ class Player {
 		if (this.musicPlayer.readyState == 0) {
 			// Iniciar canción
 			this.startSong(this.currentSong)
-			return;
+			return
 		}
 		// La canción está pausada
 		if (this.musicPlayer.paused) {
