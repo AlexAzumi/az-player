@@ -45,6 +45,8 @@ const volumeBar = document.getElementById('playerVolume')
 const volumeText = document.getElementById('volumeText')
 // Botón azar
 const randomBtn = document.getElementById('randomBtn')
+// Búsqueda
+const searchInput = document.getElementById('searchInput')
 
 // Lista de canciones
 let songsList
@@ -69,17 +71,16 @@ ipc.on('loaded-songs', (event, args) => {
 	songsList = args
 
 	// Ordenar
-	args.sort((a, b) => {
+	songsList.sort((a, b) => {
 		if (a.title > b.title) {
 			return 1
-		}
-		else {
+		} else {
 			return -1
 		}
 	})
 	
 	// Mostrar en lista
-	addSong()
+	addSong(songsList)
 
 	// Asignar volumen
 	config.playerVolume = localStorage.getItem('volume')
@@ -121,24 +122,20 @@ ipc.on('next-button', () => {
 /**
  * Agregar canciones a la lista
  */
-const addSong = () => {
+const addSong = (list) => {
 	// Vaciar lista
-	for (let child of songsListElement.children) {
-		if (child.tagName === 'div') {
-			songsListElement.removeChild(child)
-		}
+	while (songsListElement.firstChild) {
+		songsListElement.removeChild(songsListElement.firstChild);
 	}
-
-	// Par
-	let pair = false
+	
 	// ID
 	let songID = 0
 
 	// Pasar por cada canción
-	for (let song of songsList) {
+	for (let song of list) {
 		// Crear elemento
 		const songElement = document.createElement('div')
-		songElement.classList.add('pl-1', 'py-1', 'pr-4', 'position-relative')
+		songElement.classList.add('song', 'pl-1', 'py-1', 'pr-4', 'position-relative')
 		songElement.innerText = `${song.title} - `
 		// Crear subelemento de artista
 		const songArtist = document.createElement('span')
@@ -150,17 +147,6 @@ const addSong = () => {
 		// Icono de reproducción
 		const playIcon = document.createElement('i')
 		playIcon.classList.add('fa', 'fa-play', 'position-absolute', 'playIcon')
-
-		// Elemento par
-		if (pair) {
-			songElement.classList.add('list-pair')
-			pair = false
-		}
-		// Elemento impar
-		else {
-			songElement.classList.add('list-pair-not')
-			pair = true
-		}
 
 		// Establecer id
 		songElement.setAttribute('song-path', path.join(song.path, song.musicFile))
@@ -446,6 +432,29 @@ const changeWindowTitle = (title) => {
 	ipc.send('change-player-title', title)
 }
 
+const searchSongs = () => {
+	// Filtrar
+	let searchResults = songsList.filter((song) => {
+		const title = song.title.toLowerCase()
+		if (title.includes(searchInput.value.toLowerCase())) {
+			return true
+		} else {
+			return false
+		}
+	})
+	searchResults.sort((a, b) => {
+		if (a.title > b.title) {
+			return 1
+		} else {
+			return -1
+		}
+	})
+	// Mostrar canciones
+	addSong(searchResults)
+	// Vaciar resultados
+	searchResults = []
+}
+
 /*
  * Eventos de los controles
  */
@@ -490,6 +499,8 @@ randomBtn.addEventListener('click', (event) => {
 
 	localStorage.setItem('random', config.randomSong)
 })
+
+searchInput.addEventListener('input', searchSongs)
 
 /*
  * Eventos del reproductor

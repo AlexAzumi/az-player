@@ -121,6 +121,13 @@ function startApp () {
 			label: 'Ayuda',
 			submenu: [
 				{
+					label: 'Refrescar ventana',
+					accelerator: 'CmdOrCtrl+R',
+					click() {
+						win.reload()
+					}
+				},
+				{
 					label: 'Acerca de osu! player',
 					click() { openAbout() }
 				}

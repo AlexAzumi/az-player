@@ -26,7 +26,7 @@ $theme-colors: (
  */
 #songList {
 	//border-left: 3px solid $gray-500;
-	height: 100vh;
+	height: calc(100vh - 70px);
 	list-style: none;
 	overflow-y: auto;
 	user-select: none;
@@ -63,16 +63,32 @@ $theme-colors: (
 	background: $gray-600;
 	font-family: 'Nunito Sans', sans-serif;
 	height: 70px;
+	position: relative;
 	user-select: none;
 	z-index: 1;
+
+	#searchInput {
+		border: 2px solid $secondary;
+		padding-left: 2.5rem;
+	}
+
+	.search-icon {
+		position: absolute;
+		color: $gray-500;
+		left: 2rem;
+		padding-right: 0.3rem;
+		border-right: 1px solid $gray-500;
+	}
 }
 
 // Lista de canciones
-.list-pair {
-	background: $row-pair;
+.song {
+	&:nth-of-type(even) {
+		background-color: $row-pair;
+	}
 
-	&-not {
-		background: $row;
+	&:nth-of-type(odd) {
+		background-color: $row;
 	}
 }
 
