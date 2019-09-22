@@ -101,7 +101,7 @@ ipc.on('update-available', () => {
 ipc.on('update-error', () => {
 	dialog.showMessageBoxSync({
 		title: 'Error de descarga',
-		message: 'Hubo un error al descargar la aplicación',
+		message: 'Hubo un error al descargar la actualización',
 		type: 'error'
 	})
 })
