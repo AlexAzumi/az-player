@@ -3,12 +3,24 @@ const ipc = require('electron').ipcRenderer
 const path = require('path')
 const fs = require('fs')
 const slash = require('slash')
+const { remote } = require('electron')
 const { dialog } = require('electron').remote
 
 // Reporte de errores
 const sentryConfig = require('../../config')
-const sentry = require('@sentry/electron')
-sentry.init({ dsn: sentryConfig.sentryDNS })
+const { init, showReportDialog } = require('@sentry/electron')
+
+init({
+	dsn: sentryConfig.sentryDSN,
+	beforeSend(event) {
+		// Verificar si es una exepción
+		if (event.exception) {
+			showReportDialog()
+		}
+
+		return event
+	}
+})
 
 /*
  * Configuración
@@ -18,6 +30,17 @@ const config = {
 	playerVolume: 100,
 	randomSong: false
 }
+
+/*
+ * Abrir herramientas
+ */
+remote.globalShortcut.register('CommandOrControl+Shift+I', () => {
+	remote.BrowserWindow.getFocusedWindow().webContents.openDevTools()
+})
+
+window.addEventListener('beforeunload', () => {
+	remote.globalShortcut.unregisterAll()
+})
 
 /*
  * Reproductor

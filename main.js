@@ -14,7 +14,7 @@ if (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV.toString().trim() == 'd
 	require('electron-reload')(__dirname)
 }
 else {
-	sentry.init({ dsn: sentryConfig.sentryDNS })
+	sentry.init({ dsn: sentryConfig.sentryDSN })
 }
 
 // Variables

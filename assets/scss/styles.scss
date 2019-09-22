@@ -22,21 +22,6 @@ $theme-colors: (
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
 /*
- * Scrollbar
- */
-::-webkit-scrollbar {
-	width: $scrollbar-width;
-}
-
-::-webkit-scrollbar-track {
-	border-left: 2px solid $primary;
-}
-
-::-webkit-scrollbar-thumb {
-	background: $primary;
-}
-
-/*
  * Lista de canciones
  */
 #songList {
@@ -46,6 +31,21 @@ $theme-colors: (
 	list-style: none;
 	overflow-y: auto;
 	user-select: none;
+
+	/*
+	 * Scrollbar
+	 */
+	&::-webkit-scrollbar {
+		width: $scrollbar-width;
+	}
+
+	&::-webkit-scrollbar-track {
+		box-shadow: inset 0 0 6px rgba($color: $black, $alpha: 0.2);
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: $gray-700;
+	}
 
 	> div {
 		transition: background-color 250ms;
