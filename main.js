@@ -28,12 +28,16 @@ let songsData = {}
 
 // Ventana
 let win
+// Pantalla de carga
+let loadingScreen
 
 function startApp () {
 	// Si la base de datos existe
 	if (fs.existsSync(databaseLocation)) {
 		// Cargar base de datos
 		loadDatabase()
+		// Abrir ventana
+		createMainWindow()
 	}
 	else {
 		// Repetir hasta seleccionar carpeta correcta
@@ -41,6 +45,64 @@ function startApp () {
 			gameLocation = selectFolder()
 		} while (!searchSongsFolder())
 
+		// Abrir pantalla de carga
+		showLoadingScreen()
+	}
+}
+
+app.on('ready', startApp)
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+
+app.on('activate', () => {
+  if (win === null) {
+    startApp()
+  }
+})
+
+// Cambiar título
+ipcMain.on('change-player-title', (event, title) => {
+	win.setTitle(`${title} | osu! player by AlexAzumi`)
+})
+
+/**
+ * Abrir ventana de información
+ */
+const openAbout = () => {
+	let about = new BrowserWindow({
+		parent: win,
+		height: 200,
+		width: 300,
+		frame: false,
+		webPreferences: {
+			nodeIntegration: true
+		}
+	})
+
+	about.loadFile('src/about/about.html')
+}
+
+/**
+ * Abrir pantalla de carga
+ */
+const showLoadingScreen = () => {
+	loadingScreen = new BrowserWindow({
+		height: 200,
+		width: 300,
+		frame: false,
+		webPreferences: {
+			nodeIntegration: true
+		}
+	})
+
+	loadingScreen.loadFile('src/loading/loading.html')
+
+	// Al cargar obtener canciones
+	loadingScreen.webContents.on('did-finish-load', () => {
 		// Liste de carpetas
 		songList = listSongs()
 
@@ -53,10 +115,20 @@ function startApp () {
 
 		// Cargar base de datos
 		loadDatabase()
-	}
-	
-	/* Crear ventana */
+		
+		// Crear ventana de reproductor
+		createMainWindow()
 
+		// Cerrar pantalla de carga
+		loadingScreen.close()
+
+	})
+}
+
+/**
+ * Leer/crear base de datos
+ */
+const createMainWindow = () => {
 	// Crear ventana
   win = new BrowserWindow({
     width: 1280,
@@ -160,42 +232,6 @@ function startApp () {
 			autoUpdater.checkForUpdates()
 		}
 	})
-}
-
-app.on('ready', startApp)
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-
-app.on('activate', () => {
-  if (win === null) {
-    startApp()
-  }
-})
-
-// Cambiar título
-ipcMain.on('change-player-title', (event, title) => {
-	win.setTitle(`${title} | osu! player by AlexAzumi`)
-})
-
-/**
- * Abrir ventana de información
- */
-const openAbout = () => {
-	let about = new BrowserWindow({
-		parent: win,
-		height: 200,
-		width: 300,
-		frame: false,
-		webPreferences: {
-			nodeIntegration: true
-		}
-	})
-
-	about.loadFile('src/about/about.html')
 }
 
 /**
