@@ -9,7 +9,8 @@ $secondary: #FF9800;
 $info: #1976D2;
 
 // Variables
-$scrollbar-width: 15px;
+$scrollbar-width: 12px;
+$scrollbar-radius: 10px; 
 
 // Tema
 $theme-colors: (
@@ -44,7 +45,8 @@ $theme-colors: (
 	}
 
 	&::-webkit-scrollbar-thumb {
-		background: $gray-700;
+		background: $gray-800;
+		border-radius: $scrollbar-radius;
 	}
 
 	> div {
