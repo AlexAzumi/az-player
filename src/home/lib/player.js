@@ -107,9 +107,9 @@ class Player {
 		 * Aplicar configuraciones
 		 */
 		// Asignar volumen
-		this.musicPlayer.volume = this.config.volume
-		this.volume.bar.value = this.musicPlayer.volume * 100
-		this.volume.text.innerText = `${this.musicPlayer.volume * 100}%`
+		this.musicPlayer.volume = this.config.volume / 100
+		this.volume.bar.value = this.config.volume
+		this.volume.text.innerText = `${this.config.volume}%`
 
 		// Aplicar reproducción aleatoria
 		if (this.config.random) {
@@ -476,9 +476,9 @@ class Player {
 	 */
 	changeVolume() {
 		// Obtener valor
-		this.config.volume = this.volume.bar.value / 100
+		this.config.volume = this.volume.bar.value
 		// Asignar volumen
-		this.musicPlayer.volume = this.config.volume
+		this.musicPlayer.volume = this.config.volume / 100
 		this.volume.text.innerText = `${this.volume.bar.value}%`
 		// Guardar
 		localStorage.setItem('volume', this.config.volume)

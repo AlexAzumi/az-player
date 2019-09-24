@@ -8,9 +8,12 @@ const appInfo = require('../../package.json')
 const closeBtn = document.getElementById('closeBtn')
 // Versión
 const appVersion = document.getElementById('appVersion')
+// Autor
+const appAuthor = document.getElementById('appAuthor')
 
 // Mostrar información
 appVersion.innerText = appInfo.version
+appAuthor.innerText = appInfo.author
 
 /*
  * Listeners

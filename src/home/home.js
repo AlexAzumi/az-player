@@ -4,6 +4,7 @@ const { remote } = require('electron')
 const { dialog } = require('electron').remote
 
 // Reproducción
+let player
 const Player = require('./lib/player')
 // Búsqueda
 const Search = require('./lib/search')
@@ -40,9 +41,9 @@ window.addEventListener('beforeunload', () => {
  */
 ipc.on('loaded-songs', (event, playlist) => {
 	// Instanciar reproductor
-	const player = new Player(playlist)
+	player = new Player(playlist)
 	// Instanciar búsqueda
-	const search = new Search(player)
+	new Search(player)
 })
 
 /*

@@ -66,7 +66,7 @@ app.on('activate', () => {
 
 // Cambiar título
 ipcMain.on('change-player-title', (event, title) => {
-	win.setTitle(`${title} | osu! player by AlexAzumi`)
+	win.setTitle(`${title} | osu! player`)
 })
 
 /**
