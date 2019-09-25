@@ -36,6 +36,7 @@ window.addEventListener('beforeunload', () => {
 	remote.globalShortcut.unregisterAll()
 })
 
+
 /*
  * Recibir canciones del proceso principal
  */
@@ -44,6 +45,23 @@ ipc.on('loaded-songs', (event, playlist) => {
 	player = new Player(playlist)
 	// Instanciar búsqueda
 	new Search(player)
+
+	/*
+	 * Regitrar teclas de media
+	 */
+
+	// Reproducir/pausar canción
+	remote.globalShortcut.register('MediaPlayPause', () => {
+		player.playPauseSong()
+	})
+	// Siguiente canción
+	remote.globalShortcut.register('MediaNextTrack', () => {
+		player.playNextSong()
+	})
+	// Canción anterior
+	remote.globalShortcut.register('MediaPreviousTrack', () => {
+		player.playPreviousSong()
+	})
 })
 
 /*
