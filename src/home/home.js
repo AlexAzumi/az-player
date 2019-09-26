@@ -41,6 +41,10 @@ window.addEventListener('beforeunload', () => {
  * Recibir canciones del proceso principal
  */
 ipc.on('loaded-songs', (event, playlist) => {
+	if (player !== undefined) {
+		remote.getCurrentWindow().reload()
+	}
+	
 	// Instanciar reproductor
 	player = new Player(playlist)
 	// Instanciar búsqueda

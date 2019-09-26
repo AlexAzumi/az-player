@@ -472,6 +472,20 @@ class Player {
 	}
 
 	/**
+	 * Detener canción
+	 */
+	stopSong() {
+		// Pausar
+		this.musicPlayer.pause()
+		// Regresar al inicio
+		this.musicPlayer.currentTime = 0
+		// Regresar al fondo inicial
+		this.playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")'
+		// Establecer mensaje inicial
+		this.songTitle.innerText = '¡Bienvenido/a!'
+	}
+
+	/**
 	 * Cambiar volumen
 	 */
 	changeVolume() {
