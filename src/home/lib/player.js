@@ -215,7 +215,7 @@ class Player {
 			this.musicPlayer.src = songPath
 		} else {
 			// Mostrar error
-			this.dialog.showMessageBox({
+			dialog.showMessageBox({
 				title: 'Error',
 				message: 'No existe el audio de la canción',
 				type: 'error'
