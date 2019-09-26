@@ -320,7 +320,7 @@ class Player {
 			// Verificar si la animación ya está corriendo
 			if (this.titleAnimation !== undefined && this.titleAnimation.playState === 'running') {
 				// Cancelar la animación
-				titleAnimation.cancel()
+				this.titleAnimation.cancel()
 			}
 
 			// Crear animación
