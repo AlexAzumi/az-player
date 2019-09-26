@@ -11,7 +11,7 @@
 		"sass:dev": "sass assets/scss/styles.scss assets/css/styles.css --watch",
 		"get-fonts": "get-google-fonts -i \"https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap\"",
 		"build": "npm run sass && electron-builder --win",
-		"publish": "npm run sass && electron-builder --publish always"
+		"release": "npm run sass && electron-builder --publish always"
 	},
 	"build": {
 		"win": {
