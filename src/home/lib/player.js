@@ -5,6 +5,9 @@ const fs = require('fs')
 const slash = require('slash')
 const path = require('path')
 
+// Sentry
+const Sentry = require('@sentry/electron')
+
 /*
  * Reproductor
  */
@@ -220,6 +223,15 @@ class Player {
 				message: 'No existe el audio de la canción',
 				type: 'error'
 			})
+			// Capturar a sentry
+			Sentry.withScope((scope) => {
+				// Asignar scope
+				scope.setLevel('warning')
+				scope.setExtra('src', songPath)
+				// Enviar
+				Sentry.captureMessage('Audio no encontrado')
+			})
+
 			return
 		}
 		// Eliminar otras clases activas
@@ -363,6 +375,8 @@ class Player {
 		})
 		// Log
 		console.error(error)
+		// Capturar por Sentry
+		Sentry.captureEvent(error)
 	}
 
 	/**
