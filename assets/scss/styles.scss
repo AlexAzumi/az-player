@@ -22,6 +22,10 @@ $theme-colors: (
 // Bootstrap
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
+html {
+	overflow: hidden;
+}
+
 /*
  * Lista de canciones
  */
@@ -118,9 +122,9 @@ $theme-colors: (
 	}
 }
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(sm) {
 	#songList {
-		height: 60vh;
+		height: calc(60vh - 70px);
 	}
 }
 
@@ -206,7 +210,7 @@ $theme-colors: (
 	overflow: hidden;
 	position: absolute;
 	top: 50%;
-	width: 250px;
+	width: 33.33%;
 
 	> #playerVolume {
 		-webkit-appearance: none;
@@ -215,7 +219,7 @@ $theme-colors: (
 		height: 20px;
 		outline: none;
 		transition: opacity 200ms;
-		width: 80%;
+		width: 82%;
 
 		&::-webkit-slider-thumb {
 			-webkit-appearance: none;
