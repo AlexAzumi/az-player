@@ -32,6 +32,8 @@ class Player {
 	endedSongs = []
 	// Canción actual (ID)
 	currentSong = 0
+	// Canción lista
+	readySong = true
 
 	/*
 	 * DOM
@@ -203,6 +205,13 @@ class Player {
 	 * Iniciar canción
 	 */
 	startSong(songID) {
+		// Verificar si está listo
+		if (!this.readySong) {
+			// Registrar en consola
+			console.warn('La canción aún no ha terminado de cargar')
+			return
+		}
+
 		// Obtener elemento
 		const songElement = this.getSongElement(songID)
 		// Extraer información
@@ -214,7 +223,8 @@ class Player {
 
 		// Verificar si existe el audio
 		if (fs.existsSync(songPath)) {
-			// Establecer ruta
+			// Cambiar bandera
+			this.readySong = false
 			this.musicPlayer.src = songPath
 		} else {
 			// Mostrar error
@@ -266,7 +276,15 @@ class Player {
 		
 		// Reproducir
 		this.musicPlayer.currentTime = 0
-		this.musicPlayer.play()
+		const playPromise = this.musicPlayer.play()
+
+		// Esperar promesa
+		if (playPromise !== undefined) {
+			playPromise.then(() => {
+				// Cambiar bandera
+				this.readySong = true
+			})
+		}
 	}
 
 	/**
@@ -300,7 +318,7 @@ class Player {
 			// Obtener diferencia
 			let diff = (this.songTitle.clientWidth - this.songTitleContainer.offsetWidth) + 32 /* TODO: Cambiar 32 a un calculo del padding */
 			// Verificar si la animación ya está corriendo
-			if (this.titleAnimation != undefined && this.titleAnimation.playState === 'running') {
+			if (this.titleAnimation !== undefined && this.titleAnimation.playState === 'running') {
 				// Cancelar la animación
 				titleAnimation.cancel()
 			}
@@ -317,7 +335,7 @@ class Player {
 		}
 		else {
 				// Verificar si la animación ya está corriendo
-			if (this.titleAnimation != undefined && this.titleAnimation.playState === 'running') {
+			if (this.titleAnimation !== undefined && this.titleAnimation.playState === 'running') {
 				// Cancelar la animación
 				this.titleAnimation.cancel()
 			}
