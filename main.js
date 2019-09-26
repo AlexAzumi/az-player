@@ -332,9 +332,19 @@ const getSongData = () => {
 
 	// Pasar canción por canción encontrada
 	for (let song of songList) {
+		let files
+		// Unir carpetas
 		const folderPath = path.join(songsLocation, song);
 		// Leer directorio
-		const files = fs.readdirSync(folderPath)
+		try {
+			files = fs.readdirSync(folderPath)
+		}
+		catch(ex) {
+			// Reportar error
+			sentry.captureException(ex)
+			// Pasar a la siguiente canción
+			break
+		}
 		// Almacenar dirección
 		tempPath.push(folderPath)
 		// Buscar archivos
