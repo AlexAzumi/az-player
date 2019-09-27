@@ -10,11 +10,11 @@ const Player = require('./lib/player')
 const Search = require('./lib/search')
 
 // Reporte de errores
-const sentryConfig = require('../../config')
+const package = require('../../package.json')
 const { init, showReportDialog } = require('@sentry/electron')
 
 init({
-	dsn: sentryConfig.sentryDSN,
+	dsn: package.sentryDSN,
 	beforeSend(event) {
 		// Verificar si es una exepción
 		if (event.exception) {
