@@ -343,13 +343,16 @@ const getSongData = () => {
 			// Reportar error
 			sentry.captureException(ex)
 			// Pasar a la siguiente canción
-			break
+			continue
 		}
 		// Almacenar dirección
 		tempPath.push(folderPath)
 		// Buscar archivos
 		for (let file of files) {
 			if (file.includes('.osu') || file.includes('.OSU')) {
+				// Liner
+				let liner
+				// Log
 				console.log(`Archivo .osu encontrado! ${file}`)
 				// Banderas
 				let foundMusic = false
@@ -363,7 +366,20 @@ const getSongData = () => {
 				let filePath = path.join(songsLocation, song, file)
 
 				// Crear instancia
-				const liner = new lineByLine(filePath)
+				try {
+					liner = new lineByLine(filePath)
+				}
+				catch (ex) {
+					// Reportar a sentry
+					sentry.withScope((scope) => {
+						// Añadir extras
+						scope.setExtra('path', filePath)
+						// Mandar excepción
+						sentry.captureException(ex)
+					})
+					// Leer siguiente beatmap
+					continue
+				}
 
 				// Leer lineas
 				let line
