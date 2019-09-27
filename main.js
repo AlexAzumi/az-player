@@ -9,6 +9,8 @@ const sentryConfig = require('./config')
 const sentry = require('@sentry/electron')
 // Directorio del usuario
 const homeDir = require('os').homedir()
+// Configurar auto-updater
+autoUpdater.autoDownload = false
 
 // Live reload
 if (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV.toString().trim() == 'development') {
