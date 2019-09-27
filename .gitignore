@@ -1,9 +1,6 @@
 # Módulos de node
 /node_modules
 
-# Base de datos de prueba
-/database.json
-
 # Estilos pre-compilados
 /assets/css/
 
