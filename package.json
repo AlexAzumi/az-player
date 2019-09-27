@@ -20,6 +20,7 @@
 			]
 		}
 	},
+	"sentryDSN": "",
 	"keywords": [],
 	"author": "AlexAzumi",
 	"license": "ISC",

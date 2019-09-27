@@ -9,6 +9,3 @@
 
 # Versiones pre-compiladas
 /dist
-
-# Configuraciones
-/config.js

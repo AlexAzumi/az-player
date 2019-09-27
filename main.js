@@ -5,7 +5,7 @@ const path = require('path')
 const lineByLine = require('n-readlines')
 const { autoUpdater } = require('electron-updater')
 // Sentry
-const sentryConfig = require('./config')
+const package = require('./package.json')
 const sentry = require('@sentry/electron')
 // Directorio del usuario
 const homeDir = require('os').homedir()
@@ -18,7 +18,7 @@ if (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV.toString().trim() == 'd
 	require('electron-reload')(__dirname)
 }
 else {
-	sentry.init({ dsn: sentryConfig.sentryDSN })
+	sentry.init({ dsn: package.sentryDSN })
 }
 
 // Variables
