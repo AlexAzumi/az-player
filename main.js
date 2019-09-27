@@ -328,7 +328,10 @@ const searchSongsFolder = () => {
  * Analizar carpeta de 'Songs'
  */
 const listSongs = () => {
-	return fs.readdirSync(songsLocation)
+	// Buscar y filtrar directorios
+	return fs.readdirSync(songsLocation, { withFileTypes: true })
+		.filter(dir => dir.isDirectory())
+		.map(dir => dir.name)
 }
 
 /**
