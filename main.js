@@ -1,12 +1,14 @@
 // Dependencias
-const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain, Menu, shell } = require('electron')
 const fs = require('fs')
 const path = require('path')
 const lineByLine = require('n-readlines')
 const { autoUpdater } = require('electron-updater')
-
+// Sentry
 const sentryConfig = require('./config')
 const sentry = require('@sentry/electron')
+// Directorio del usuario
+const homeDir = require('os').homedir()
 
 // Live reload
 if (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV.toString().trim() == 'development') {
@@ -18,7 +20,8 @@ else {
 }
 
 // Variables
-const databaseLocation = 'database.json'
+const databaseLocation = path.join(homeDir, 'osu-player', 'database.json')
+const databaseFolder = path.join(homeDir, 'osu-player')
 let gameLocation
 let songsLocation
 
@@ -200,6 +203,13 @@ const createMainWindow = () => {
 					click() {
 						win.reload()
 					}
+				},
+				{
+					type: 'separator'
+				},
+				{
+					label: 'Donar al proyecto',
+					click() { shell.openExternal('https://ko-fi.com/alexazumi') }
 				},
 				{
 					type: 'separator'
@@ -464,8 +474,24 @@ const createDatabase = () => {
 	}
 	// Dar formato apropiado
 	let content = JSON.stringify(songsData, null, 2)
+	// Crear carpeta
+	if (!fs.existsSync(databaseFolder)) {
+		fs.mkdirSync(databaseFolder)
+	}
 	// Escribir archivo
-	fs.writeFileSync('database.json', content, 'utf-8')
+	try {
+		fs.writeFileSync(databaseLocation, content, 'utf-8')
+	}
+	catch (ex) {
+		// Capturar
+		sentry.captureException(ex)
+		// Mostrar error
+		dialog.showErrorBox(
+			'Error',
+			'No se pudo crear la base de datos')
+		// Salir de la aplicación
+		app.quit()
+	}
 }
 
 /**
@@ -479,8 +505,22 @@ const sendDataToPlayer = () => {
  * Cargar base de datos
  */
 const loadDatabase = () => {
+	// Base de datos
+	let load
 	// Cargar archivo
-	const load = fs.readFileSync(databaseLocation)
+	try {
+		load = fs.readFileSync(databaseLocation)
+	}
+	catch (ex) {
+		// Capturar excepción
+		sentry.captureException(ex)
+		// Mostrar mensaje
+		dialog.showErrorBox(
+			'Error',
+			'No se pudo leer la base de datos')
+		// Terminar aplicación
+		app.quit()
+	}
 	// Almacenar en variable
 	songsList = JSON.parse(load).songs
 }
