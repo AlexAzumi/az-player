@@ -13,80 +13,75 @@
 </head>
 <body>
 	<!-- Cuadro de actualizaciones -->
-	<div id="updateBox" class="d-none update-box flex-column bg-dark text-light rounded p-3">
-		<p class="mb-2">¡Nueva actualización disponible!</p>
+	<div id="updateBox" class="update-box">
+		<p class="message">¡Nueva actualización disponible!</p>
 		<div class="btn-group">
+			<button id="acceptUpdateBtn" class="btn btn-green">Actualizar</button>
 			<button id="declineUpdateBtn" class="btn btn-light">Más tarde</button>
-			<button id="acceptUpdateBtn" class="btn btn-success">Actualizar</button>
 		</div>
 	</div>
 
 	<!-- Contenedor -->
-	<div class="container-fluid">
-		<!-- App -->
-		<div class="row">
-			<!-- Reproducción -->
-			<div id="player" class="col-md-8 px-0 position-relative">
-				<div id="songTitleContainer" class="p-3">
-					<h2 class="mb-0" id="songTitle">¡Bienvenido/a!</h2>
+	<div>
+		<!-- Cuadro de búsqueda -->
+		<div class="search-bar">
+			<p class="title">osu! player</p>
+			<input id="searchBar" class="search-input" type="search" placeholder="Buscar">
+		</div>
+		<!-- Lista de canciones -->
+		<div class="songs-list" id="songsList"></div>
+		<!-- Controles -->
+		<div class="controls">
+			<!-- Barra de reproducción -->
+			<input class="seek-bar" id="playerRange" type="range" max="100" min="0" value="0">
+			<!-- Canción actual -->
+			<div class="info-container">
+				<img id="songPreview" class="preview" src="../../assets/img/background.jpg" alt="Miniatura">
+				<p id="songTitle" class="title">Título</p>
+				<p id="songArtist" class="artist">Artista</p>
+			</div>
+			<!-- Controles -->
+			<div class="controls-container">
+				<!-- Repetir -->
+				<div
+					id="repeatBtn"
+					class="control-button margin-right"
+					title="Repetir">
+					<i class="fas fa-retweet fa-lg"></i>
 				</div>
-				<!-- Panel -->
-				<div id="playerPanel">
-					<!-- Timespan -->
-					<input id="playerRange" type="range" max="100" min="0" value="0">
-					<!-- Volumen -->
-					<div id="playerVolumeContainer">
-						<input id="playerVolume" type="range" min="0" max="100" value="100" step="1" title="Volumen">
-						<p id="volumeText" class="float-right text-light"></p>
-					</div>
-					<!-- Controles -->
-					<div class="controls d-flex h-100 justify-content-center align-items-center">
-						<!-- Anterior -->
-						<div
-							id="previousBtn"
-							class="d-inline-block control-btn"
-							title="Canción anterior">
-							<i class="fas fa-step-backward fa-2x"></i>
-						</div>
-						<!-- Reproducir/pausar -->
-						<div
-							id="playPauseBtn"
-							class="d-inline-block mx-4 control-btn"
-							title="Reproducir/pausar">
-							<i class="fas fa-play fa-2x"></i>
-						</div>
-						<!-- Siguiente -->
-						<div
-							id="nextBtn"
-							class="d-inline-block control-btn"
-							title="Siguiente canción">
-							<i class="fas fa-step-forward fa-2x"></i>
-						</div>
-					</div>
-					<!-- Otros controles -->
-					<div id="otherControls" class="controls d-flex align-items-center">
-						<div
-							id="randomBtn"
-							class="d-inline-block control-btn not-hover-color"
-							title="Reproducción aleatoria">
-							<i class="fas fa-random fa-2x"></i>
-						</div>
-					</div>
+				<!-- Anterior -->
+					<div
+					id="previousBtn"
+					class="control-button no-margin"
+					title="Canción anterior">
+					<i class="fas fa-step-backward fa-2x"></i>
+				</div>
+				<!-- Reproducir/pausar -->
+				<div
+					id="playPauseBtn"
+					class="control-button"
+					title="Reproducir/pausar">
+					<i class="fas fa-play fa-2x fa-fw"></i>
+				</div>
+				<!-- Siguiente -->
+				<div
+					id="nextBtn"
+					class="control-button no-margin"
+					title="Siguiente canción">
+					<i class="fas fa-step-forward fa-2x"></i>
+				</div>
+				<!-- Reproducción aleatoria -->
+				<div
+					id="randomBtn"
+					class="control-button margin-left"
+					title="Reproducción aleatoria">
+					<i class="fas fa-random fa-lg"></i>
 				</div>
 			</div>
-			<!-- Lista de canciones -->
-			<div class="col-md-4 px-0">
-				<!-- Cuadro de búsqueda -->
-				<div
-					id="songsListTitle"
-					class="h2 text-center mb-0 py-2 text-light d-flex align-items-center justify-content-center px-4">
-						<i class="fas fa-search fa-xs search-icon"></i>
-						<input id="searchInput" class="form-control shadow-sm" type="search" placeholder="Buscar">
-				</div>
-				<!-- Lista de canciones -->
-				<div id="songList"></div>
-				<!-- Mensaje sin resultados -->
-				<p id="noResults" class="d-none search-no-results text-center">Sin resultados</p>
+			<!-- Volumen -->
+			<div class="volume-container" id="playerVolumeContainer">
+				<input class="volume" id="playerVolume" type="range" min="0" max="100" value="100" step="1" title="Volumen">
+				<p class="volume-text" id="volumeText"></p>
 			</div>
 		</div>
 	</div>
