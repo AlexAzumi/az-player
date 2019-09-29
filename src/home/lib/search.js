@@ -18,7 +18,7 @@ class Search {
 		/*
 		 * DOM
 		 */
-		this.searchInput = document.getElementById('searchBar')
+		this.searchInput = document.getElementById('searchInput')
 		this.noResultsMessage = document.getElementById('noResults')
 
 		// Reproductor
@@ -48,9 +48,9 @@ class Search {
 		
 		// Verificar resultados
 		if (searchResults.length > 0) {
-			//this.noResultsMessage.classList.add('d-none')
+			this.noResultsMessage.classList.add('d-none')
 		} else {
-			//this.noResultsMessage.classList.remove('d-none')
+			this.noResultsMessage.classList.remove('d-none')
 		}
 
 		// Ocultar elementos

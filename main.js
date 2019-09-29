@@ -141,8 +141,8 @@ const createMainWindow = () => {
     webPreferences: {
       nodeIntegration: true
 		},
-		minHeight: 520,
-		minWidth: 760
+		minHeight: 700,
+		minWidth: 500
   })
 	
 	// Cargar el archivo

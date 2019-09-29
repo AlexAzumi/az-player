@@ -26,6 +26,8 @@ class Player {
 	 */
 	// Duración de la canción actual
 	currentSongDuration
+	// Animación
+	titleAnimation
 	// Canciones terminadas
 	endedSongs = []
 	// Canción actual (ID)
@@ -36,12 +38,12 @@ class Player {
 	/*
 	 * DOM
 	 */
+	// Reproductor
+	playerElement
 	// Título de la canción
 	songTitle
-	// Artista de la canción
-	songArtist
-	// Preview de la canción
-	songPreview
+	// Contenedor del título
+	songTitleContainer
 	// Lista de canciones
 	songsListElement
 
@@ -88,9 +90,8 @@ class Player {
 		// Reproductor
 		this.playerElement = document.getElementById('player')
 		this.songTitle = document.getElementById('songTitle')
-		this.songArtist = document.getElementById('songArtist')
-		this.songPreview = document.getElementById('songPreview')
-		this.songsListElement = document.getElementById('songsList')
+		this.songTitleContainer = document.getElementById('songTitleContainer')
+		this.songsListElement = document.getElementById('songList')
 		// Botones del reproductor
 		this.playPauseBtn = document.getElementById('playPauseBtn')
 		this.nextBtn = document.getElementById('nextBtn')
@@ -101,7 +102,7 @@ class Player {
 		this.volume.bar = document.getElementById('playerVolume')
 		this.volume.text = document.getElementById('volumeText')
 		// Búsqueda
-		this.searchInput = document.getElementById('searchBar')
+		this.searchInput = document.getElementById('searchInput')
 		this.noResults = document.getElementById('noResults')
 
 		// Agregar en la lista
@@ -160,27 +161,18 @@ class Player {
 		for (let song of playlist) {
 			// Crear elemento
 			const songElement = document.createElement('div')
-			songElement.classList.add('song')
-			// Crear fondo como miniatura
-			const songBackground = document.createElement('img')
-			songBackground.classList.add('image')
-			songBackground.src = path.join(song.path, song.background)
-			// Crear icono
-			const songIcon = document.createElement('li')
-			songIcon.classList.add('icon', 'fa', 'fa-play', 'fa-lg')
-			// Crear título
-			const songTitle = document.createElement('p')
-			songTitle.classList.add('title')
-			songTitle.innerText = song.title
+			songElement.classList.add('song', 'pl-1', 'py-1', 'pr-4', 'position-relative')
+			songElement.innerText = `${song.title} - `
 			// Crear subelemento de artista
-			const songArtist = document.createElement('p')
-			songArtist.classList.add('artist')
-			songArtist.innerText = song.artist
+			const songArtist = document.createElement('span')
+			songArtist.innerHTML = song.artist
+			songArtist.classList.add('text-muted')
 			// Combinar elementos
-			songElement.appendChild(songBackground)
-			songElement.appendChild(songIcon)
-			songElement.appendChild(songTitle)
 			songElement.appendChild(songArtist)
+
+			// Icono de reproducción
+			const playIcon = document.createElement('i')
+			playIcon.classList.add('fa', 'fa-play', 'position-absolute', 'playIcon')
 
 			// Establecer id
 			songElement.setAttribute('song-path', path.join(song.path, song.musicFile))
@@ -197,6 +189,9 @@ class Player {
 
 			// Agregar listener
 			songElement.addEventListener('click', this.playSelectedSong.bind(this))
+
+			// Agregar en elemento
+			songElement.appendChild(playIcon)
 
 			// Agregar en lista
 			this.songsListElement.appendChild(songElement)
@@ -261,19 +256,19 @@ class Player {
 		// Establecer como activo
 		songElement.classList.add('active')
 		// Mostrar icono
-		//songElement.childNodes[2].classList.add('playIcon-show')
+		songElement.childNodes[2].classList.add('playIcon-show')
 		
 		// Establecer fondo del reproductor
 		if (songBackground !== 'NONE') {
 			if (fs.existsSync(songBackground)) {
-				this.songPreview.src = `${slash(songBackground)}`
+				this.playerElement.style.backgroundImage = `url("${slash(songBackground)}")`
 			}
 			else {
-				this.songPreview.src = '../../assets/img/background.jpg'
+				this.playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")'
 			}
 		}
 		else {
-			this.songPreview.src = '../../assets/img/background.jpg'
+			this.playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")'
 		}
 
 		// Actualizar información mostrada
@@ -309,10 +304,42 @@ class Player {
 	updateInfo(title, artist) {
 		// Establecer título de la ventana
 		this.changeWindowTitle(`${title} - ${artist}`)
+
 		// Mostrar título
-		this.songTitle.innerText = title
-		// Mostrar artista
-		this.songArtist.innerText = artist
+		this.songTitle.innerText = `${title} - `
+		// Crear subtítulo con artista y establecer valores
+		const artistElement = document.createElement('span')
+		artistElement.innerHTML = artist
+		// Unir elementos
+		this.songTitle.appendChild(artistElement)
+		
+		// Verificar el tamaño del título
+		if (this.songTitle.clientWidth > this.songTitleContainer.offsetWidth) {
+			// Obtener diferencia
+			let diff = (this.songTitle.clientWidth - this.songTitleContainer.offsetWidth) + 32 /* TODO: Cambiar 32 a un calculo del padding */
+			// Verificar si la animación ya está corriendo
+			if (this.titleAnimation !== undefined && this.titleAnimation.playState === 'running') {
+				// Cancelar la animación
+				this.titleAnimation.cancel()
+			}
+
+			// Crear animación
+			this.titleAnimation = this.songTitle.animate([
+				{ transform: 'translateX(0px)' },
+				{ transform: `translateX(-${diff}px)` },
+				{ transform: 'translateX(0px)' }
+			], {
+				duration: 8000 * (diff / 70), /* TODO: Ajustar valores */
+				iterations: Infinity
+			})
+		}
+		else {
+				// Verificar si la animación ya está corriendo
+			if (this.titleAnimation !== undefined && this.titleAnimation.playState === 'running') {
+				// Cancelar la animación
+				this.titleAnimation.cancel()
+			}
+		}
 	}
 
 	/**
