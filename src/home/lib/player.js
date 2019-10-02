@@ -38,6 +38,8 @@ class Player {
 		this.readySong = true
 		// Objeto de volumen
 		this.volume = []
+		// Tiempo de espera
+		this.previousTime = 3.0
 
 		/*
 		 * Obtener DOM
@@ -410,6 +412,14 @@ class Player {
 	 * Reproducir canción anterior
 	 */
 	playPreviousSong() {
+		// Verificar si retroceder en vez de cambiar
+		if (this.musicPlayer.currentTime > this.previousTime) {
+			// Regresar al inicio
+			this.musicPlayer.currentTime = 0
+			// Terminar método
+			return
+		}
+		
 		// Verificar si hay más canciones
 		if (this.currentSong > 0) {
 			this.currentSong--
