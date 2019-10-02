@@ -48,7 +48,7 @@ class Player {
 		this.playerElement = document.getElementById('player')
 		this.songTitle = document.getElementById('songTitle')
 		this.songTitleContainer = document.getElementById('songTitleContainer')
-		this.songsListElement = document.getElementById('songList')
+		this.songsListElement = document.getElementById('songsList')
 		// Botones del reproductor
 		this.playPauseBtn = document.getElementById('playPauseBtn')
 		this.nextBtn = document.getElementById('nextBtn')
@@ -118,18 +118,18 @@ class Player {
 		for (let song of playlist) {
 			// Crear elemento
 			const songElement = document.createElement('div')
-			songElement.classList.add('song', 'pl-1', 'py-1', 'pr-4', 'position-relative')
+			songElement.classList.add('song')
 			songElement.innerText = `${song.title} - `
 			// Crear subelemento de artista
 			const songArtist = document.createElement('span')
 			songArtist.innerHTML = song.artist
-			songArtist.classList.add('text-muted')
+			songArtist.classList.add('artist')
 			// Combinar elementos
 			songElement.appendChild(songArtist)
 
 			// Icono de reproducción
 			const playIcon = document.createElement('i')
-			playIcon.classList.add('fa', 'fa-play', 'position-absolute', 'playIcon')
+			playIcon.classList.add('fa', 'fa-play', 'position-absolute', 'play-icon')
 
 			// Establecer id
 			songElement.setAttribute('song-path', path.join(song.path, song.musicFile))
@@ -206,14 +206,14 @@ class Player {
 			element.classList.remove('active')
 		})
 		// Ocultar icono
-		this.songsListElement.querySelectorAll('.playIcon').forEach((element) => {
-			element.classList.remove('playIcon-show')
+		this.songsListElement.querySelectorAll('.play-icon').forEach((element) => {
+			element.classList.remove('play-icon-show')
 		})
 
 		// Establecer como activo
 		songElement.classList.add('active')
 		// Mostrar icono
-		songElement.childNodes[2].classList.add('playIcon-show')
+		songElement.childNodes[2].classList.add('play-icon-show')
 		
 		// Establecer fondo del reproductor
 		if (songBackground !== 'NONE') {
@@ -266,6 +266,7 @@ class Player {
 		this.songTitle.innerText = `${title} - `
 		// Crear subtítulo con artista y establecer valores
 		const artistElement = document.createElement('span')
+		artistElement.classList.add('song-artist')
 		artistElement.innerHTML = artist
 		// Unir elementos
 		this.songTitle.appendChild(artistElement)
@@ -425,7 +426,7 @@ class Player {
 			this.currentSong--
 		}
 		else {
-			this.currentSong = this.playlist.length - 1
+			this.currentSong = 0
 		}
 		// Iniciar canción
 		this.startSong(this.currentSong)

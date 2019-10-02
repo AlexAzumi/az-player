@@ -167,8 +167,8 @@ function createMainWindow() {
     webPreferences: {
       nodeIntegration: true
 		},
-		minHeight: 700,
-		minWidth: 500
+		minHeight: 750,
+		minWidth: 600
   })
 	
 	// Cargar el archivo

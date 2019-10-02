@@ -29,7 +29,7 @@ html {
 /*
  * Lista de canciones
  */
-#songList {
+.songs-list {
 	border-bottom: 2px solid $gray-600;
 	border-left: 2px solid $gray-600;
 	height: calc(100vh - 70px);
@@ -50,39 +50,58 @@ html {
 		border: 2px solid white;
 	}
 
-	> div {
-		transition: background-color 250ms;
+	/*
+	 * Canciones
+	 */
+	.song {
+		background-color: $gray-200;
+		margin-bottom: 0.2rem;
 		font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
-		&:hover {
-			cursor: pointer;
-			color: $light;
-			background-color: $primary;
+		padding-bottom: 0.25rem;
+		padding-left: 0.25rem;
+		padding-right: 1.5rem;
+		padding-top: 0.25rem;
+		position: relative;
+		transition: background-color 250ms;
 
-			span {
+		// Hover
+		&:hover {
+			background-color: $primary;
+			color: $light;
+			cursor: pointer;
+
+			.artist {
 				color: $gray-300 !important;
 			}
 		}
 
-		span {
+		// Artista
+		.artist {
+			color: $gray-600;
 			pointer-events: none;
 		}
 
+		// Canción activa
 		&.active {
 			background: $secondary;
 		}
-	}
 
-	> p {
-		font-family: 'Nunito Sans', sans-serif;
-	}
-
-	// Canciones
-	.song {
-		background-color: $gray-200;
-		margin-bottom: 0.2rem;
-	
+		// Última canción
 		&:last-of-type {
 			margin-bottom: 0;
+		}
+
+		// Icono de reproducción
+		.play-icon {
+			display: none !important;
+			margin-top: -8px;
+			right: 8px;
+			top: 50%;
+
+			// Mostrar icono
+			&-show {
+				display: block !important;
+			}
 		}
 	}
 }
@@ -96,20 +115,33 @@ html {
 	top: 80px;
 }
 
-// Título "Lista de canciones"
-#songsListTitle {
+// Caja de búsqueda
+.search-box {
+	align-items: center;
 	background: $gray-600;
+	color: $light;
+	display: flex;
 	font-family: 'Nunito Sans', sans-serif;
+	font-size: 1.5em;
 	height: 70px;
+	justify-items: center;
+	margin-bottom: 0;
+	padding-bottom: 0.5rem;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+	padding-top: 0.5rem;
 	position: relative;
+	text-align: center;
 	user-select: none;
 	z-index: 1;
 
-	#searchInput {
+	// Campo de texto
+	.search-input {
 		border: 2px solid $gray-800;
 		padding-left: 2.5rem;
 	}
 
+	// Icono
 	.search-icon {
 		position: absolute;
 		color: $gray-500;
@@ -119,8 +151,9 @@ html {
 	}
 }
 
+// Pantalla pequeña
 @include media-breakpoint-down(sm) {
-	#songList {
+	.songs-list {
 		height: calc(60vh - 70px);
 	}
 }
@@ -128,138 +161,141 @@ html {
 /*
  * Reproductor
  */
-#player {
+.player {
 	background: url('../img/background.jpg');
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
 	min-height: 40vh;
-}
-
-// Contenedor del título
-#songTitleContainer {
-	background: rgba($color: $black, $alpha: 0.7);
-	height: 70px;
-	white-space: nowrap;
-	width: 100%;
-}
-
-// Título de la canción
-#songTitle {
-	color: $light;
-	float: left;
-	font-family: 'Nunito Sans', sans-serif;
+	padding-left: 0;
+	padding-right: 0;
 	position: relative;
-	user-select: none;
 
-	// Artista
-	span {
-		color: $gray-500;
+	// Contenedor del título
+	.title-container {
+		background: rgba($color: $black, $alpha: 0.7);
+		height: 70px;
+		white-space: nowrap;
+		width: 100%;
+
+		// Título de la canción
+		.song-title {
+			color: $light;
+			float: left;
+			font-family: 'Nunito Sans', sans-serif;
+			position: relative;
+			user-select: none;
+
+			// Artista
+			.song-artist {
+				color: $gray-500;
+			}
+		}
 	}
-}
 
-// Panel de controles
-#playerPanel {
-	background: rgba($color: $black, $alpha: 0.7);
-	bottom: 0;
-	height: 65px;
-	left: 0;
-	position: absolute;
-	user-select: none;
-	width: 100%;
-}
+	// Panel de controles
+	.player-panel {
+		background: rgba($color: $black, $alpha: 0.7);
+		bottom: 0;
+		height: 65px;
+		left: 0;
+		position: absolute;
+		user-select: none;
+		width: 100%;
+	}
 
-// Tiempo de reproducción
-#playerRange {
-	-webkit-appearance: none;
-	background: $gray-500;
-	height: 8px;
-	outline: none;
-	overflow: hidden;
-	position: absolute;
-	top: -8px;
-	transition: 200ms;
-	width: 100%;
-
-	&::-webkit-slider-thumb {
+	// Tiempo de reproducción
+	.seekbar {
 		-webkit-appearance: none;
-		box-shadow: -100vw 0 0 100vw $primary;
-		cursor: pointer;
-		transition: 150ms;
-		width: 0;
-	}
-
-	&:hover {
-		cursor: pointer;
-		height: 15px;
-		top: -15px;
-	}
-}
-
-#volumeText {
-	line-height: 20px;
-}
-
-#playerVolumeContainer {
-	height: 20px;
-	left: 25px;
-	margin-top: -10px;
-	overflow: hidden;
-	position: absolute;
-	top: 50%;
-	width: 33.33%;
-
-	> #playerVolume {
-		-webkit-appearance: none;
-		background: $gray-600;
-		cursor: pointer;
-		height: 20px;
+		background: $gray-500;
+		height: 8px;
 		outline: none;
-		transition: opacity 200ms;
-		width: 82%;
+		overflow: hidden;
+		position: absolute;
+		top: -8px;
+		transition: 200ms;
+		width: 100%;
 
 		&::-webkit-slider-thumb {
 			-webkit-appearance: none;
-			box-shadow: -100vw 0 0 100vw $secondary;
+			box-shadow: -100vw 0 0 100vw $primary;
 			cursor: pointer;
 			transition: 150ms;
-			background: $light;
-			height: 25px;
-			width: 10px;
+			width: 0;
+		}
+
+		&:hover {
+			cursor: pointer;
+			height: 15px;
+			top: -15px;
 		}
 	}
-}
 
-#otherControls {
-	position: absolute;
-	top: 0;
-	right: 25px;
-	height: 100%;
+	// Botones
+	.control-btn {
+		display: inline-block;
+		color: $gray-500;
+		transition: color 250ms;
 
-	.active {
-		color: $secondary;
+		// Hover
+		&:hover {
+			cursor: pointer;
+		}
 	}
-}
 
-.controls {
-	color: $gray-400;
-}
-
-.control-btn {
-	transition: color 250ms;
-	&:hover {
-		cursor: pointer;
+	// Más botones
+	.extra-buttons {
+		position: absolute;
+		top: 0;
+		right: 25px;
+		height: 100%;
+	
+		// Botón activo
+		.active {
+			color: $secondary;
+		}
 	}
-}
 
-.playIcon {
-	display: none !important;
-	margin-top: -8px;
-	right: 8px;
-	top: 50%;
-
-	&-show {
-		display: block !important;
+	// Contenedor del volumen
+	.volume-container {
+		display: flex;
+		height: 20px;
+		left: 25px;
+		margin-top: -10px;
+		overflow: hidden;
+		position: absolute;
+		top: 50%;
+		width: 33.33%;
+	
+		// Barra de volumen
+		.volume {
+			-webkit-appearance: none;
+			flex-grow: 1;
+			background: $gray-600;
+			cursor: pointer;
+			height: 20px;
+			outline: none;
+			transition: opacity 200ms;
+			margin-right: 0.5rem;
+	
+			// Scroll
+			&::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				box-shadow: -100vw 0 0 100vw $secondary;
+				cursor: pointer;
+				transition: 150ms;
+				background: $light;
+				height: 25px;
+				width: 10px;
+			}
+		}
+		
+		// Volumen en texto
+		.volume-text {
+			color: $light;
+			float: right;
+			line-height: 20px;
+		}
 	}
 }
 

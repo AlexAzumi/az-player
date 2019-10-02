@@ -6,6 +6,9 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>osu! player</title>
 
+	<!-- CSP -->
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+
 	<!-- Estilos -->
 	<link rel="stylesheet" href="../../assets/css/styles.css">
 	<link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css">
@@ -26,48 +29,48 @@
 		<!-- App -->
 		<div class="row">
 			<!-- Reproducción -->
-			<div id="player" class="col-md-8 px-0 position-relative">
-				<div id="songTitleContainer" class="p-3">
-					<h2 class="mb-0" id="songTitle">¡Bienvenido/a!</h2>
+			<div id="player" class="player col-md-8">
+				<div id="songTitleContainer" class="title-container p-3">
+					<h2 class="song-title mb-0" id="songTitle">¡Bienvenido/a!</h2>
 				</div>
 				<!-- Panel -->
-				<div id="playerPanel">
+				<div id="playerPanel" class="player-panel">
 					<!-- Timespan -->
-					<input id="playerRange" type="range" max="100" min="0" value="0">
+					<input id="playerRange" class="seekbar" type="range" max="100" min="0" value="0">
 					<!-- Volumen -->
-					<div id="playerVolumeContainer">
-						<input id="playerVolume" type="range" min="0" max="100" value="100" step="1" title="Volumen">
-						<p id="volumeText" class="float-right text-light"></p>
+					<div id="playerVolumeContainer" class="volume-container">
+						<input id="playerVolume" class="volume" type="range" min="0" max="100" value="100" step="1" title="Volumen">
+						<p id="volumeText" class="volume-text"></p>
 					</div>
 					<!-- Controles -->
-					<div class="controls d-flex h-100 justify-content-center align-items-center">
+					<div class="d-flex h-100 justify-content-center align-items-center">
 						<!-- Anterior -->
 						<div
 							id="previousBtn"
-							class="d-inline-block control-btn"
+							class="control-btn"
 							title="Canción anterior">
 							<i class="fas fa-step-backward fa-2x"></i>
 						</div>
 						<!-- Reproducir/pausar -->
 						<div
 							id="playPauseBtn"
-							class="d-inline-block mx-4 control-btn"
+							class="control-btn mx-4"
 							title="Reproducir/pausar">
 							<i class="fas fa-play fa-2x"></i>
 						</div>
 						<!-- Siguiente -->
 						<div
 							id="nextBtn"
-							class="d-inline-block control-btn"
+							class="control-btn"
 							title="Siguiente canción">
 							<i class="fas fa-step-forward fa-2x"></i>
 						</div>
 					</div>
 					<!-- Otros controles -->
-					<div id="otherControls" class="controls d-flex align-items-center">
+					<div id="otherControls" class="extra-buttons d-flex align-items-center">
 						<div
 							id="randomBtn"
-							class="d-inline-block control-btn not-hover-color"
+							class="control-btn not-hover-color"
 							title="Reproducción aleatoria">
 							<i class="fas fa-random fa-2x"></i>
 						</div>
@@ -77,14 +80,12 @@
 			<!-- Lista de canciones -->
 			<div class="col-md-4 px-0">
 				<!-- Cuadro de búsqueda -->
-				<div
-					id="songsListTitle"
-					class="h2 text-center mb-0 py-2 text-light d-flex align-items-center justify-content-center px-4">
-						<i class="fas fa-search fa-xs search-icon"></i>
-						<input id="searchInput" class="form-control shadow-sm" type="search" placeholder="Buscar">
+				<div id="songsListTitle" class="search-box">
+					<i class="fas fa-search fa-xs search-icon"></i>
+					<input id="searchInput" class="search-input form-control shadow-sm" type="search" placeholder="Buscar">
 				</div>
 				<!-- Lista de canciones -->
-				<div id="songList"></div>
+				<div id="songsList" class="songs-list"></div>
 				<!-- Mensaje sin resultados -->
 				<p id="noResults" class="d-none search-no-results text-center">Sin resultados</p>
 			</div>
