@@ -420,14 +420,29 @@ class Player {
 			// Terminar método
 			return
 		}
-		
-		// Verificar si hay más canciones
-		if (this.currentSong > 0) {
-			this.currentSong--
+
+		// Verificar si está reproduciendo aleatoriamente
+		if (this.config.random) {
+			// Existen canciones anteriormente reproducidas
+			if (this.endedSongs.length > 0) {
+				this.currentSong = this.endedSongs.pop()
+			}
+			else {
+				// Regresar al inicio
+				this.currentSong = 0
+			}
 		}
 		else {
-			this.currentSong = 0
+			// Verificar si hay más canciones
+			if (this.currentSong > 0) {
+				this.currentSong--
+			}
+			else {
+				// Regresar al inicio
+				this.currentSong = 0
+			}
 		}
+
 		// Iniciar canción
 		this.startSong(this.currentSong)
 	}
