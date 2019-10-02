@@ -24,6 +24,15 @@
 	"keywords": [],
 	"author": "AlexAzumi",
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/AlexAzumi/osu-player-v2.git"
+	},
+	"bugs": {
+		"url": "https://github.com/AlexAzumi/osu-player-v2/issues",
+		"email": "alejandro-hdez115@outlook.com"
+	},
+	"homepage": "https://github.com/AlexAzumi/osu-player-v2",
 	"devDependencies": {
 		"bootstrap": "^4.3.1",
 		"electron": "^6.0.7",

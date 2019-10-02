@@ -106,7 +106,7 @@ function openAbout() {
 	// Crear ventana
 	let about = new BrowserWindow({
 		parent: playerWindow,
-		height: 200,
+		height: 340,
 		width: 300,
 		frame: false,
 		webPreferences: {
@@ -162,12 +162,12 @@ function showLoadingScreen() {
 function createMainWindow() {
 	// Crear ventana
   playerWindow = new BrowserWindow({
-    width: 1130,
-    height: 560,
+    width: 1280,
+    height: 720,
     webPreferences: {
       nodeIntegration: true
 		},
-		minHeight: 750,
+		minHeight: 720,
 		minWidth: 600
   })
 	
@@ -244,6 +244,7 @@ function createMainWindow() {
 				},
 				{
 					label: 'Acerca de osu! player',
+					accelerator: 'F1',
 					click() { openAbout() }
 				}
 			]

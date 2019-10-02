@@ -28,7 +28,7 @@ class Player {
 			random: localStorage.getItem('random') ? JSON.parse(localStorage.getItem('random')) : false
 		}
 		// Mostrar configuración
-		console.log('Configuración', this.config)
+		console.log('%cConfiguración', 'color: purple; font-size: 1.3em;', this.config)
 
 		// Canciones terminadas
 		this.endedSongs = []

@@ -277,6 +277,7 @@ html {
 			outline: none;
 			transition: opacity 200ms;
 			margin-right: 0.5rem;
+			max-width: 200px;
 	
 			// Scroll
 			&::-webkit-slider-thumb {
@@ -331,10 +332,39 @@ html {
 /*
  * Acerca del programa
  */
-#closeBtn {
-	position: absolute;
-	bottom: 0.5rem;
-	right: 0.5rem;
+.info-box {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+
+	// Información
+	.about-info {
+		align-items: center;
+		background-color: $secondary;
+		border-radius: 10px;
+		color: $dark;
+		display: flex;
+		flex-grow: 1;
+		font-family: 'Nunito Sans', sans-serif;
+		font-weight: 600;
+		justify-content: center;
+		padding: 0.3rem 0.5rem;
+	
+		// Campos de información
+		.subtext {
+			padding-left: 0.25rem;
+			font-weight: normal;
+		}
+	
+		// Repositorio en GitHub
+		&.repository {
+			font-weight: normal;
+	
+			&:hover {
+				cursor: pointer;
+			}
+		}
+	}
 }
 
 /*
