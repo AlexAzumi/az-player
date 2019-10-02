@@ -162,8 +162,8 @@ function showLoadingScreen() {
 function createMainWindow() {
 	// Crear ventana
   playerWindow = new BrowserWindow({
-    width: 1280,
-    height: 720,
+    width: 1130,
+    height: 560,
     webPreferences: {
       nodeIntegration: true
 		},
