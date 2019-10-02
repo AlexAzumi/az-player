@@ -1,18 +1,27 @@
 // Dependencias
 const { app, BrowserWindow, dialog, ipcMain, Menu, shell } = require('electron')
+const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
 const path = require('path')
-const lineByLine = require('n-readlines')
-const { autoUpdater } = require('electron-updater')
-// Sentry
-const package = require('./package.json')
 const sentry = require('@sentry/electron')
+
+// Manager
+const Manager = require('./src/manager')
+
 // Directorio del usuario
 const homeDir = require('os').homedir()
-// Configurar auto-updater
+
+// Información de la applicación
+const package = require('./package.json')
+
+/*
+ * Configuración del actualizador automático
+ */
 autoUpdater.autoDownload = false
 
-// Live reload
+/*
+ * Configuración del entorno
+ */
 if (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV.toString().trim() == 'development') {
 	console.warn('Live reload activado')
 	require('electron-reload')(__dirname)
@@ -21,65 +30,82 @@ else {
 	sentry.init({ dsn: package.sentryDSN })
 }
 
-// Variables
-const databaseLocation = path.join(homeDir, 'osu-player', 'database.json')
-const databaseFolder = path.join(homeDir, 'osu-player')
-let gameLocation
-let songsLocation
+/*
+ * Manager
+ */
+let manager = new Manager(app)
 
-// Información
-let songList
+/*
+ * Base de datos
+ */
+const database = {
+	location: path.join(homeDir, 'osu-player', 'database.json'),
+	folder: path.join(homeDir, 'osu-player')
+}
+
+// Información de base de datos
 let songsData = {}
 
-// Ventana
-let win
+/*
+ * Ventanas
+ */
+
+// Reproductor
+let playerWindow
 // Pantalla de carga
 let loadingScreen
 
-function startApp () {
+/**
+ * Iniciar aplicación
+ */
+function startApp() {
 	// Si la base de datos existe
-	if (fs.existsSync(databaseLocation)) {
+	if (fs.existsSync(database.location)) {
 		// Cargar base de datos
-		loadDatabase()
+		songsData = manager.loadDatabase(database.location)
 		// Abrir ventana
 		createMainWindow()
 	}
 	else {
 		// Repetir hasta seleccionar carpeta correcta
 		do {
-			gameLocation = selectFolder()
-		} while (!searchSongsFolder())
+			songsData.gameLocation = manager.selectGameFolder()
+		} while (!manager.searchSongsFolder(songsData.gameLocation))
 
 		// Abrir pantalla de carga
 		showLoadingScreen()
 	}
 }
 
+// Aplicación lista
 app.on('ready', startApp)
 
+// Todas las ventanas han sido cerradas
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
+// Ventana activa
 app.on('activate', () => {
-  if (win === null) {
+  if (playerWindow === null) {
     startApp()
   }
 })
 
 // Cambiar título
 ipcMain.on('change-player-title', (event, title) => {
-	win.setTitle(`${title} | osu! player`)
+	playerWindow.setTitle(`${title} | osu! player`)
 })
 
 /**
  * Abrir ventana de información
  */
-const openAbout = () => {
+function openAbout() {
+	// Crear ventana
 	let about = new BrowserWindow({
-		parent: win,
+		parent: playerWindow,
 		height: 200,
 		width: 300,
 		frame: false,
@@ -87,14 +113,22 @@ const openAbout = () => {
 			nodeIntegration: true
 		}
 	})
-
+	// Cargar página
 	about.loadFile('src/about/about.html')
+}
+
+/**
+ * Enviar datos al reproductor
+ */
+function sendDataToPlayer() {
+	playerWindow.webContents.send('loaded-songs', songsData.songs)
 }
 
 /**
  * Abrir pantalla de carga
  */
-const showLoadingScreen = () => {
+function showLoadingScreen() {
+	// Crear ventana
 	loadingScreen = new BrowserWindow({
 		height: 200,
 		width: 300,
@@ -103,39 +137,31 @@ const showLoadingScreen = () => {
 			nodeIntegration: true
 		}
 	})
-
+	// Cargar página
 	loadingScreen.loadFile('src/loading/loading.html')
 
 	// Al cargar obtener canciones
 	loadingScreen.webContents.on('did-finish-load', () => {
-		// Liste de carpetas
-		songList = listSongs()
-
+		// Listar carpetas dentro de "Songs"
+		songList = manager.listSongsFolder(path.join(songsData.gameLocation, 'Songs'))
 		// Obtener información
-		songsData.gameLocation = gameLocation
-		songsData.songs = getSongData()
-
+		songsData.songs = manager.getSongsData(path.join(songsData.gameLocation, 'Songs'))
 		// Escribir a archivo
-		createDatabase()
-
-		// Cargar base de datos
-		loadDatabase()
-		
+		manager.createDatabase(database, songsData)
 		// Crear ventana de reproductor
 		createMainWindow()
 
 		// Cerrar pantalla de carga
 		loadingScreen.close()
-
 	})
 }
 
 /**
  * Leer/crear base de datos
  */
-const createMainWindow = () => {
+function createMainWindow() {
 	// Crear ventana
-  win = new BrowserWindow({
+  playerWindow = new BrowserWindow({
     width: 1280,
     height: 720,
     webPreferences: {
@@ -146,34 +172,34 @@ const createMainWindow = () => {
   })
 	
 	// Cargar el archivo
-  win.loadFile('src/home/home.html')
+  playerWindow.loadFile('src/home/home.html')
 
 	// Abrir herramientas de desarrollador
 	if (process.env.ELECTRON_ENV) {
-		win.webContents.openDevTools()
+		playerWindow.webContents.openDevTools()
 	}
 
 	// Establecer iconos
-	win.setThumbarButtons([
+	playerWindow.setThumbarButtons([
 		{
 			tooltip: 'Anterior',
 			icon: path.join(__dirname, 'assets/icons/previous.png'),
 			click () {
-				win.webContents.send('previous-button')
+				playerWindow.webContents.send('previous-button')
 			}
 		},
 		{
 			tooltip: 'Reproducir',
 			icon: path.join(__dirname, `assets/icons/play.png`),
 			click () {
-				win.webContents.send('play-button')
+				playerWindow.webContents.send('play-button')
 			}
 		},
 		{
 			tooltip: 'Siguiente',
 			icon: path.join(__dirname, 'assets/icons/next.png'),
 			click () {
-				win.webContents.send('next-button')
+				playerWindow.webContents.send('next-button')
 			}
 		}
 	])
@@ -203,7 +229,7 @@ const createMainWindow = () => {
 					label: 'Refrescar ventana',
 					accelerator: 'CmdOrCtrl+R',
 					click() {
-						win.reload()
+						playerWindow.reload()
 					}
 				},
 				{
@@ -226,21 +252,17 @@ const createMainWindow = () => {
 	Menu.setApplicationMenu(menu)
 
 	// Establecer icono
-	win.setIcon(path.join(__dirname, 'assets/icons/win/icon.ico'))
+	playerWindow.setIcon(path.join(__dirname, 'assets/icons/win/icon.ico'))
 
   // Emitido cuando la ventana es cerrada
-  win.on('closed', () => {
-    win = null
+  playerWindow.on('closed', () => {
+    playerWindow = null
 	})
 
 	// Enviar contenido cuando termine de cargar el contenido
-	win.webContents.on('did-finish-load', () => {
+	playerWindow.webContents.on('did-finish-load', () => {
 		// Enviar información
 		sendDataToPlayer()
-		// Establecer Sentry
-		if (process.env.ELECTRON_ENV === undefined) {
-			win.webContents.send('activate-sentry')
-		}
 		// Verificar actualizaciones
 		if (!process.env.ELECTRON_ENV) {
 			autoUpdater.checkForUpdates()
@@ -251,283 +273,38 @@ const createMainWindow = () => {
 /**
  * Refrescar lista
  */
-const refreshDatabase = () => {
+function refreshDatabase() {
 	// Cargar dirección
-	const database = fs.readFileSync(databaseLocation)
-	gameLocation = JSON.parse(database).gameLocation
-	console.log(gameLocation)
+	const file = fs.readFileSync(database.location)
+	songsData = JSON.parse(file)
+	console.log(songsData.gameLocation)
 
 	// Verificar carpeta
-	if (searchSongsFolder()) {
+	if (manager.searchSongsFolder(songsData.gameLocation)) {
 		// Liste de carpetas
-		songList = listSongs()
-
+		songList = manager.listSongsFolder(path.join(songsData.gameLocation, 'Songs'))
 		// Obtener información
-		songsData = {}
-		songsData.gameLocation = gameLocation
-		songsData.songs = getSongData()
-
+		songsData.songs = manager.getSongsData(path.join(songsData.gameLocation, 'Songs'))
 		// Escribir a archivo
-		createDatabase()
-
-		// Cargar
-		loadDatabase()
+		manager.createDatabase(database, songsData)
 
 		// Enviar datos
 		sendDataToPlayer()
 	}
 	else {
+		// Reportar a Sentry
+		sentry.withScope((scope) => {
+			// Extras
+			scope.setExtra('Base de datos', songsData.gameLocation)
+			// Reportar
+			sentry.captureMessage('La carpeta "Songs" no existe o fue cambiada de dirección')
+		})
+		// Mostrar error
 		dialog.showErrorBox(
 			'Error #AZ002',
 			'La carpeta "Songs" no existe o fue cambiada de dirección'
 		)
 	}
-}
-
-/**
- * Selecionar carpeta
- */
-const selectFolder = () => {
-	// Solicitar carpeta al usuario
-	const folder = dialog.showOpenDialogSync({
-		title: 'Selecciona la carpeta de osu!',
-		properties: [
-			'openDirectory'
-		]
-	})
-
-	// Carpeta seleccionada
-	if (folder !== undefined) {
-		return folder[0]
-	}
-
-	// No se seleccionó una carpeta
-	return undefined
-}
-
-/**
- * Buscar carpeta llamada 'Songs'
- */
-const searchSongsFolder = () => {
-	// Nunca se seleccionó carpeta
-	if (gameLocation === undefined) {
-		app.exit(-1)
-	}
-	// Se seleccionó la carpeta correcta
-	else if (fs.existsSync(path.join(gameLocation, 'Songs'))) {
-		songsLocation = path.join(gameLocation, 'Songs')
-		return true
-	}
-	// Se seleccionó la carpeta incorrecta
-	else {
-		return false
-	}
-}
-
-/**
- * Analizar carpeta de 'Songs'
- */
-const listSongs = () => {
-	// Buscar y filtrar directorios
-	return fs.readdirSync(songsLocation, { withFileTypes: true })
-		.filter(dir => dir.isDirectory())
-		.map(dir => dir.name)
-}
-
-/**
- * Obtener información del beatmap
- */
-const getSongData = () => {
-	// Información alamacenada temporalmente
-	let tempPath = []
-	let tempMusics = []
-	let tempTitles = []
-	let tempArtists = []
-	let tempBgs = []
-
-	// Pasar canción por canción encontrada
-	for (let song of songList) {
-		let files
-		// Unir carpetas
-		const folderPath = path.join(songsLocation, song);
-		// Leer directorio
-		try {
-			files = fs.readdirSync(folderPath)
-		}
-		catch(ex) {
-			// Reportar error
-			sentry.captureException(ex)
-			// Pasar a la siguiente canción
-			continue
-		}
-		// Almacenar dirección
-		tempPath.push(folderPath)
-		// Buscar archivos
-		for (let file of files) {
-			if (file.includes('.osu') || file.includes('.OSU')) {
-				// Liner
-				let liner
-				// Log
-				console.log(`Archivo .osu encontrado! ${file}`)
-				// Banderas
-				let foundMusic = false
-				let foundTitle = false
-				let foundArtist = false
-				let foundBg = false
-
-				let nextIsBg = false
-
-				// Dirección del archivo
-				let filePath = path.join(songsLocation, song, file)
-
-				// Crear instancia
-				try {
-					liner = new lineByLine(filePath)
-				}
-				catch (ex) {
-					// Reportar a sentry
-					sentry.withScope((scope) => {
-						// Añadir extras
-						scope.setExtra('path', filePath)
-						// Mandar excepción
-						sentry.captureException(ex)
-					})
-					// Leer siguiente beatmap
-					continue
-				}
-
-				// Leer lineas
-				let line
-
-				while (line = liner.next()) {
-					line = line.toString('ascii')
-					// Título encontrado
-					if (line.includes('Title:')) {
-						line = line.replace('Title:', '')
-						tempTitles.push(line)
-						foundTitle = true
-					}
-					// Artista encontrado
-					else if (line.includes('Artist:')) {
-						line = line.replace('Artist:', '')
-						console.log(`Artista: ${line}`)
-						tempArtists.push(line)
-						foundArtist = true
-					}
-					// Nombre de audio encontrado
-					else if (line.includes('AudioFilename:')) {
-						line = line.replace('AudioFilename: ', '')
-						tempMusics.push(line)
-						foundMusic = true
-					}
-					else if (nextIsBg) {
-						// Crear regex
-						const checkRegex = RegExp('\"(.)+.(jpg|png)\"', 'i')
-						// Probar regex
-						if (checkRegex.test(line)) {
-							line = line.split('"')
-							tempBgs.push(line[1])
-
-							foundBg = true
-							nextIsBg = false
-						}
-					}
-					else if (line.includes('[Events]'))
-					{
-						nextIsBg = true
-					}
-
-					// Toda la información necesaria fue encontrada
-					if (foundMusic && foundArtist && foundTitle && foundBg) {
-						break
-					}
-				}
-
-				if (nextIsBg) {
-					tempBgs.push('NONE')
-				}
-
-				// Dejar de buscar archivos en carpeta
-				break
-			}
-		}
-	}
-
-	// Almacenar información temporalmente
-	let tempMusicInfo = []
-
-	for (let i = 0; i < tempMusics.length; i++) {
-		tempMusicInfo.push({
-			path: tempPath[i],
-			musicFile: tempMusics[i].replace(/\r/, ''),
-			title: tempTitles[i].replace(/\r/, ''),
-			artist: tempArtists[i].replace(/\r/, ''),
-			background: tempBgs[i].replace(/\r/, '')
-		})
-	}
-
-	return tempMusicInfo
-}
-
-/**
- * Crear base de datos
- */
-const createDatabase = () => {
-	// Verificar si existe la base de datos
-	if (fs.existsSync(databaseLocation)) {
-		fs.unlinkSync(databaseLocation)
-	}
-	// Dar formato apropiado
-	let content = JSON.stringify(songsData, null, 2)
-	// Crear carpeta
-	if (!fs.existsSync(databaseFolder)) {
-		fs.mkdirSync(databaseFolder)
-	}
-	// Escribir archivo
-	try {
-		fs.writeFileSync(databaseLocation, content, 'utf-8')
-	}
-	catch (ex) {
-		// Capturar
-		sentry.captureException(ex)
-		// Mostrar error
-		dialog.showErrorBox(
-			'Error',
-			'No se pudo crear la base de datos')
-		// Salir de la aplicación
-		app.quit()
-	}
-}
-
-/**
- * Enviar datos al reproductor
- */
-const sendDataToPlayer = () => {
-	win.webContents.send('loaded-songs', songsList)
-}
-
-/**
- * Cargar base de datos
- */
-const loadDatabase = () => {
-	// Base de datos
-	let load
-	// Cargar archivo
-	try {
-		load = fs.readFileSync(databaseLocation)
-	}
-	catch (ex) {
-		// Capturar excepción
-		sentry.captureException(ex)
-		// Mostrar mensaje
-		dialog.showErrorBox(
-			'Error',
-			'No se pudo leer la base de datos')
-		// Terminar aplicación
-		app.quit()
-	}
-	// Almacenar en variable
-	songsList = JSON.parse(load).songs
 }
 
 /*
@@ -536,17 +313,17 @@ const loadDatabase = () => {
 
 // Actualización disponible
 autoUpdater.on('update-available', () => {
-	win.webContents.send('update-available')
+	playerWindow.webContents.send('update-available')
 })
 
 // Error al actualizar
 autoUpdater.on('error', (error) => {
-	win.webContents.send('update-error', error)
+	playerWindow.webContents.send('update-error', error)
 })
 
 // Actualización descargada
 autoUpdater.on('update-downloaded', () => {
-	win.webContents.send('update-downloaded')
+	playerWindow.webContents.send('update-downloaded')
 })
 
 /*

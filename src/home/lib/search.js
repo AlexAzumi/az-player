@@ -2,14 +2,6 @@
  * Búsquedas
  */
 class Search {
-	// Cuadro de búsqueda
-	searchInput
-	// Mensaje 'sin resultados'
-	noResultsMessage
-
-	// Reproductor
-	player
-
 	/**
 	 * Constructor
 	 * @param player Reproductor de música

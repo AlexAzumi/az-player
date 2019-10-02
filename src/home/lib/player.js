@@ -12,60 +12,6 @@ const Sentry = require('@sentry/electron')
  * Reproductor
  */
 class Player {
-	// Reproductor
-	musicPlayer
-
-	// Configuración
-	config
-
-	// Lista de canciones
-	playlist = []
-
-	/*
-	 * Parámetros
-	 */
-	// Duración de la canción actual
-	currentSongDuration
-	// Animación
-	titleAnimation
-	// Canciones terminadas
-	endedSongs = []
-	// Canción actual (ID)
-	currentSong = 0
-	// Canción lista
-	readySong = true
-
-	/*
-	 * DOM
-	 */
-	// Reproductor
-	playerElement
-	// Título de la canción
-	songTitle
-	// Contenedor del título
-	songTitleContainer
-	// Lista de canciones
-	songsListElement
-
-	// Reproducir/pausar
-	playPauseBtn
-	// Siguiente
-	nextBtn
-	// Anterior
-	previousBtn
-	// Reproducción aleatoria
-	randomBtn
-
-	// Barra de reproducción
-	seekBar
-	// Volumen
-	volume = []
-
-	// Búsqueda
-	searchInput
-	// Sin resultados
-	noResults
-
 	/**
 	 * Constructor
 	 * @param playlist Lista de canciones
@@ -83,6 +29,15 @@ class Player {
 		}
 		// Mostrar configuración
 		console.log('Configuración', this.config)
+
+		// Canciones terminadas
+		this.endedSongs = []
+		// Canción actual (ID)
+		this.currentSong = 0
+		// Canción lista
+		this.readySong = true
+		// Objeto de volumen
+		this.volume = []
 
 		/*
 		 * Obtener DOM

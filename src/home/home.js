@@ -1,18 +1,23 @@
 // Dependencias
-const ipc = require('electron').ipcRenderer
 const { remote } = require('electron')
 const { dialog } = require('electron').remote
-
-// Reproducción
-let player
+const { init, showReportDialog } = require('@sentry/electron')
+const ipc = require('electron').ipcRenderer
+// Librerías
 const Player = require('./lib/player')
-// Búsqueda
 const Search = require('./lib/search')
 
-// Reporte de errores
-const package = require('../../package.json')
-const { init, showReportDialog } = require('@sentry/electron')
+// Reproductor
+let player
 
+/*
+ * Información de la aplicación
+ */
+const package = require('../../package.json')
+
+/*
+ * Iniciar Sentry
+ */
 init({
 	dsn: package.sentryDSN,
 	beforeSend(event) {
@@ -35,7 +40,6 @@ remote.globalShortcut.register('CommandOrControl+Shift+I', () => {
 window.addEventListener('beforeunload', () => {
 	remote.globalShortcut.unregisterAll()
 })
-
 
 /*
  * Recibir canciones del proceso principal
