@@ -10,6 +10,10 @@ cache:
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
 
+branches:
+	only:
+	- master	
+
 script:
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
