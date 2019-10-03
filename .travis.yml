@@ -11,8 +11,8 @@ cache:
     - $HOME/.cache/electron-builder
 
 branches:
-	only:
-	- master	
+  only:
+    - master
 
 script:
   - |
