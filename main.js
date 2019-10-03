@@ -54,6 +54,8 @@ let songsData = {}
 let playerWindow
 // Pantalla de carga
 let loadingScreen
+// Sobre el programa
+let aboutWindow
 
 /**
  * Iniciar aplicación
@@ -103,18 +105,28 @@ ipcMain.on('change-player-title', (event, title) => {
  * Abrir ventana de información
  */
 function openAbout() {
+	// Verificar si está abierta
+	if (aboutWindow !== undefined && aboutWindow !== null) {
+		return
+	}
+
 	// Crear ventana
-	let about = new BrowserWindow({
+	aboutWindow = new BrowserWindow({
 		parent: playerWindow,
 		height: 340,
 		width: 300,
 		frame: false,
+		resizable: false,
 		webPreferences: {
 			nodeIntegration: true
 		}
 	})
 	// Cargar página
-	about.loadFile('src/about/about.html')
+	aboutWindow.loadFile('src/about/about.html')
+	// Evento de ventana cerrada
+	aboutWindow.on('closed', () => {
+		aboutWindow = null
+	})
 }
 
 /**
@@ -153,6 +165,10 @@ function showLoadingScreen() {
 
 		// Cerrar pantalla de carga
 		loadingScreen.close()
+	})
+	// Evento de ventana cerrada
+	loadingScreen.on('closed', () => {
+		loadingScreen = null
 	})
 }
 
