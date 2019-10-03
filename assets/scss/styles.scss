@@ -30,8 +30,9 @@ html {
  * Lista de canciones
  */
 .songs-list {
-	border-bottom: 2px solid $gray-600;
-	border-left: 2px solid $gray-600;
+	background-color: whitesmoke;
+	//border-bottom: 3px solid $gray-600;
+	border-left: 3px solid $gray-600;
 	height: calc(100vh - 70px);
 	list-style: none;
 	overflow-y: auto;
@@ -45,20 +46,20 @@ html {
 	}
 
 	&::-webkit-scrollbar-thumb {
-		background: $gray-700;
+		background: $gray-600;
 		border-radius: $scrollbar-radius;
-		border: 2px solid white;
+		border: 2px solid whitesmoke;
 	}
 
 	/*
 	 * Canciones
 	 */
 	.song {
-		background-color: $gray-200;
-		margin-bottom: 0.2rem;
+		background-color: $gray-300;
+		margin-bottom: 3px;
 		font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
 		padding-bottom: 0.25rem;
-		padding-left: 0.25rem;
+		padding-left: 0.5rem;
 		padding-right: 1.5rem;
 		padding-top: 0.25rem;
 		position: relative;
@@ -126,10 +127,8 @@ html {
 	height: 70px;
 	justify-items: center;
 	margin-bottom: 0;
-	padding-bottom: 0.5rem;
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
-	padding-top: 0.5rem;
 	position: relative;
 	text-align: center;
 	user-select: none;
@@ -137,7 +136,8 @@ html {
 
 	// Campo de texto
 	.search-input {
-		border: 2px solid $gray-800;
+		border: 0;
+		border-radius: 2rem;
 		padding-left: 2.5rem;
 	}
 
@@ -349,6 +349,7 @@ html {
 		font-weight: 600;
 		justify-content: center;
 		padding: 0.3rem 0.5rem;
+		transition: background-color 250ms;
 	
 		// Campos de información
 		.subtext {
@@ -362,6 +363,7 @@ html {
 	
 			&:hover {
 				cursor: pointer;
+				background-color: rgba($color: $secondary, $alpha: 0.7);
 			}
 		}
 	}
