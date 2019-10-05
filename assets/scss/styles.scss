@@ -48,10 +48,6 @@ html {
 		&:hover {
 			background-color: $secondary;
 			color: $dark;
-
-			.submenu {
-				display: block !important;
-			}
 		}
 
 		// Elemento de menú
