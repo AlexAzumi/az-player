@@ -6,6 +6,7 @@ const ipc = require('electron').ipcRenderer
 // Librerías
 const Player = require('./lib/player')
 const Search = require('./lib/search')
+const Bar = require('./lib/bar');
 
 // Reproductor
 let player
@@ -51,6 +52,8 @@ ipc.on('loaded-songs', (event, playlist) => {
 	
 	// Instanciar reproductor
 	player = new Player(playlist)
+	// Instanciar barra
+	new Bar(player)
 	// Instanciar búsqueda
 	new Search(player)
 

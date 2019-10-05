@@ -11,6 +11,7 @@ $info: #1976D2;
 // Variables
 $scrollbar-width: 12px;
 $scrollbar-radius: 10px;
+$navbar-height: 25px;
 
 // Tema
 $theme-colors: (
@@ -27,13 +28,73 @@ html {
 }
 
 /*
+ * Barra de menú
+ */
+.bar {
+	background-color: $primary;
+	color: $light;
+	display: flex;
+	height: $navbar-height;
+
+	// Menú
+	.menu {
+		line-height: $navbar-height;
+		margin: 0;
+		padding: 0 0.5rem;
+		position: relative;
+		transition: 150ms;
+		user-select: none;
+
+		&:hover {
+			background-color: $secondary;
+			color: $dark;
+
+			.submenu {
+				display: block !important;
+			}
+		}
+
+		// Elemento de menú
+		.menu-item {
+			list-style: none;
+		}
+
+		.submenu {
+			background-color: $primary; 
+			border: 1px solid $light;
+			box-shadow: 0px 0px 2px rgba($color: $dark, $alpha: 0.3);
+			display: none;
+			left: 0;
+			position: absolute;
+			z-index: 1;
+
+			.submenu-item {
+				color: $light;
+				list-style: none;
+				padding: 0.25rem 0.5rem;
+				white-space: nowrap;
+
+				&:hover {
+					background-color: $secondary;
+					color: $dark;
+				}
+			}
+
+			.separator {
+				border-bottom: 1px solid $light;
+			}
+		}
+	}
+}
+
+/*
  * Lista de canciones
  */
 .songs-list {
 	background-color: whitesmoke;
 	//border-bottom: 3px solid $gray-600;
 	border-left: 3px solid $gray-600;
-	height: calc(100vh - 70px);
+	height: calc(100vh - (70px + 25px));
 	list-style: none;
 	overflow-y: auto;
 	user-select: none;

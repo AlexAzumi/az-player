@@ -19,16 +19,18 @@ class Player {
 	constructor(playlist) {
 		// Instanciar reproductor
 		this.musicPlayer = new Audio()
-		// Obtener canciones
-		this.playlist = this.sortPlaylist(playlist)
 		// Aplicar configuración
 		this.config = {
 			tickTime: 250,
 			volume: localStorage.getItem('volume') ? localStorage.getItem('volume') : 100,
-			random: localStorage.getItem('random') ? JSON.parse(localStorage.getItem('random')) : false
+			random: localStorage.getItem('random') ? JSON.parse(localStorage.getItem('random')) : false,
+			order: localStorage.getItem('order') ? localStorage.getItem('order') : 'title'
 		}
 		// Mostrar configuración
 		console.log('%cConfiguración', 'color: purple; font-size: 1.3em;', this.config)
+
+		// Ordenar canciones
+		this.playlist = this.sortPlaylist(playlist, this.config.order)
 
 		// Canciones terminadas
 		this.endedSongs = []
@@ -89,15 +91,36 @@ class Player {
 	 * Ordenar lista de reproducción
 	 * @param playlist Lista de canciones
 	 */
-	sortPlaylist(playlist) {
-		// Ordenar por título
-		return playlist.sort((a, b) => {
-			if (a.title.toLowerCase() > b.title.toLowerCase()) {
-				return 1
-			} else {
-				return -1
-			}
-		})
+	sortPlaylist(playlist, sort) {
+		// Tipo de orden
+		switch (sort) {
+			// Ordenar por título
+			case 'title':
+				localStorage.setItem('order', 'title')
+
+				return playlist.sort((a, b) => {
+					if (a.title.toLowerCase() > b.title.toLowerCase()) {
+						return 1
+					} else {
+						return -1
+					}
+				})
+			// Ordenar por artista
+			case 'artist':
+				localStorage.setItem('order', 'artist')
+
+				return playlist.sort((a, b) => {
+					if (a.artist.toLowerCase() > b.artist.toLowerCase()) {
+						return 1
+					} else {
+						return -1
+					}
+				})
+			// Orden sin especificar
+			default:
+				console.warn('Orden sin especificar')
+				break;
+		}
 	}
 
 	/**
