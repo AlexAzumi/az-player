@@ -40,6 +40,7 @@ html {
 
 	// Menú
 	.menu {
+		-webkit-app-region: no-drag;
 		line-height: $navbar-height;
 		margin: 0;
 		padding: 0 0.5rem;
@@ -91,6 +92,7 @@ html {
 
 	// Botones de control
 	.buttons-menu {
+		-webkit-app-region: no-drag;
 		display: flex;
 		height: $navbar-height;
 		position: absolute;
