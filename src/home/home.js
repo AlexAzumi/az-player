@@ -6,6 +6,11 @@ const ipc = require('electron').ipcRenderer
 // Librerías
 const Player = require('./lib/player')
 const Search = require('./lib/search')
+const Bar = require('./lib/bar')
+const Window = require('./lib/window')
+
+// Control de ventana
+new Window()
 
 // Reproductor
 let player
@@ -51,6 +56,8 @@ ipc.on('loaded-songs', (event, playlist) => {
 	
 	// Instanciar reproductor
 	player = new Player(playlist)
+	// Instanciar barra
+	new Bar(player)
 	// Instanciar búsqueda
 	new Search(player)
 
@@ -138,9 +145,9 @@ ipc.on('update-downloaded', () => {
 	// Preguntar
 	const response = dialog.showMessageBoxSync({
 		title: 'Actualización descargada',
-		message: '¿Desea aplicar la actualización? (Se cerrará la aplicación)',
+		message: 'Una nueva versión ha sido decargada. ¿Desea reiniciar la aplicación para aplicar las actualizaciones?',
 		type: 'question',
-		buttons: ['Aceptar', 'Cancelar']
+		buttons: ['Aceptar', 'Más tarde']
 	})
 	// Actualización aceptada
 	if (response == 0) {

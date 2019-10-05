@@ -1,7 +1,7 @@
 {
 	"name": "osu-player",
 	"productName": "osu! player",
-	"version": "0.4.1",
+	"version": "0.5.0",
 	"description": "Reproductor de beatmaps de osu!",
 	"main": "main.js",
 	"scripts": {
@@ -45,6 +45,7 @@
 		"@sentry/electron": "^0.17.4",
 		"electron-updater": "^4.1.2",
 		"get-google-fonts": "^1.2.0",
+		"mousetrap": "^1.6.3",
 		"n-readlines": "^1.0.0",
 		"slash": "^3.0.0"
 	}

@@ -1,5 +1,5 @@
 // Dependencias
-const { app, BrowserWindow, dialog, ipcMain, Menu, shell } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron')
 const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
 const path = require('path')
@@ -101,6 +101,12 @@ ipcMain.on('change-player-title', (event, title) => {
 	playerWindow.setTitle(`${title} | osu! player`)
 })
 
+// Refrescar base de datos
+ipcMain.on('refresh-database', refreshDatabase)
+
+// Abrir about
+ipcMain.on('open-about', openAbout)
+
 /**
  * Abrir ventana de información
  */
@@ -184,7 +190,8 @@ function createMainWindow() {
       nodeIntegration: true
 		},
 		minHeight: 720,
-		minWidth: 600
+		minWidth: 600,
+		frame: false
   })
 	
 	// Cargar el archivo
@@ -220,53 +227,7 @@ function createMainWindow() {
 		}
 	])
 
-	// Establecer menú
-	const menu = Menu.buildFromTemplate([
-		{
-			label: 'Inicio',
-			submenu: [
-				{
-					label: 'Actualizar lista de canciones',
-					click() { refreshDatabase() }
-				},
-				{
-					type: 'separator'
-				},
-				{
-					label: 'Salir',
-					click() { app.quit() }
-				}
-			]
-		},
-		{
-			label: 'Ayuda',
-			submenu: [
-				{
-					label: 'Refrescar ventana',
-					accelerator: 'CmdOrCtrl+R',
-					click() {
-						playerWindow.reload()
-					}
-				},
-				{
-					type: 'separator'
-				},
-				{
-					label: 'Donar al proyecto',
-					click() { shell.openExternal('https://ko-fi.com/alexazumi') }
-				},
-				{
-					type: 'separator'
-				},
-				{
-					label: 'Acerca de osu! player',
-					accelerator: 'F1',
-					click() { openAbout() }
-				}
-			]
-		}
-	])
-	Menu.setApplicationMenu(menu)
+	Menu.setApplicationMenu(null)
 
 	// Establecer icono
 	playerWindow.setIcon(path.join(__dirname, 'assets/icons/win/icon.ico'))

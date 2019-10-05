@@ -24,6 +24,59 @@
 		</div>
 	</div>
 
+	<!-- Barra -->
+	<nav class="bar">
+		<!-- Menú de inicio -->
+		<div class="menu">
+			<li class="menu-item" submenu="home">Inicio</li>
+			<div class="submenu" id="submenu-home">
+				<li class="submenu-item separator" id="updateDatabaseButton">
+					Actualizar lista de canciones <span class="shortcut">Ctrl+U</span>
+				</li>
+				<li class="submenu-item" id="exitAppButton">Salir</li>
+			</div>
+		</div>
+
+		<!-- Menú de ordenamiento -->
+		<div class="menu">
+			<li class="menu-item" submenu="order">Ordenar canciones</li>
+			<div class="submenu" id="submenu-order">
+				<li class="submenu-item" id="sortArtistButton">
+					Por artista <span class="shortcut">Ctrl+1</span>
+				</li>
+				<li class="submenu-item" id="sortTitleButton">
+					Por título
+					<span class="shortcut">Ctrl+2</span>
+				</li>
+			</div>
+		</div>
+
+		<!-- Menú de ordenamiento -->
+		<div class="menu">
+			<li class="menu-item" submenu="help">Ayuda</li>
+			<div class="submenu" id="submenu-help">
+				<li class="submenu-item separator" id="refreshButton">Refrescar ventana</li>
+				<li class="submenu-item separator" id="donateButton">Donar al proyecto</li>
+				<li class="submenu-item" id="aboutButton">
+					Acerca de osu player! <span class="shortcut">F1</span>
+				</li>
+			</div>
+		</div>
+
+		<!-- Botones -->
+		<div class="buttons-menu">
+			<div class="button" id="minimizeButton">
+				<i class="fas fa-window-minimize fa-fw"></i>
+			</div>
+			<div class="button" id="maximizeButton">
+				<i class="fas fa-window-maximize fa-fw"></i>
+			</div>
+			<div class="button" id="closeButton">
+				<i class="fas fa-window-close fa-fw"></i>
+			</div>
+		</div>
+	</nav>
+
 	<!-- Contenedor -->
 	<div class="container-fluid">
 		<!-- App -->
