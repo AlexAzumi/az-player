@@ -6,7 +6,11 @@ const ipc = require('electron').ipcRenderer
 // Librerías
 const Player = require('./lib/player')
 const Search = require('./lib/search')
-const Bar = require('./lib/bar');
+const Bar = require('./lib/bar')
+const Window = require('./lib/window')
+
+// Control de ventana
+new Window()
 
 // Reproductor
 let player

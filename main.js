@@ -1,5 +1,5 @@
 // Dependencias
-const { app, BrowserWindow, dialog, ipcMain, Menu, shell } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron')
 const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
 const path = require('path')
@@ -190,7 +190,8 @@ function createMainWindow() {
       nodeIntegration: true
 		},
 		minHeight: 720,
-		minWidth: 600
+		minWidth: 600,
+		frame: false
   })
 	
 	// Cargar el archivo
