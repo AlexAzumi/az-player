@@ -43,7 +43,6 @@ html {
 		margin: 0;
 		padding: 0 0.5rem;
 		position: relative;
-		transition: 150ms;
 		user-select: none;
 
 		&:hover {
@@ -98,7 +97,6 @@ html {
 
 		.button {
 			padding: 0.5rem;
-			transition: 250ms;
 
 			&:hover {
 				background-color: $secondary;
