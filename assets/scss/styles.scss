@@ -374,4 +374,9 @@ html {
  */
 .loading-screen {
 	height: 100vh;
+
+	// Texto de carga
+	.loading-text {
+		font-family: 'Nunito Sans', sans-serif;
+	}
 }
