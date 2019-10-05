@@ -138,9 +138,9 @@ ipc.on('update-downloaded', () => {
 	// Preguntar
 	const response = dialog.showMessageBoxSync({
 		title: 'Actualización descargada',
-		message: '¿Desea aplicar la actualización? (Se cerrará la aplicación)',
+		message: 'Una nueva versión ha sido decargada. ¿Desea reiniciar la aplicación para aplicar las actualizaciones?',
 		type: 'question',
-		buttons: ['Aceptar', 'Cancelar']
+		buttons: ['Aceptar', 'Más tarde']
 	})
 	// Actualización aceptada
 	if (response == 0) {
