@@ -4,6 +4,7 @@ const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
 const path = require('path')
 const sentry = require('@sentry/electron')
+const isDev = require('electron-is-dev')
 
 // Manager
 const Manager = require('./src/manager')
@@ -22,7 +23,7 @@ autoUpdater.autoDownload = false
 /*
  * Configuración del entorno
  */
-if (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV.toString().trim() == 'development') {
+if (isDev) {
 	console.warn('Live reload activado')
 	require('electron-reload')(__dirname)
 }
@@ -198,7 +199,7 @@ function createMainWindow() {
   playerWindow.loadFile('src/home/home.html')
 
 	// Abrir herramientas de desarrollador
-	if (process.env.ELECTRON_ENV) {
+	if (isDev) {
 		playerWindow.webContents.openDevTools()
 	}
 
@@ -242,7 +243,7 @@ function createMainWindow() {
 		// Enviar información
 		sendDataToPlayer()
 		// Verificar actualizaciones
-		if (!process.env.ELECTRON_ENV) {
+		if (!isDev) {
 			autoUpdater.checkForUpdates()
 		}
 	})
