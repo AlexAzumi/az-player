@@ -36,7 +36,7 @@ $(document).ready(() => {
 	$('#acceptUpdateBtn').text(localization.getString('update.updateBtn'))
 	// Barra
 	$('#homeMenu').text(localization.getString('menu.home.title'))
-	$('#updateDatabaseButton').text(localization.getString('menu.home.updateDatabase'))
+	$('#updateDatabaseText').text(localization.getString('menu.home.updateDatabase'))
 	$('#exitAppButton').text(localization.getString('menu.home.exit'))
 
 	$('#sortMenu').text(localization.getString('menu.sort.title'))
