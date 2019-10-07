@@ -4,6 +4,7 @@ const fs = require('fs')
 const os = require('os')
 const path = require('path')
 
+const DEFAULT_LOCALE = 'en'
 const LOCALE_CONFIG_DIR = path.join(os.homedir(), 'osu-player', 'localization.json')
 const LOCALE_DIR = path.join(__dirname, '../localization')
 
@@ -93,12 +94,10 @@ class LocalizationManager {
 						this.app.exit(-1)
 					}
 				} else {
-					console.error(ex)
-					this.app.exit(-1)
+					return DEFAULT_LOCALE
 				}
 			} else {
-				console.error(ex)
-				this.app.exit(-1)
+				return DEFAULT_LOCALE
 			}
 		}
 	}
