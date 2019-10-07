@@ -36,7 +36,7 @@ class Search {
 			}
 		})
 
-		searchResults = this.player.sortPlaylist(searchResults)
+		searchResults = this.player.sortPlaylist(searchResults, this.player.config.order)
 		
 		// Verificar resultados
 		if (searchResults.length > 0) {

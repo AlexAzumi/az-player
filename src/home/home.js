@@ -10,7 +10,7 @@ const Bar = require('./lib/bar')
 const Window = require('./lib/window')
 
 // Control de ventana
-new Window()
+const windowControl = new Window()
 
 // Reproductor
 let player
@@ -50,14 +50,18 @@ window.addEventListener('beforeunload', () => {
  * Recibir canciones del proceso principal
  */
 ipc.on('loaded-songs', (event, playlist) => {
-	if (player !== undefined) {
-		remote.getCurrentWindow().reload()
+	if (player !== undefined || player === null) {
+		if (windowControl.isLoadingScreenActive) {
+			windowControl.setLoadingScreen(false)
+		}
+		player.stopSong()
+		player = null
 	}
 	
 	// Instanciar reproductor
 	player = new Player(playlist)
 	// Instanciar barra
-	new Bar(player)
+	new Bar(player, windowControl)
 	// Instanciar búsqueda
 	new Search(player)
 

@@ -98,6 +98,7 @@ html {
 		position: absolute;
 		right: 0;
 		top: 0;
+		z-index: 11;
 
 		.button {
 			padding: 0.5rem;
@@ -107,6 +108,32 @@ html {
 				color: $dark;
 			}
 		}
+	}
+}
+
+/*
+ * Procesando beatmaps
+ */
+.procesing-beatmaps {
+	align-items: center;
+	background-color: rgba($color: $dark, $alpha: 0.8);
+	bottom: 0;
+	display: none;
+	flex-direction: row;
+	justify-content: center;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 10;
+
+	&.show {
+		display: flex;
+	}
+
+	.loading {
+		color: $light;
+		text-align: center;
 	}
 }
 

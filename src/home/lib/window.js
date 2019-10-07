@@ -13,6 +13,9 @@ class Window {
 		this.minimizeButton = document.getElementById('minimizeButton')
 		this.maximizeButton = document.getElementById('maximizeButton')
 		this.closeButton = document.getElementById('closeButton')
+		
+		this.loadingScreen = document.getElementById('loadingScreen')
+		this.isLoadingScreenActive = false
 
 		/*
 		 * Listeners
@@ -42,6 +45,20 @@ class Window {
 			const window = remote.getCurrentWindow()
 			window.close()
 		})
+	}
+	
+	/**
+	 * Mostrar o ocultar pantalla de carga
+	 * @param {boolean} show `true` Mostrar pantalla | `false` Ocultar pantalla
+	 */
+	setLoadingScreen(show) {
+		if (show) {
+			this.loadingScreen.classList.add('show')
+			this.isLoadingScreenActive = true
+		} else {
+			this.loadingScreen.classList.remove('show')
+			this.isLoadingScreenActive = false
+		}
 	}
 }
 
