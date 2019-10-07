@@ -192,11 +192,16 @@ function createMainWindow() {
 		},
 		minHeight: 720,
 		minWidth: 600,
-		frame: false
+		frame: false,
+		show: false
   })
 	
 	// Cargar el archivo
-  playerWindow.loadFile('src/home/home.html')
+	playerWindow.loadFile('src/home/home.html')
+	
+	playerWindow.once('ready-to-show', () => {
+		playerWindow.show()
+	})
 
 	// Abrir herramientas de desarrollador
 	if (isDev) {
