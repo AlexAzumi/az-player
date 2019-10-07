@@ -11,7 +11,9 @@ class Bar {
 	 * Constructor
 	 * @param player Reproductor de música
 	 */
-	constructor(player) {
+	constructor(player, windowControl) {
+		// Control de ventana
+		this.windowControl = windowControl
 		// Asignar player
 		this.player = player
 		// Obtener elementos
@@ -42,6 +44,7 @@ class Bar {
 	 * Actualizar base de datos
 	 */
 	actionUpdateDatabase() {
+		this.windowControl.setLoadingScreen(true)
 		ipcRenderer.send('refresh-database')
 	}
 
