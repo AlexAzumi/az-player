@@ -128,6 +128,65 @@ class LocalizationManager {
 			throw 'Localization Manager: Falta localización del texto'
 		}
 	}
+
+	/**
+	 * Obtener lista de localizaciones
+	 */
+	getLocalizationList() {
+		const files = fs.readdirSync(LOCALE_DIR, { withFileTypes: true })
+			.filter(file => !file.isDirectory())
+			.filter(file => file.name.includes('.json'))
+			.map(file => file.name)
+		
+		let locals = []
+		for (let file of files) {
+			const location = path.join(LOCALE_DIR, file)
+			try {
+				const read = fs.readFileSync(location)
+				const parts = file.split('.')
+				locals.push({ 
+					locale: parts[0],
+					localeName: JSON.parse(read).localization
+				})
+			} catch (ex) {
+				console.error(ex)
+			}
+		}
+
+		return locals
+	}
+
+	/**
+	 * Obtener localización actual
+	 * @return {string} Localización actual
+	 */
+	getActualLocale() {
+		return this.localeConfig
+	}
+
+	/**
+	 * Establecer localización
+	 * @param {string} locale Nombre corto de localización
+	 * @return {boolean} Se realizó el cambio o no
+	 */
+	setLocale(locale) {
+		if (locale) {
+			try {
+				const data = JSON.stringify({
+					localization: locale
+				}, null, 2)
+				fs.writeFileSync(LOCALE_CONFIG_DIR, data)
+
+				return true
+			} catch (ex) {
+				// Log
+				console.error(ex)
+				return false
+			}
+		} else {
+			throw 'Localization Manager: Falta localización a cambiar'
+		}
+	}
 }
 
 module.exports = LocalizationManager

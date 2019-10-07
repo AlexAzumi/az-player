@@ -1,6 +1,7 @@
 // Dependencias
 const { remote, ipcRenderer } = require('electron')
 const { shell } = remote
+const $ = require('jquery')
 const Mousetrap = require('mousetrap')
 
 /*
@@ -10,8 +11,11 @@ class Bar {
 	/**
 	 * Constructor
 	 * @param player Reproductor de música
+	 * @param localizationManager Controlador de localización
 	 */
-	constructor(player, windowControl) {
+	constructor(player, windowControl, localizationManager) {
+		// Localización
+		this.localization = localizationManager
 		// Control de ventana
 		this.windowControl = windowControl
 		// Asignar player
@@ -31,6 +35,9 @@ class Bar {
 
 		// Establecer shortcuts
 		this.setShortcuts()
+
+		// Establecer menú de localización
+		this.setLocalizationMenu()
 
 		/*
 		 * Establecer listeners
@@ -168,11 +175,34 @@ class Bar {
 			// onMouseLeave
 			submenu.addEventListener('mouseleave', (event) => {
 				// Ocultar elemento
-				if (!event.toElement.classList.contains('menu-item')) {
-					// Ocultar elemento
+				if (!event.toElement) {
+					event.srcElement.style = 'none'
+				} else if (!event.toElement.classList.contains('menu-item')) {
 					event.srcElement.style = 'none'
 				}
 			})
+		}
+	}
+
+	/**
+	 * Establecer menú de localizaciones
+	 */
+	setLocalizationMenu() {
+		const list = localization.getLocalizationList()
+		for (let locale of list) {
+			const element = document.createElement('li')
+			element.classList.add('submenu-item')
+			element.setAttribute('locale', locale.locale)
+			element.innerText = locale.localeName
+			
+			$(element).click((event) => {
+				if(this.localization.setLocale(event.target.getAttribute('locale'))) {
+					// Recargar página
+					remote.getCurrentWindow().reload()
+				}
+			})
+
+			$('#submenu-locals').append(element)
 		}
 	}
 }

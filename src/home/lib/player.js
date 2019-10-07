@@ -4,7 +4,6 @@ const ipc = require('electron').ipcRenderer
 const fs = require('fs')
 const slash = require('slash')
 const path = require('path')
-const LocalizationManager = require('../../localization')
 
 // Sentry
 const Sentry = require('@sentry/electron')
@@ -16,10 +15,11 @@ class Player {
 	/**
 	 * Constructor
 	 * @param playlist Lista de canciones
+	 * @param localizationManager Controlador de localización
 	 */
-	constructor(playlist) {
+	constructor(playlist, localizationManager) {
 		// Localización
-		this.localization = new LocalizationManager()
+		this.localization = localizationManager
 		// Instanciar reproductor
 		this.musicPlayer = new Audio()
 		// Aplicar configuración

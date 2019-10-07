@@ -1,4 +1,6 @@
 {
+	"localization": "Español",
+	"localizationText": "Lenguajes",
 	"openFolderDialog": {
 		"title": "Abrir carpeta de instalación de osu!"
 	},

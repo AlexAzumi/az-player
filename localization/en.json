@@ -1,4 +1,6 @@
 {
+	"localization": "English",
+	"localizationText": "Languages",
 	"openFolderDialog": {
 		"title": "Open osu! installation folder"
 	},

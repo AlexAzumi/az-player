@@ -47,6 +47,8 @@ $(document).ready(() => {
 	$('#refreshButton').text(localization.getString('menu.help.refreshWindow'))
 	$('#donateButton').text(localization.getString('menu.help.donate'))
 	$('#aboutButtonText').text(localization.getString('menu.help.about'))
+
+	$('#localizationMenu').text(localization.getString('localizationText'))
 	// Reproductor
 	$('#songTitle').text(localization.getString('player.welcome'))
 	$('#playerVolume').attr('title', localization.getString('player.volume'))
@@ -90,9 +92,9 @@ ipc.on('loaded-songs', (event, playlist) => {
 	}
 	
 	// Instanciar reproductor
-	player = new Player(playlist)
+	player = new Player(playlist, localization)
 	// Instanciar barra
-	new Bar(player, windowControl)
+	new Bar(player, windowControl, localization)
 	// Instanciar búsqueda
 	new Search(player)
 
