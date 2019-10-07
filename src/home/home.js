@@ -1,15 +1,31 @@
 // Dependencias
-const $ = require('jquery')
-const { remote } = require('electron')
 const { dialog } = require('electron').remote
 const { init, showReportDialog } = require('@sentry/electron')
+const { remote } = require('electron')
+const $ = require('jquery')
 const ipc = require('electron').ipcRenderer
+const package = require('../../package.json')
 // Librerías
+const Bar = require('./lib/bar')
+const LocalizationManager = require('../localization')
 const Player = require('./lib/player')
 const Search = require('./lib/search')
-const Bar = require('./lib/bar')
 const Window = require('./lib/window')
-const LocalizationManager = require('../localization')
+
+/*
+ * Iniciar Sentry
+ */
+init({
+	dsn: package.sentryDSN,
+	beforeSend(event) {
+		// Verificar si es una exepción
+		if (event.exception) {
+			showReportDialog()
+		}
+
+		return event
+	}
+})
 
 // Localización
 const localization = new LocalizationManager()
@@ -45,32 +61,6 @@ $(document).ready(() => {
 	$('#noResults').text(localization.getString('search.noResults'))
 })
 
-// Control de ventana
-const windowControl = new Window()
-
-// Reproductor
-let player
-
-/*
- * Información de la aplicación
- */
-const package = require('../../package.json')
-
-/*
- * Iniciar Sentry
- */
-init({
-	dsn: package.sentryDSN,
-	beforeSend(event) {
-		// Verificar si es una exepción
-		if (event.exception) {
-			showReportDialog()
-		}
-
-		return event
-	}
-})
-
 /*
  * Abrir herramientas
  */
@@ -81,6 +71,11 @@ remote.globalShortcut.register('CommandOrControl+Shift+I', () => {
 window.addEventListener('beforeunload', () => {
 	remote.globalShortcut.unregisterAll()
 })
+
+// Control de ventana
+const windowControl = new Window()
+// Reproductor
+let player
 
 /*
  * Recibir canciones del proceso principal
