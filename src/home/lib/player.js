@@ -521,7 +521,7 @@ class Player {
 		// Regresar al fondo inicial
 		this.playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")'
 		// Establecer mensaje inicial
-		this.songTitle.innerText = '¡Bienvenido/a!'
+		this.songTitle.innerText = this.localization.getString('player.welcome')
 	}
 
 	/**
