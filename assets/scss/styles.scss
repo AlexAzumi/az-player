@@ -178,7 +178,6 @@ html {
 		padding-right: 1.5rem;
 		padding-top: 0.25rem;
 		position: relative;
-		transition: background-color 250ms;
 
 		// Hover
 		&:hover {
@@ -335,7 +334,6 @@ html {
 			-webkit-appearance: none;
 			box-shadow: -100vw 0 0 100vw $primary;
 			cursor: pointer;
-			transition: 150ms;
 			width: 0;
 		}
 
@@ -349,8 +347,7 @@ html {
 	// Botones
 	.control-btn {
 		display: inline-block;
-		color: $gray-500;
-		transition: color 250ms;
+		color: $gray-400;
 
 		// Hover
 		&:hover {
@@ -390,7 +387,6 @@ html {
 			cursor: pointer;
 			height: 20px;
 			outline: none;
-			transition: opacity 200ms;
 			margin-right: 0.5rem;
 			max-width: 200px;
 	
@@ -399,7 +395,6 @@ html {
 				-webkit-appearance: none;
 				box-shadow: -100vw 0 0 100vw $secondary;
 				cursor: pointer;
-				transition: 150ms;
 				background: $light;
 				height: 25px;
 				width: 10px;
