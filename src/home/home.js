@@ -50,12 +50,12 @@ window.addEventListener('beforeunload', () => {
  * Recibir canciones del proceso principal
  */
 ipc.on('loaded-songs', (event, playlist) => {
-	if (player !== undefined) {
+	if (player !== undefined || player === null) {
 		if (windowControl.isLoadingScreenActive) {
 			windowControl.setLoadingScreen(false)
 		}
 		player.stopSong()
-		delete player	
+		player = null
 	}
 	
 	// Instanciar reproductor
