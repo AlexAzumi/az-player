@@ -1,35 +1,33 @@
 // Dependencias
-const { remote, shell} = require('electron')
+const $ = require('jquery')
+const { remote, shell } = require('electron')
+const LocalizationManager = require('../localization')
 
 // Información
 const appInfo = require('../../package.json')
 
-// Botón de cerrar
-const closeBtn = document.getElementById('closeBtn')
-// Versión
-const appVersion = document.getElementById('appVersion')
-// Autor
-const appAuthor = document.getElementById('appAuthor')
-// Repositorio
-const appRepository = document.getElementById('appRepository')
-
-// Mostrar información
-appVersion.innerText = appInfo.version
-appAuthor.innerText = appInfo.author
+const localization = new LocalizationManager()
+$(document).ready(() => {
+	// Localización
+	$('#versionTag').text(`${localization.getString('about.version')}:`)
+	$('#authorTag').text(`${localization.getString('about.author')}:`)
+	$('#repositoryTag').text(localization.getString('about.repository'))
+	$('#closeBtn').text(localization.getString('about.close'))
+	// Mostrar información
+	$('#appVersion').text(appInfo.version)
+	$('#appAuthor').text(appInfo.author)
+})
 
 /*
  * Listeners
  */
-
-appRepository.addEventListener('click', () => {
+$('#appRepository').click(() => {
 	shell.openExternal(appInfo.homepage)
 })
 
-// Botón de cerrar
-closeBtn.addEventListener('click', () => {
+$('#closeBtn').click(() => {
 	// Obtener ventana
 	const window = remote.getCurrentWindow()
-
 	// Cerrar
 	window.close()
 })

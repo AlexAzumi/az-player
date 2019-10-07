@@ -34,7 +34,7 @@ else {
 /*
  * Manager
  */
-let manager = new Manager(app)
+let manager
 
 /*
  * Base de datos
@@ -62,6 +62,8 @@ let aboutWindow
  * Iniciar aplicación
  */
 function startApp() {
+	// Instanciar manager
+	manager = new Manager(app)
 	// Si la base de datos existe
 	if (fs.existsSync(database.location)) {
 		// Cargar base de datos

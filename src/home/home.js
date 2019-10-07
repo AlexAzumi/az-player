@@ -1,4 +1,5 @@
 // Dependencias
+const $ = require('jquery')
 const { remote } = require('electron')
 const { dialog } = require('electron').remote
 const { init, showReportDialog } = require('@sentry/electron')
@@ -8,6 +9,41 @@ const Player = require('./lib/player')
 const Search = require('./lib/search')
 const Bar = require('./lib/bar')
 const Window = require('./lib/window')
+const LocalizationManager = require('../localization')
+
+// Localización
+const localization = new LocalizationManager()
+$(document).ready(() => {
+	// Caja de actualización
+	$('#updateBoxTitle').text(localization.getString('update.box.title'))
+	$('#declineUpdateBtn').text(localization.getString('update.laterBtn'))
+	$('#acceptUpdateBtn').text(localization.getString('update.updateBtn'))
+	// Barra
+	$('#homeMenu').text(localization.getString('menu.home.title'))
+	$('#updateDatabaseButton').text(localization.getString('menu.home.updateDatabase'))
+	$('#exitAppButton').text(localization.getString('menu.home.exit'))
+
+	$('#sortMenu').text(localization.getString('menu.sort.title'))
+	$('#orderByArtist').text(localization.getString('menu.sort.byArtist'))
+	$('#orderByTitle').text(localization.getString('menu.sort.byTitle'))
+
+	$('#helpMenu').text(localization.getString('menu.help.title'))
+	$('#refreshButton').text(localization.getString('menu.help.refreshWindow'))
+	$('#donateButton').text(localization.getString('menu.help.donate'))
+	$('#aboutButtonText').text(localization.getString('menu.help.about'))
+	// Reproductor
+	$('#songTitle').text(localization.getString('player.welcome'))
+	$('#playerVolume').attr('title', localization.getString('player.volume'))
+	$('#previousBtn').attr('title', localization.getString('player.previousBtn'))
+	$('#playPauseBtn').attr('title', localization.getString('player.playPauseBtn'))
+	$('#nextBtn').attr('title', localization.getString('player.nextBtn'))
+	$('#randomBtn').attr('title', localization.getString('player.suffleBtn'))
+	// Pantalla de actualización
+	$('#loadingMessage').text(localization.getString('loadingScreen.message'))
+	// Búsqueda
+	$('#searchInput').attr('placeholder', localization.getString('search.placeholder'))
+	$('#noResults').text(localization.getString('search.noResults'))
+})
 
 // Control de ventana
 const windowControl = new Window()
@@ -138,8 +174,8 @@ ipc.on('update-available', () => {
 // Error al actualizar
 ipc.on('update-error', (event, error) => {
 	dialog.showMessageBoxSync({
-		title: `Error de descarga | ${error.code}`,
-		message: 'Se generó un error en la actualización',
+		title: localization.getString('update.updateError.title'),
+		message: localization.getString('update.updateError.message'),
 		type: 'error'
 	})
 })
@@ -148,10 +184,12 @@ ipc.on('update-error', (event, error) => {
 ipc.on('update-downloaded', () => {
 	// Preguntar
 	const response = dialog.showMessageBoxSync({
-		title: 'Actualización descargada',
-		message: 'Una nueva versión ha sido decargada. ¿Desea reiniciar la aplicación para aplicar las actualizaciones?',
+		title: localization.getString('update.updateDownloaded.title'),
+		message: localization.getString('update.updateDownloaded.message'),
 		type: 'question',
-		buttons: ['Aceptar', 'Más tarde']
+		buttons: [
+			localization.getString('update.acceptBtn'),
+			localization.getString('update.laterBtn')]
 	})
 	// Actualización aceptada
 	if (response == 0) {

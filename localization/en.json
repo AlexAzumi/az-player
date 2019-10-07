@@ -1,0 +1,64 @@
+{
+	"openFolderDialog": {
+		"title": "Open osu! installation folder"
+	},
+	"loadingScreen": {
+		"message": "Processing beatmaps"
+	},
+	"update": {
+		"box": {
+			"title": "Update available!"
+		},
+		"updateError": {
+			"title": "Download error",
+			"message": "An error ocurred while downloading the update"
+		},
+		"updateDownloaded": {
+			"title": "Update downloaded",
+			"message": "The update was download. Do you want to restart in order to apply updates?"
+		},
+		"updateBtn": "Update",
+		"acceptBtn": "Continue",
+		"laterBtn": "Later"
+	},
+	"menu": {
+		"home": {
+			"title": "Home",
+			"updateDatabase": "Update playlist",
+			"exit": "Exit"
+		},
+		"sort": {
+			"title": "Sort",
+			"byArtist": "By artist",
+			"byTitle": "By title"
+		},
+		"help": {
+			"title": "Help",
+			"refreshWindow": "Refresh window",
+			"donate": "Support this project",
+			"about": "About osu! player"
+		}
+	},
+	"player": {
+		"welcome": "Welcome!",
+		"volume": "Volume",
+		"previousBtn": "Previous song",
+		"playPauseBtn": "Play/pause",
+		"nextBtn": "Next song",
+		"suffleBtn": "Suffle",
+		"songNotFound": {
+			"title": "Error",
+			"message": "Audio file not found"
+		}
+	},
+	"search": {
+		"placeholder": "Search",
+		"noResults": "No results"
+	},
+	"about": {
+		"version": "Version",
+		"author": "Author",
+		"repository": "GitHub repository",
+		"close": "Close"
+	}
+}

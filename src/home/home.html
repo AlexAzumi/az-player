@@ -17,10 +17,10 @@
 <body>
 	<!-- Cuadro de actualizaciones -->
 	<div id="updateBox" class="d-none update-box flex-column bg-dark text-light rounded p-3">
-		<p class="mb-2">¡Nueva actualización disponible!</p>
+		<p id="updateBoxTitle" class="mb-2">{update.box.title}</p>
 		<div class="btn-group">
-			<button id="declineUpdateBtn" class="btn btn-light">Más tarde</button>
-			<button id="acceptUpdateBtn" class="btn btn-success">Actualizar</button>
+			<button id="declineUpdateBtn" class="btn btn-light">{update.laterBtn}</button>
+			<button id="acceptUpdateBtn" class="btn btn-success">{update.updateBtn}</button>
 		</div>
 	</div>
 
@@ -28,24 +28,26 @@
 	<nav class="bar">
 		<!-- Menú de inicio -->
 		<div class="menu">
-			<li class="menu-item" submenu="home">Inicio</li>
+			<li id="homeMenu" class="menu-item" submenu="home">{menu.home.title}</li>
 			<div class="submenu" id="submenu-home">
 				<li class="submenu-item separator" id="updateDatabaseButton">
-					Actualizar lista de canciones <span class="shortcut">Ctrl+U</span>
+					<span id="updateDatabaseButton">{menu.home.updateDatabase}</span>
+					<span class="shortcut">Ctrl+U</span>
 				</li>
-				<li class="submenu-item" id="exitAppButton">Salir</li>
+				<li class="submenu-item" id="exitAppButton">{menu.home.exit}</li>
 			</div>
 		</div>
 
 		<!-- Menú de ordenamiento -->
 		<div class="menu">
-			<li class="menu-item" submenu="order">Ordenar canciones</li>
+			<li id="sortMenu" class="menu-item" submenu="order">{menu.order.title}</li>
 			<div class="submenu" id="submenu-order">
 				<li class="submenu-item" id="sortArtistButton">
-					Por artista <span class="shortcut">Ctrl+1</span>
+					<span id="orderByArtist">{menu.order.byArtist}</span> 
+					<span class="shortcut">Ctrl+1</span>
 				</li>
 				<li class="submenu-item" id="sortTitleButton">
-					Por título
+					<span id="orderByTitle">{menu.order.byTitle}</span>
 					<span class="shortcut">Ctrl+2</span>
 				</li>
 			</div>
@@ -53,12 +55,13 @@
 
 		<!-- Menú de ordenamiento -->
 		<div class="menu">
-			<li class="menu-item" submenu="help">Ayuda</li>
+			<li id="helpMenu" class="menu-item" submenu="help">{menu.help.title}</li>
 			<div class="submenu" id="submenu-help">
-				<li class="submenu-item separator" id="refreshButton">Refrescar ventana</li>
-				<li class="submenu-item separator" id="donateButton">Donar al proyecto</li>
+				<li class="submenu-item separator" id="refreshButton">{menu.help.refreshWindow}</li>
+				<li class="submenu-item separator" id="donateButton">{menu.help.donate}</li>
 				<li class="submenu-item" id="aboutButton">
-					Acerca de osu player! <span class="shortcut">F1</span>
+					<span id="aboutButtonText">{menu.help.about}</span>
+					<span class="shortcut">F1</span>
 				</li>
 			</div>
 		</div>
@@ -80,7 +83,7 @@
 	<!-- Pantalla de carga -->
 	<div id="loadingScreen" class="procesing-beatmaps">
 		<div class="loading">
-			<h1 class="display-4 mb-4">Procesando beatmaps</h1>
+			<h1 id="loadingMessage" class="display-4 mb-4">{loadingScreen.message}</h1>
 			<i class="fas fa-spinner fa-6x fa-pulse text-primary"></i>
 		</div>
 	</div>
@@ -92,7 +95,7 @@
 			<!-- Reproducción -->
 			<div id="player" class="player col-md-8">
 				<div id="songTitleContainer" class="title-container p-3">
-					<h2 class="song-title mb-0" id="songTitle">¡Bienvenido/a!</h2>
+					<h2 class="song-title mb-0" id="songTitle">{player.welcome}</h2>
 				</div>
 				<!-- Panel -->
 				<div id="playerPanel" class="player-panel">
@@ -100,7 +103,7 @@
 					<input id="playerRange" class="seekbar" type="range" max="100" min="0" value="0">
 					<!-- Volumen -->
 					<div id="playerVolumeContainer" class="volume-container">
-						<input id="playerVolume" class="volume" type="range" min="0" max="100" value="100" step="1" title="Volumen">
+						<input id="playerVolume" class="volume" type="range" min="0" max="100" value="100" step="1">
 						<p id="volumeText" class="volume-text"></p>
 					</div>
 					<!-- Controles -->
@@ -108,8 +111,7 @@
 						<!-- Anterior -->
 						<div
 							id="previousBtn"
-							class="control-btn"
-							title="Canción anterior">
+							class="control-btn">
 							<i class="fas fa-step-backward fa-2x"></i>
 						</div>
 						<!-- Reproducir/pausar -->
@@ -122,8 +124,7 @@
 						<!-- Siguiente -->
 						<div
 							id="nextBtn"
-							class="control-btn"
-							title="Siguiente canción">
+							class="control-btn">
 							<i class="fas fa-step-forward fa-2x"></i>
 						</div>
 					</div>
@@ -131,8 +132,7 @@
 					<div id="otherControls" class="extra-buttons d-flex align-items-center">
 						<div
 							id="randomBtn"
-							class="control-btn not-hover-color"
-							title="Reproducción aleatoria">
+							class="control-btn not-hover-color">
 							<i class="fas fa-random fa-2x"></i>
 						</div>
 					</div>
@@ -143,12 +143,12 @@
 				<!-- Cuadro de búsqueda -->
 				<div id="songsListTitle" class="search-box">
 					<i class="fas fa-search fa-xs search-icon"></i>
-					<input id="searchInput" class="search-input form-control" type="search" placeholder="Buscar">
+					<input id="searchInput" class="search-input form-control" type="search">
 				</div>
 				<!-- Lista de canciones -->
 				<div id="songsList" class="songs-list"></div>
 				<!-- Mensaje sin resultados -->
-				<p id="noResults" class="d-none search-no-results text-center">Sin resultados</p>
+				<p id="noResults" class="d-none search-no-results text-center">{search.noResults}</p>
 			</div>
 		</div>
 	</div>

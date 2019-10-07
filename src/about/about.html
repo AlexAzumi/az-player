@@ -21,21 +21,24 @@
 
 		<!-- Versión del programa -->
 		<div class="about-info mt-4 mb-2 mx-3">
-			Versión: <span class="subtext" id="appVersion">0.3.7</span>
+			<span id="versionTag">{about.version}</span>
+			<span class="subtext" id="appVersion">0.3.7</span>
 		</div>
 
 		<!-- Creador -->
 		<div class="about-info mb-2 mx-3">
-			Creador: <span class="subtext" id="appAuthor">AlexAzumi</span>
+			<span id="authorTag">{about.author}</span>
+			<span class="subtext" id="appAuthor">AlexAzumi</span>
 		</div>
 
 		<!-- Repositorio -->
 		<div id="appRepository" class="about-info repository mb-4 mx-3">
-			Repositorio en GitHub <i class="fab fa-github ml-1"></i>
+			<span id="repositoryTag">{about.repository}</span>
+			<i class="fab fa-github ml-1"></i>
 		</div>
 		
 		<!-- Botón de cerrar -->
-		<button class="btn btn-primary mx-3 mb-3" id="closeBtn">Cerrar</button>
+		<button class="btn btn-primary mx-3 mb-3" id="closeBtn">{about.close}</button>
 	</div>
 
 	<!-- Scripts -->

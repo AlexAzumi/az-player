@@ -4,6 +4,7 @@ const ipc = require('electron').ipcRenderer
 const fs = require('fs')
 const slash = require('slash')
 const path = require('path')
+const LocalizationManager = require('../../localization')
 
 // Sentry
 const Sentry = require('@sentry/electron')
@@ -17,6 +18,8 @@ class Player {
 	 * @param playlist Lista de canciones
 	 */
 	constructor(playlist) {
+		// Localización
+		this.localization = new LocalizationManager()
 		// Instanciar reproductor
 		this.musicPlayer = new Audio()
 		// Aplicar configuración
@@ -209,8 +212,8 @@ class Player {
 		} else {
 			// Mostrar error
 			dialog.showMessageBox({
-				title: 'Error',
-				message: 'No existe el audio de la canción',
+				title: this.localization.getString('player.songNotFound.title'),
+				message: this.localization.getString('player.songNotFound.message'),
 				type: 'error'
 			})
 			// Capturar a sentry

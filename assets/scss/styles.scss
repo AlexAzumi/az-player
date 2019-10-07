@@ -82,6 +82,10 @@ html {
 				.shortcut {
 					padding-left: 1rem;
 				}
+
+				span {
+					pointer-events: none;
+				}
 			}
 
 			.separator {

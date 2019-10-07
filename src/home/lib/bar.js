@@ -110,8 +110,8 @@ class Bar {
 	setSubmenuActions() {
 		this.updateDatabaseButton.addEventListener('click', this.actionUpdateDatabase.bind(this))
 		this.exitAppButton.addEventListener('click', this.actionCloseApp.bind(this))
-		this.sortArtistButton.addEventListener('click', this.actionOrderbyTitle.bind(this))
-		this.sortTitleButton.addEventListener('click', this.actionOrderbyArtist.bind(this))
+		this.sortArtistButton.addEventListener('click', this.actionOrderbyArtist.bind(this))
+		this.sortTitleButton.addEventListener('click', this.actionOrderbyTitle.bind(this))
 		this.refreshButton.addEventListener('click', this.actionRefreshWindow.bind(this))
 		this.donateButton.addEventListener('click', this.actionDonate.bind(this))
 		this.aboutButton.addEventListener('click', this.actionOpenAbout.bind(this))
@@ -163,7 +163,6 @@ class Bar {
 		for (let submenu of this.submenus) {
 			// Click
 			submenu.addEventListener('click', (event) => {
-				// Ocultar elemento
 				event.srcElement.parentElement.style.display = 'none'
 			})
 			// onMouseLeave

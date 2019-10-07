@@ -1,0 +1,64 @@
+{
+	"openFolderDialog": {
+		"title": "Abrir carpeta de instalación de osu!"
+	},
+	"loadingScreen": {
+		"message": "Procesando beatmaps"
+	},
+	"update": {
+		"box": {
+			"title": "¡Nueva actualización disponible!"
+		},
+		"updateError": {
+			"title": "Error de descarga",
+			"message": "Se ha generado un error al descargas la actualización"
+		},
+		"updateDownloaded": {
+			"title": "Actualización descargada correctamente",
+			"message": "Una nueva versión ha sido decargada. ¿Desea reiniciar la aplicación para aplicar las actualizaciones?"
+		},
+		"updateBtn": "Actualizar",
+		"acceptBtn": "Aceptar",
+		"laterBtn": "Más tarde"
+	},
+	"menu": {
+		"home": {
+			"title": "Inicio",
+			"updateDatabase": "Actualizar lista de canciones",
+			"exit": "Salir"
+		},
+		"sort": {
+			"title": "Ordenar",
+			"byArtist": "Por artista",
+			"byTitle": "Por título"
+		},
+		"help": {
+			"title": "Ayuda",
+			"refreshWindow": "Refrescar ventana",
+			"donate": "Donar al proyecto",
+			"about": "Acerca de osu! player"
+		}
+	},
+	"player": {
+		"welcome": "¡Bienvenido/a!",
+		"volume": "Volumen",
+		"previousBtn": "Canción anterior",
+		"playPauseBtn": "Reproducir/pausar",
+		"nextBtn": "Siguiente canción",
+		"suffleBtn": "Reproducción aleatoria",
+		"songNotFound": {
+			"title": "Error",
+			"message": "Archivo de audio no encontrado"
+		}
+	},
+	"search": {
+		"placeholder": "Buscar",
+		"noResults": "Sin resultados"
+	},
+	"about": {
+		"version": "Versión",
+		"author": "Autor",
+		"repository": "Repositorio en GitHub",
+		"close": "Cerrar"
+	}
+}

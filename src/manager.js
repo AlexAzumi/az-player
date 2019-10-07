@@ -1,18 +1,21 @@
 // Dependencias
-const { dialog } = require('electron')
+const { dialog, app } = require('electron')
 const fs = require('fs')
 const lineByLine = require('n-readlines')
 const path = require('path')
 const sentry = require('@sentry/electron')
 
+const LocalizationManager = require('./localization')
+
 class Manager {
 	/**
 	 * Constructor
-	 * @param application Aplicación de Electron
 	 */
-	constructor(application) {
+	constructor() {
+		// Localización
+		this.localization = new LocalizationManager()
 		// Aplicación
-		this.app = application
+		this.app = app
 	}
 
 	/**
@@ -22,7 +25,7 @@ class Manager {
 	selectGameFolder() {
 		// Solicitar carpeta al usuario
 		const folder = dialog.showOpenDialogSync({
-			title: 'Selecciona la carpeta de osu!',
+			title: this.localization.getString('openFolderDialog.title'),
 			properties: [
 				'openDirectory'
 			]
@@ -43,7 +46,7 @@ class Manager {
 	searchSongsFolder(gameLocation) {
 		// Nunca se seleccionó carpeta
 		if (gameLocation === undefined) {
-			this.app.exit(-1)
+			this.app.exit(0)
 		}
 		// Se seleccionó la carpeta correcta
 		else if (fs.existsSync(path.join(gameLocation, 'Songs'))) {
