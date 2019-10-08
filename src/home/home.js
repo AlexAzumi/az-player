@@ -169,7 +169,7 @@ ipc.on('update-available', () => {
 })
 
 // Error al actualizar
-ipc.on('update-error', (event, error) => {
+ipc.on('update-error', () => {
 	dialog.showMessageBoxSync({
 		title: localization.getString('update.updateError.title'),
 		message: localization.getString('update.updateError.message'),
