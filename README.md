@@ -13,9 +13,7 @@ Decarga la última versión haciendo clic [en este enlace](https://github.com/Al
 La aplicación está en estado `beta`, la cual puede tener muchos errores o dejar de funcionar de manera inesperada.
 
 ## Mi perfil de osu
-<p align="center">
-	<img src="https://i.ibb.co/qgzYq4m/Perfil-de-osu.png" alt="Perfil-de-osu" href="https://osu.ppy.sh/users/3783551">
-</p>
+[![Perfil](https://i.ibb.co/qgzYq4m/Perfil-de-osu.png)](https://osu.ppy.sh/users/3783551)
 
 ## Apoyar al proyecto
 Puedes apoyar a este proyecto haciendo una donación en [mi página de Ko-Fi](https://ko-fi.com/alexazumi) o si deseas puedes regalarme `sopporter tag` en osu! :)
