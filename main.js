@@ -14,6 +14,7 @@ const homeDir = require('os').homedir()
 
 // Información de la applicación
 const package = require('./package.json')
+const config = require('./config.json')
 
 /*
  * Configuración del actualizador automático
@@ -27,7 +28,7 @@ if (isDev) {
 	console.warn('Live reload activado')
 	require('electron-reload')(__dirname)
 }
-else {
+else if (config.sentry.enabled) {
 	sentry.init({ dsn: package.sentryDSN })
 }
 
@@ -40,8 +41,8 @@ let manager
  * Base de datos
  */
 const database = {
-	location: path.join(homeDir, 'osu-player', 'database.json'),
-	folder: path.join(homeDir, 'osu-player')
+	location: path.join(homeDir, 'az-player', 'database.json'),
+	folder: path.join(homeDir, 'az-player')
 }
 
 // Información de base de datos
@@ -101,7 +102,7 @@ app.on('activate', () => {
 
 // Cambiar título
 ipcMain.on('change-player-title', (event, title) => {
-	playerWindow.setTitle(`${title} | osu! player`)
+	playerWindow.setTitle(`${title} | az! player`)
 })
 
 // Refrescar base de datos

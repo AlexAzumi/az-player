@@ -5,7 +5,7 @@ const os = require('os')
 const path = require('path')
 
 const DEFAULT_LOCALE = 'en'
-const LOCALE_CONFIG_DIR = path.join(os.homedir(), 'osu-player', 'localization.json')
+const LOCALE_CONFIG_DIR = path.join(os.homedir(), 'az-player', 'localization.json')
 const LOCALE_DIR = path.join(__dirname, '../localization')
 
 class LocalizationManager {
@@ -55,6 +55,14 @@ class LocalizationManager {
 				localization: this.locale
 			}
 			const data = JSON.stringify(localization, null, 2)
+
+			// Verificar la existencia de la carpeta
+			const azFolder = path.join(LOCALE_CONFIG_DIR, '../')
+			if (!fs.existsSync(azFolder)) {
+				fs.mkdirSync(azFolder)
+			}
+
+			// Escribir archivo de localización
 			try {
 				fs.writeFileSync(localizationDir, data, 'utf-8')
 				return localization.localization

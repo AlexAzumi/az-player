@@ -1,6 +1,6 @@
 {
-	"name": "osu-player",
-	"productName": "osu! player",
+	"name": "az-player",
+	"productName": "az! player",
 	"version": "0.5.1",
 	"description": "Reproductor de beatmaps de osu!",
 	"main": "main.js",

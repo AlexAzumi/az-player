@@ -11,21 +11,25 @@ const LocalizationManager = require('../localization')
 const Player = require('./lib/player')
 const Search = require('./lib/search')
 const Window = require('./lib/window')
+// Config
+const config = require('../../config.json')
 
 /*
  * Iniciar Sentry
  */
-init({
-	dsn: package.sentryDSN,
-	beforeSend(event) {
-		// Verificar si es una exepción
-		if (event.exception) {
-			showReportDialog()
+if (config.sentry.enabled) {
+	init({
+		dsn: package.sentryDSN,
+		beforeSend(event) {
+			// Verificar si es una exepción
+			if (event.exception) {
+				showReportDialog()
+			}
+	
+			return event
 		}
-
-		return event
-	}
-})
+	})
+}
 
 // Localización
 const localization = new LocalizationManager()
