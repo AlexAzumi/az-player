@@ -33,13 +33,13 @@
 			</div>
 	
 			<!-- Repositorio -->
-			<div id="appRepository" class="about-info repository mb-4 mx-3">
+			<div ng-click="openRepository()" class="about-info repository mb-4 mx-3">
 				<span id="repositoryTag">{{about.repository}}</span>
 				<i class="fab fa-github ml-1"></i>
 			</div>
 			
 			<!-- Botón de cerrar -->
-			<button class="btn btn-primary mx-3 mb-3" id="closeBtn">{{about.close}}</button>
+			<button ng-click="closeWindow()" class="btn btn-primary mx-3 mb-3">{{about.close}}</button>
 		</div>
 	</div>
 
