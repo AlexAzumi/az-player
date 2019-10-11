@@ -2,7 +2,7 @@
 const $ = require('jquery');
 const { remote, shell } = require('electron');
 // Angular
-require('./aboutApp');
+require('./lib/aboutApp');
 // Información
 const appInfo = require('../../package.json');
 

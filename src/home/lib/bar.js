@@ -1,7 +1,6 @@
 // Dependencias
 const { remote, ipcRenderer } = require('electron');
 const { shell } = remote;
-const $ = require('jquery');
 const Mousetrap = require('mousetrap');
 
 /*
@@ -28,6 +27,7 @@ class Bar {
 		this.refreshButton = document.getElementById('refreshButton');
 		this.donateButton = document.getElementById('donateButton');
 		this.aboutButton = document.getElementById('aboutButton');
+		this.submenuLocals = document.getElementById('submenu-locals');
 		// Lista de menús
 		this.menuButtons = document.getElementsByClassName('menu-item');
 		// Lista de submenús
@@ -188,7 +188,7 @@ class Bar {
 	 * Establecer menú de localizaciones
 	 */
 	setLocalizationMenu() {
-		if (document.getElementById('submenu-locals').children.length > 0) {
+		if (this.submenuLocals.children.length > 0) {
 			return;
 		}
 		const list = localization.getLocalizationList();
@@ -197,15 +197,15 @@ class Bar {
 			element.classList.add('submenu-item');
 			element.setAttribute('locale', locale.locale);
 			element.innerText = locale.localeName;
-
-			$(element).click((event) => {
+			// Añadir evento
+			element.addEventListener('click', (event) => {
 				if (this.localization.setLocale(event.target.getAttribute('locale'))) {
 					// Recargar página
 					remote.getCurrentWindow().reload();
 				}
 			});
-
-			$('#submenu-locals').append(element);
+			// Agregar a submenu
+			this.submenuLocals.appendChild(element);
 		}
 	}
 }

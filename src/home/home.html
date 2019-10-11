@@ -19,12 +19,17 @@
 		<!-- Cuadro de actualizaciones -->
 		<div
 			ng-controller="updateController"
+			ng-class="{show: showBox}"
 			id="updateBox"
 			class="d-none update-box flex-column bg-dark text-light rounded p-3">
 			<p id="updateBoxTitle" class="mb-2">{{update.box.title}}</p>
 			<div class="btn-group">
-				<button id="declineUpdateBtn" class="btn btn-light">{{update.laterBtn}}</button>
-				<button id="acceptUpdateBtn" class="btn btn-success">{{update.updateBtn}}</button>
+				<button
+					ng-click="clickLater($event)"
+					class="btn btn-light">{{update.laterBtn}}</button>
+				<button
+					ng-click="clickUpdate()"
+					class="btn btn-success">{{update.updateBtn}}</button>
 			</div>
 		</div>
 

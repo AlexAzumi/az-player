@@ -1,8 +1,8 @@
 // Dependencias
 const angular = require('angular');
-const LocalizationManager = require('../localization');
+const LocalizationManager = require('../../localization');
 // Información
-const appInfo = require('../../package.json');
+const appInfo = require('../../../package.json');
 // Localización
 const localization = new LocalizationManager();
 

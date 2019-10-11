@@ -1,9 +1,14 @@
 // Dependencias
+const { ipcRenderer } = require('electron');
+const { dialog } = require('electron').remote;
 const angular = require('angular');
 const LozalizationManager = require('../../localization');
 
 // Localización
 const localization = new LozalizationManager();
+
+// Scopes
+let updateBoxScope;
 
 /*
  * Controladores
@@ -11,6 +16,9 @@ const localization = new LozalizationManager();
 
 // Caja de actualización
 function updateController($scope) {
+	// Asignar scope
+	updateBoxScope = $scope;
+	// Localización
 	$scope.update = {
 		box: {
 			title: localization.getString('update.box.title')
@@ -18,10 +26,20 @@ function updateController($scope) {
 		laterBtn: localization.getString('update.laterBtn'),
 		updateBtn: localization.getString('update.updateBtn')
 	};
+	// Mostrar caja
+	$scope.showBox = false;
+	// Eventos
+	$scope.clickLater = function() {
+		$scope.showBox = false;
+	};
+	$scope.clickUpdate = function() {
+		$scope.showBox = false;
+	};
 }
 
 // Barra de menú
 function menuBarController($scope) {
+	// Localización
 	$scope.menu = {
 		home: {
 			title: localization.getString('menu.home.title'),
@@ -40,25 +58,27 @@ function menuBarController($scope) {
 			donate: localization.getString('menu.help.donate'),
 			about: localization.getString('menu.help.about')
 		}
-	}
+	};
 }
 
 // Pantalla de carga
 function loadingScreenController($scope) {
+	// Localización
 	$scope.loadingScreen = {
 		message: localization.getString('loadingScreen.message')
-	}
+	};
 }
 
 // Reproductor de música
 function playerController($scope) {
+	// Localización
 	$scope.player = {
-		welcome: localization.getString('player.welcome'),
+		welcome: localization.getString('player.welcome')
 	};
 	$scope.search = {
 		placeholder: localization.getString('search.placeholder'),
-		noResults: localization.getString('search.noResults'),
-	}
+		noResults: localization.getString('search.noResults')
+	};
 }
 
 angular
@@ -67,3 +87,39 @@ angular
 	.controller('loadingScreenController', loadingScreenController)
 	.controller('menuBarController', menuBarController)
 	.controller('playerController', playerController);
+
+/*
+ * Actualizaciones automáticas
+ */
+
+// Actualización disponible
+ipcRenderer.on('update-available', () => {
+	// Actualizar controlador
+	updateBoxScope.$apply(function() {
+		updateBoxScope.showBox = true;
+	});
+});
+
+// Error al actualizar
+ipcRenderer.on('update-error', () => {
+	dialog.showMessageBoxSync({
+		title: localization.getString('update.updateError.title'),
+		message: localization.getString('update.updateError.message'),
+		type: 'error'
+	});
+});
+
+// Actualización descargada
+ipcRenderer.on('update-downloaded', () => {
+	// Preguntar
+	const response = dialog.showMessageBoxSync({
+		title: localization.getString('update.updateDownloaded.title'),
+		message: localization.getString('update.updateDownloaded.message'),
+		type: 'question',
+		buttons: [ localization.getString('update.acceptBtn'), localization.getString('update.laterBtn') ]
+	});
+	// Actualización aceptada
+	if (response == 0) {
+		ipcRenderer.send('quit-and-install');
+	}
+});

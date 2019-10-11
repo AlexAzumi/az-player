@@ -15,9 +15,11 @@
 	<link rel="stylesheet" href="../../assets/fonts/fonts.css">
 </head>
 <body class="d-flex flex-column justify-content-center align-items-center bg-dark loading-screen">
-	<div class="text-center">
-		<h4 id="loadingMessage" class="pb-2 text-light loading-text">{loadingScreen.message}</h4>
-		<i class="fas fa-spinner fa-4x fa-pulse text-primary"></i>
+	<div ng-app="loadingApp" ng-csp>
+		<div ng-controller="loadingController" class="text-center">
+			<h4 id="loadingMessage" class="pb-2 text-light loading-text">{{loadingScreen.message}}</h4>
+			<i class="fas fa-spinner fa-4x fa-pulse text-primary"></i>
+		</div>
 	</div>
 
 	<!-- Scripts -->
