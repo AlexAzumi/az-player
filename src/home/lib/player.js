@@ -158,7 +158,7 @@ class Player {
 			playIcon.classList.add('fa', 'fa-play', 'position-absolute', 'play-icon')
 
 			// Establecer id
-			songElement.setAttribute('song-path', path.join(song.path, song.musicFile))
+			songElement.setAttribute('song-path', path.join(song.path, song.audio))
 			songElement.setAttribute('song-title', song.title)
 			songElement.setAttribute('song-artist', song.artist)
 			songElement.id = songID

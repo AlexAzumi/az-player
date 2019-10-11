@@ -1,7 +1,7 @@
 // Dependencias
 const { dialog, app } = require('electron')
 const fs = require('fs')
-const lineByLine = require('n-readlines')
+const LineByLine = require('n-readlines')
 const path = require('path')
 const sentry = require('@sentry/electron')
 
@@ -135,13 +135,9 @@ class Manager {
 	 * @return Lista de canciones
 	 */
 	getSongsData(songsLocation) {
-		// Información alamacenada temporalmente
-		let tempPath = []
-		let tempMusics = []
-		let tempTitles = []
-		let tempArtists = []
-		let tempBgs = []
-
+		// Canciones
+		let songs = new Array()
+		
 		// Pasar canción por canción encontrada
 		for (let song of songList) {
 			let files
@@ -157,121 +153,131 @@ class Manager {
 				// Pasar a la siguiente canción
 				continue
 			}
-			// Almacenar dirección
-			tempPath.push(folderPath)
-			// Buscar archivos
-			for (let file of files) {
-				if (file.includes('.osu') || file.includes('.OSU')) {
-					// Crear liner
-					let liner
-					// Log
-					console.log(`Archivo .osu encontrado! ${file}`)
-					// Banderas
-					let foundMusic = false
-					let foundTitle = false
-					let foundArtist = false
-					let foundBg = false
-
-					let nextIsBg = false
-
-					// Dirección del archivo
-					let filePath = path.join(songsLocation, song, file)
-
-					// Crear instancia
-					try {
-						liner = new lineByLine(filePath)
-					}
-					catch (ex) {
-						// Reportar a sentry
-						sentry.withScope((scope) => {
-							// Añadir extras
-							scope.setExtra('Archivo', filePath)
-							// Mandar excepción
-							sentry.captureException(ex)
-						})
-						// Leer siguiente beatmap
-						continue
-					}
-
-					// Línea
-					let line
-					// Leer archivo linea por línea
-					while (line !== false) {
-						// Leer línea
-						line = liner.next()
-
-						// Verificar si existe una línea
-						if (!line) {
-							break
-						}
-						line = line.toString('ascii')
-
-						// Título encontrado
-						if (line.includes('Title:')) {
-							line = line.replace('Title:', '')
-							tempTitles.push(line)
-							foundTitle = true
-						}
-						// Artista encontrado
-						else if (line.includes('Artist:')) {
-							line = line.replace('Artist:', '')
-							console.log(`Artista: ${line}`)
-							tempArtists.push(line)
-							foundArtist = true
-						}
-						// Nombre de audio encontrado
-						else if (line.includes('AudioFilename:')) {
-							line = line.replace('AudioFilename: ', '')
-							tempMusics.push(line)
-							foundMusic = true
-						}
-						else if (nextIsBg) {
-							// Crear regex
-							const checkRegex = RegExp('\"(.)+.(jpg|png)\"', 'i')
-							// Probar regex
-							if (checkRegex.test(line)) {
-								line = line.split('"')
-								tempBgs.push(line[1])
-
-								foundBg = true
-								nextIsBg = false
-							}
-						}
-						else if (line.includes('[Events]'))
-						{
-							nextIsBg = true
-						}
-
-						// Toda la información necesaria fue encontrada
-						if (foundMusic && foundArtist && foundTitle && foundBg) {
-							break
-						}
-					}
-					// No se encontró un fondo
-					if (nextIsBg) {
-						tempBgs.push('NONE')
-					}
-					// Dejar de buscar archivos en carpeta
-					break
-				}
+			// Obtener canción
+			const data = this.getSong(files, folderPath, songsLocation)
+			if (data) {
+				songs.push(data)
 			}
 		}
-
-		// Almacenar información temporalmente
-		let tempMusicInfo = []
-
-		// Crear lista de canciones
-		for (let i = 0; i < tempMusics.length; i++) {
-			tempMusicInfo.push({
-				path: tempPath[i],
-				musicFile: tempMusics[i].replace(/\r/, ''),
-				title: tempTitles[i].replace(/\r/, ''),
-				artist: tempArtists[i].replace(/\r/, ''),
-				background: tempBgs[i].replace(/\r/, '')
-			})
-		}
 		// Regresar lista de música
-		return tempMusicInfo
+		return songs
+	}
+
+	/**
+	 * Obtener información de canciones
+	 * @param {string[]} files Lista de archivos
+	 * @param {string} folderPath Localización de los archivos
+	 */
+	getSong(files, folderPath) {
+		// Canción
+		let song = {
+			path: null,
+			audio: null,
+			title: null,
+			artist: null,
+			background: null
+		}
+		// Almacenar dirección
+		song.path = folderPath;
+		// Buscar archivos
+		for (let file of files) {
+			if (file.includes('.osu') || file.includes('.OSU')) {
+				// Bandera
+				let isNextBG = false
+				// Crear liner
+				let liner
+				// Log
+				console.log(`Archivo .osu encontrado! ${file}`)
+				// Dirección del archivo
+				let filePath = path.join(song.path, file)
+
+				// Crear liner
+				try {
+					liner = new LineByLine(filePath)
+				}
+				catch (ex) {
+					console.log(ex)
+					// Reportar a sentry
+					sentry.withScope((scope) => {
+						// Añadir extras
+						scope.setExtra('Archivo', filePath)
+						// Mandar excepción
+						sentry.captureException(ex)
+					})
+					// Leer siguiente beatmap
+					continue
+				}
+
+				// Línea
+				let line
+				// Leer archivo linea por línea
+				while (line !== false) {
+					// Leer línea
+					line = liner.next()
+					// Verificar si existe una línea
+					if (!line) {
+						break
+					}
+					line = line.toString('ascii')
+
+					// Título encontrado
+					if (line.includes('Title:')) {
+						line = line.replace('Title:', '')
+						line = this.deleteSpecialCharacter(line)
+						song.title = line
+					}
+					// Artista encontrado
+					else if (line.includes('Artist:')) {
+						line = line.replace('Artist:', '')
+						line = this.deleteSpecialCharacter(line)
+						song.artist = line
+					}
+					// Nombre de audio encontrado
+					else if (line.includes('AudioFilename:')) {
+						line = line.replace('AudioFilename: ', '')
+						line = this.deleteSpecialCharacter(line)
+						song.audio = line
+					}
+					else if (isNextBG) {
+						// Crear regex
+						const checkRegex = RegExp('\"(.)+.(jpg|png)\"', 'i')
+						// Probar regex
+						if (checkRegex.test(line)) {
+							line = line.split('"')
+							song.background = line[1]
+							isNextBG = false
+						}
+					}
+					else if (line.includes('[Events]'))
+					{
+						isNextBG = true
+					}
+
+					if (song.artist
+						&& song.audio
+						&& song.background
+						&& song.path
+						&& song.title) {
+							return song
+						}
+				}
+				// No se encontró un fondo
+				if (isNextBG) {
+					song.background = 'NONE'
+				}
+				// Dejar de buscar archivos en carpeta
+				return song
+			}
+		}
+		return null
+	}
+
+	/**
+	 * Eliminar caracteres especiales
+	 * @param string text 
+	 */
+	deleteSpecialCharacter(text) {
+		return text.replace(/\r/, '');
 	}
 }
 
