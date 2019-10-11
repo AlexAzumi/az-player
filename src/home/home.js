@@ -88,10 +88,13 @@ let player
  */
 ipc.on('loaded-songs', (event, playlist) => {
 	if (player !== undefined || player === null) {
+		console.log(player)
 		if (windowControl.isLoadingScreenActive) {
 			windowControl.setLoadingScreen(false)
 		}
 		player.stopSong()
+		player.playlist = player.sortPlaylist(playlist, player.config.order)
+		player.addSongsToContainer(player.playlist)
 	} else {
 		// Instanciar reproductor
 		player = new Player(playlist, localization)

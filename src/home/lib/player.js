@@ -45,6 +45,8 @@ class Player {
 		this.volume = []
 		// Tiempo de espera
 		this.previousTime = 3.0
+		// Estado del reproductor
+		this.neverPlayed = true
 
 		/*
 		 * Obtener DOM
@@ -495,9 +497,10 @@ class Player {
 	 * Reproducir o pausar canción
 	 */
 	playPauseSong() {
-		if (this.musicPlayer.readyState == 0) {
+		if (this.musicPlayer.readyState == 0 && this.neverPlayed) {
 			// Iniciar canción
 			this.startSong(this.currentSong)
+			this.neverPlayed = false
 			return
 		}
 		// La canción está pausada
@@ -514,6 +517,12 @@ class Player {
 	 * Detener canción
 	 */
 	stopSong() {
+		// Restaurar estado
+		this.endedSongs = []
+		this.currentSong = 0
+		this.readySong = true
+		this.neverPlayed = true
+
 		// Pausar
 		this.musicPlayer.pause()
 		// Regresar al inicio
