@@ -11,6 +11,7 @@ const LocalizationManager = require('../localization');
 const Player = require('./lib/player');
 const Search = require('./lib/search');
 const Window = require('./lib/window');
+// Angular
 require('./lib/angularApp');
 // Config
 const config = require('../../config.json');

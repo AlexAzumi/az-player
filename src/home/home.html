@@ -29,29 +29,29 @@
 		</div>
 
 		<!-- Barra -->
-		<nav class="bar">
+		<nav ng-controller="menuBarController" class="bar">
 			<!-- Menú de inicio -->
 			<div class="menu">
-				<li id="homeMenu" class="menu-item" submenu="home">{menu.home.title}</li>
+				<li id="homeMenu" class="menu-item" submenu="home">{{menu.home.title}}</li>
 				<div class="submenu" id="submenu-home">
 					<li class="submenu-item separator" id="updateDatabaseButton">
-						<span id="updateDatabaseText">{menu.home.updateDatabase}</span>
+						<span id="updateDatabaseText">{{menu.home.updateDatabase}}</span>
 						<span class="shortcut">Ctrl+U</span>
 					</li>
-					<li class="submenu-item" id="exitAppButton">{menu.home.exit}</li>
+					<li class="submenu-item" id="exitAppButton">{{menu.home.exit}}</li>
 				</div>
 			</div>
 
 			<!-- Menú de ordenamiento -->
 			<div class="menu">
-				<li id="sortMenu" class="menu-item" submenu="order">{menu.order.title}</li>
+				<li id="sortMenu" class="menu-item" submenu="order">{{menu.sort.title}}</li>
 				<div class="submenu" id="submenu-order">
 					<li class="submenu-item" id="sortArtistButton">
-						<span id="orderByArtist">{menu.order.byArtist}</span> 
+						<span id="orderByArtist">{{menu.sort.byArtist}}</span> 
 						<span class="shortcut">Ctrl+1</span>
 					</li>
 					<li class="submenu-item" id="sortTitleButton">
-						<span id="orderByTitle">{menu.order.byTitle}</span>
+						<span id="orderByTitle">{{menu.sort.byTitle}}</span>
 						<span class="shortcut">Ctrl+2</span>
 					</li>
 				</div>
@@ -59,18 +59,18 @@
 
 			<!-- Menú de ordenamiento -->
 			<div class="menu">
-				<li id="localizationMenu" class="menu-item" submenu="locals">{localizationText}</li>
+				<li id="localizationMenu" class="menu-item" submenu="locals">{{menu.localizationText}}</li>
 				<div class="submenu" id="submenu-locals"></div>
 			</div>
 
 			<!-- Menú de ayuda -->
 			<div class="menu">
-				<li id="helpMenu" class="menu-item" submenu="help">{menu.help.title}</li>
+				<li id="helpMenu" class="menu-item" submenu="help">{{menu.help.title}}</li>
 				<div class="submenu" id="submenu-help">
-					<li class="submenu-item separator" id="refreshButton">{menu.help.refreshWindow}</li>
-					<li class="submenu-item separator" id="donateButton">{menu.help.donate}</li>
+					<li class="submenu-item separator" id="refreshButton">{{menu.help.refreshWindow}}</li>
+					<li class="submenu-item separator" id="donateButton">{{menu.help.donate}}</li>
 					<li class="submenu-item" id="aboutButton">
-						<span id="aboutButtonText">{menu.help.about}</span>
+						<span id="aboutButtonText">{{menu.help.about}}</span>
 						<span class="shortcut">F1</span>
 					</li>
 				</div>
@@ -91,9 +91,12 @@
 		</nav>
 
 		<!-- Pantalla de carga -->
-		<div id="loadingScreen" class="procesing-beatmaps">
+		<div
+			ng-controller="loadingScreenController"
+			id="loadingScreen"
+			class="procesing-beatmaps">
 			<div class="loading">
-				<h1 id="loadingMessage" class="display-4 mb-4">{loadingScreen.message}</h1>
+				<h1 id="loadingMessage" class="display-4 mb-4">{{loadingScreen.message}}</h1>
 				<i class="fas fa-spinner fa-6x fa-pulse text-primary"></i>
 			</div>
 		</div>
@@ -101,9 +104,9 @@
 		<!-- Contenedor -->
 		<div class="container-fluid">
 			<!-- App -->
-			<div class="row">
+			<div ng-controller="playerController" class="row">
 				<!-- Reproducción -->
-				<div id="player" class="player col-md-8" ng-controller="playerController">
+				<div id="player" class="player col-md-8">
 					<div id="songTitleContainer" class="title-container p-3">
 						<h2 class="song-title mb-0" id="songTitle">{{player.welcome}}</h2>
 					</div>
@@ -153,12 +156,12 @@
 					<!-- Cuadro de búsqueda -->
 					<div id="songsListTitle" class="search-box">
 						<i class="fas fa-search fa-xs search-icon"></i>
-						<input id="searchInput" class="search-input form-control" type="search">
+						<input id="searchInput" class="search-input form-control" type="search" placeholder="{{search.placeholder}}">
 					</div>
 					<!-- Lista de canciones -->
 					<div id="songsList" class="songs-list"></div>
 					<!-- Mensaje sin resultados -->
-					<p id="noResults" class="d-none search-no-results text-center">{search.noResults}</p>
+					<p id="noResults" class="d-none search-no-results text-center">{{search.noResults}}</p>
 				</div>
 			</div>
 		</div>
