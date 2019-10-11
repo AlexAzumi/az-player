@@ -1,18 +1,19 @@
 // Dependencias
-const { dialog } = require('electron').remote
-const { init, showReportDialog } = require('@sentry/electron')
-const { remote } = require('electron')
-const $ = require('jquery')
-const ipc = require('electron').ipcRenderer
-const package = require('../../package.json')
+const { dialog } = require('electron').remote;
+const { init, showReportDialog } = require('@sentry/electron');
+const { remote } = require('electron');
+const $ = require('jquery');
+const ipc = require('electron').ipcRenderer;
+const package = require('../../package.json');
 // Librerías
-const Bar = require('./lib/bar')
-const LocalizationManager = require('../localization')
-const Player = require('./lib/player')
-const Search = require('./lib/search')
-const Window = require('./lib/window')
+const Bar = require('./lib/bar');
+const LocalizationManager = require('../localization');
+const Player = require('./lib/player');
+const Search = require('./lib/search');
+const Window = require('./lib/window');
+require('./lib/angularApp');
 // Config
-const config = require('../../config.json')
+const config = require('../../config.json');
 
 /*
  * Iniciar Sentry
@@ -23,85 +24,52 @@ if (config.sentry.enabled) {
 		beforeSend(event) {
 			// Verificar si es una exepción
 			if (event.exception) {
-				showReportDialog()
+				showReportDialog();
 			}
-	
-			return event
+
+			return event;
 		}
-	})
+	});
 }
 
 // Localización
-const localization = new LocalizationManager()
-$(document).ready(() => {
-	// Caja de actualización
-	$('#updateBoxTitle').text(localization.getString('update.box.title'))
-	$('#declineUpdateBtn').text(localization.getString('update.laterBtn'))
-	$('#acceptUpdateBtn').text(localization.getString('update.updateBtn'))
-	// Barra
-	$('#homeMenu').text(localization.getString('menu.home.title'))
-	$('#updateDatabaseText').text(localization.getString('menu.home.updateDatabase'))
-	$('#exitAppButton').text(localization.getString('menu.home.exit'))
-
-	$('#sortMenu').text(localization.getString('menu.sort.title'))
-	$('#orderByArtist').text(localization.getString('menu.sort.byArtist'))
-	$('#orderByTitle').text(localization.getString('menu.sort.byTitle'))
-
-	$('#helpMenu').text(localization.getString('menu.help.title'))
-	$('#refreshButton').text(localization.getString('menu.help.refreshWindow'))
-	$('#donateButton').text(localization.getString('menu.help.donate'))
-	$('#aboutButtonText').text(localization.getString('menu.help.about'))
-
-	$('#localizationMenu').text(localization.getString('localizationText'))
-	// Reproductor
-	$('#songTitle').text(localization.getString('player.welcome'))
-	$('#playerVolume').attr('title', localization.getString('player.volume'))
-	$('#previousBtn').attr('title', localization.getString('player.previousBtn'))
-	$('#playPauseBtn').attr('title', localization.getString('player.playPauseBtn'))
-	$('#nextBtn').attr('title', localization.getString('player.nextBtn'))
-	$('#randomBtn').attr('title', localization.getString('player.suffleBtn'))
-	// Pantalla de actualización
-	$('#loadingMessage').text(localization.getString('loadingScreen.message'))
-	// Búsqueda
-	$('#searchInput').attr('placeholder', localization.getString('search.placeholder'))
-	$('#noResults').text(localization.getString('search.noResults'))
-})
+const localization = new LocalizationManager();
 
 /*
  * Abrir herramientas
  */
 remote.globalShortcut.register('CommandOrControl+Shift+I', () => {
-	remote.BrowserWindow.getFocusedWindow().webContents.openDevTools()
-})
+	remote.BrowserWindow.getFocusedWindow().webContents.openDevTools();
+});
 
 window.addEventListener('beforeunload', () => {
-	remote.globalShortcut.unregisterAll()
-})
+	remote.globalShortcut.unregisterAll();
+});
 
 // Control de ventana
-const windowControl = new Window()
+const windowControl = new Window();
 // Reproductor
-let player
+let player;
 
 /*
  * Recibir canciones del proceso principal
  */
 ipc.on('loaded-songs', (event, playlist) => {
 	if (player !== undefined || player === null) {
-		console.log(player)
+		console.log(player);
 		if (windowControl.isLoadingScreenActive) {
-			windowControl.setLoadingScreen(false)
+			windowControl.setLoadingScreen(false);
 		}
-		player.stopSong()
-		player.playlist = player.sortPlaylist(playlist, player.config.order)
-		player.addSongsToContainer(player.playlist)
+		player.stopSong();
+		player.playlist = player.sortPlaylist(playlist, player.config.order);
+		player.addSongsToContainer(player.playlist);
 	} else {
 		// Instanciar reproductor
-		player = new Player(playlist, localization)
+		player = new Player(playlist, localization);
 		// Instanciar barra
-		new Bar(player, windowControl, localization)
+		new Bar(player, windowControl, localization);
 		// Instanciar búsqueda
-		new Search(player)
+		new Search(player);
 	}
 
 	/*
@@ -110,17 +78,17 @@ ipc.on('loaded-songs', (event, playlist) => {
 
 	// Reproducir/pausar canción
 	remote.globalShortcut.register('MediaPlayPause', () => {
-		player.playPauseSong()
-	})
+		player.playPauseSong();
+	});
 	// Siguiente canción
 	remote.globalShortcut.register('MediaNextTrack', () => {
-		player.playNextSong()
-	})
+		player.playNextSong();
+	});
 	// Canción anterior
 	remote.globalShortcut.register('MediaPreviousTrack', () => {
-		player.playPreviousSong()
-	})
-})
+		player.playPreviousSong();
+	});
+});
 
 /*
  * Botones de la miniatura
@@ -128,29 +96,29 @@ ipc.on('loaded-songs', (event, playlist) => {
 
 // Anterior
 ipc.on('previous-button', () => {
-	player.playPreviousSong()
-})
+	player.playPreviousSong();
+});
 
 // Reproducir/pausar
 ipc.on('play-button', () => {
-	player.playPauseSong()
-})
+	player.playPauseSong();
+});
 
 // Siguiente
 ipc.on('next-button', () => {
-	player.playNextSong()
-})
+	player.playNextSong();
+});
 
 /*
  * Actualizaciones automáticas
  */
 
 // Mensaje de actualizacón
-const updateBox = document.getElementById('updateBox')
+const updateBox = document.getElementById('updateBox');
 
 // Botones de actualización
-const acceptUpdateBtn = document.getElementById('acceptUpdateBtn')
-const declineUpdateBtn = document.getElementById('declineUpdateBtn')
+const acceptUpdateBtn = document.getElementById('acceptUpdateBtn');
+const declineUpdateBtn = document.getElementById('declineUpdateBtn');
 
 /*
  * Eventos de botones
@@ -158,21 +126,21 @@ const declineUpdateBtn = document.getElementById('declineUpdateBtn')
 
 // Aceptar actualización
 acceptUpdateBtn.addEventListener('click', () => {
-	ipc.send('update-accepted')
+	ipc.send('update-accepted');
 	// Ocultar caja
-	updateBox.classList.remove('show')
-})
+	updateBox.classList.remove('show');
+});
 
 // Denegar actualización
 declineUpdateBtn.addEventListener('click', () => {
 	// Ocultar caja
-	updateBox.classList.remove('show')
-})
+	updateBox.classList.remove('show');
+});
 
 // Actualización disponible
 ipc.on('update-available', () => {
-	updateBox.classList.add('show')
-})
+	updateBox.classList.add('show');
+});
 
 // Error al actualizar
 ipc.on('update-error', () => {
@@ -180,8 +148,8 @@ ipc.on('update-error', () => {
 		title: localization.getString('update.updateError.title'),
 		message: localization.getString('update.updateError.message'),
 		type: 'error'
-	})
-})
+	});
+});
 
 // Actualización descargada
 ipc.on('update-downloaded', () => {
@@ -190,12 +158,10 @@ ipc.on('update-downloaded', () => {
 		title: localization.getString('update.updateDownloaded.title'),
 		message: localization.getString('update.updateDownloaded.message'),
 		type: 'question',
-		buttons: [
-			localization.getString('update.acceptBtn'),
-			localization.getString('update.laterBtn')]
-	})
+		buttons: [ localization.getString('update.acceptBtn'), localization.getString('update.laterBtn') ]
+	});
 	// Actualización aceptada
 	if (response == 0) {
-		ipc.send('quit-and-install')
+		ipc.send('quit-and-install');
 	}
-})
+});

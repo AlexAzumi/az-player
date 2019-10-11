@@ -10,14 +10,14 @@ class Search {
 		/*
 		 * DOM
 		 */
-		this.searchInput = document.getElementById('searchInput')
-		this.noResultsMessage = document.getElementById('noResults')
+		this.searchInput = document.getElementById('searchInput');
+		this.noResultsMessage = document.getElementById('noResults');
 
 		// Reproductor
-		this.player = player
+		this.player = player;
 
 		// Asignar eventos
-		this.assingEvents()
+		this.assingEvents();
 	}
 
 	/**
@@ -26,23 +26,25 @@ class Search {
 	searchSongs() {
 		// Filtrar
 		let searchResults = this.player.playlist.filter((song) => {
-			const title = song.title.toLowerCase()
-			const artist = song.artist.toLowerCase()
-			if (title.includes(this.searchInput.value.toLowerCase()) || artist.includes(this.searchInput.value.toLowerCase())) {
-				return true
+			const title = song.title.toLowerCase();
+			const artist = song.artist.toLowerCase();
+			if (
+				title.includes(this.searchInput.value.toLowerCase()) ||
+				artist.includes(this.searchInput.value.toLowerCase())
+			) {
+				return true;
+			} else {
+				return false;
 			}
-			else {
-				return false
-			}
-		})
+		});
 
-		searchResults = this.player.sortPlaylist(searchResults, this.player.config.order)
-		
+		searchResults = this.player.sortPlaylist(searchResults, this.player.config.order);
+
 		// Verificar resultados
 		if (searchResults.length > 0) {
-			this.noResultsMessage.classList.add('d-none')
+			this.noResultsMessage.classList.add('d-none');
 		} else {
-			this.noResultsMessage.classList.remove('d-none')
+			this.noResultsMessage.classList.remove('d-none');
 		}
 
 		// Ocultar elementos
@@ -51,19 +53,18 @@ class Search {
 			if (searchResults.length > 0) {
 				for (let song of searchResults) {
 					if (song.title !== element.getAttribute('song-title')) {
-						element.setAttribute('hidden', '')
-					}
-					else {
-						element.removeAttribute('hidden')
-						break
+						element.setAttribute('hidden', '');
+					} else {
+						element.removeAttribute('hidden');
+						break;
 					}
 				}
 			} else {
-				element.setAttribute('hidden', '')
+				element.setAttribute('hidden', '');
 			}
 		}
 		// Vaciar resultados
-		searchResults = []
+		searchResults = [];
 	}
 
 	/**
@@ -71,8 +72,8 @@ class Search {
 	 */
 	assingEvents() {
 		// Entrada en cuadro de texto
-		this.searchInput.addEventListener('input', this.searchSongs.bind(this))
+		this.searchInput.addEventListener('input', this.searchSongs.bind(this));
 	}
 }
 
-module.exports = Search
+module.exports = Search;

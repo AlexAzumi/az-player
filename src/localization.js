@@ -1,12 +1,12 @@
 // Dependencias
-const electron = require('electron')
-const fs = require('fs')
-const os = require('os')
-const path = require('path')
+const electron = require('electron');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 
-const DEFAULT_LOCALE = 'en'
-const LOCALE_CONFIG_DIR = path.join(os.homedir(), 'az-player', 'localization.json')
-const LOCALE_DIR = path.join(__dirname, '../localization')
+const DEFAULT_LOCALE = 'en';
+const LOCALE_CONFIG_DIR = path.join(os.homedir(), 'az-player', 'localization.json');
+const LOCALE_DIR = path.join(__dirname, '../localization');
 
 class LocalizationManager {
 	/**
@@ -14,16 +14,16 @@ class LocalizationManager {
 	 */
 	constructor() {
 		// Obtener applicación
-		this.app = electron.app ? electron.app : electron.remote.app
+		this.app = electron.app ? electron.app : electron.remote.app;
 		// Obtener localización
-		this.locale = this.getLocale(this.app)
+		this.locale = this.getLocale(this.app);
 		// Obtener configuración
-		this.localeConfig = this.getLocaleConfig(LOCALE_CONFIG_DIR)
+		this.localeConfig = this.getLocaleConfig(LOCALE_CONFIG_DIR);
 		// Cargar archivo de localización
-		this.localization = this.getLocaleFile(LOCALE_DIR)
+		this.localization = this.getLocaleFile(LOCALE_DIR);
 
 		// Log
-		console.log(`Locale: ${this.locale} | Configured locale: ${this.localeConfig}`)
+		console.log(`Locale: ${this.locale} | Configured locale: ${this.localeConfig}`);
 	}
 
 	/**
@@ -32,7 +32,7 @@ class LocalizationManager {
 	 * @returns {string} Localización
 	 */
 	getLocale(app) {
-		return app.getLocale()
+		return app.getLocale();
 	}
 
 	/**
@@ -43,32 +43,32 @@ class LocalizationManager {
 		if (fs.existsSync(localizationDir)) {
 			// Leer archivo
 			try {
-				const read = fs.readFileSync(localizationDir)
-				return JSON.parse(read).localization
+				const read = fs.readFileSync(localizationDir);
+				return JSON.parse(read).localization;
 			} catch (ex) {
-				console.error(ex)
-				this.app.exit(-1)
+				console.error(ex);
+				this.app.exit(-1);
 			}
 		} else {
 			// Crear archivo
 			const localization = {
 				localization: this.locale
-			}
-			const data = JSON.stringify(localization, null, 2)
+			};
+			const data = JSON.stringify(localization, null, 2);
 
 			// Verificar la existencia de la carpeta
-			const azFolder = path.join(LOCALE_CONFIG_DIR, '../')
+			const azFolder = path.join(LOCALE_CONFIG_DIR, '../');
 			if (!fs.existsSync(azFolder)) {
-				fs.mkdirSync(azFolder)
+				fs.mkdirSync(azFolder);
 			}
 
 			// Escribir archivo de localización
 			try {
-				fs.writeFileSync(localizationDir, data, 'utf-8')
-				return localization.localization
+				fs.writeFileSync(localizationDir, data, 'utf-8');
+				return localization.localization;
 			} catch (ex) {
-				console.error(ex)
-				this.app.exit(-1)
+				console.error(ex);
+				this.app.exit(-1);
 			}
 		}
 	}
@@ -78,34 +78,34 @@ class LocalizationManager {
 	 * @return Datos de localización
 	 */
 	getLocaleFile(localesDir) {
-		let localePath = path.join(localesDir, `${this.localeConfig}.json`)
+		let localePath = path.join(localesDir, `${this.localeConfig}.json`);
 		if (fs.existsSync(localePath)) {
 			try {
-				const load = fs.readFileSync(localePath)
-				return JSON.parse(load)
+				const load = fs.readFileSync(localePath);
+				return JSON.parse(load);
 			} catch (ex) {
-				console.error(ex)
-				this.app.exit(-1)
+				console.error(ex);
+				this.app.exit(-1);
 			}
 		} else {
 			// Verificar si variación de idioma
 			if (this.localeConfig.includes('-')) {
-				const locale = this.localeConfig.split('-')
-				localePath = path.join(localesDir, `${locale[0]}.json`)
+				const locale = this.localeConfig.split('-');
+				localePath = path.join(localesDir, `${locale[0]}.json`);
 				// Buscar idioma
 				if (fs.existsSync(localePath)) {
 					try {
-						const load = fs.readFileSync(localePath)
-						return JSON.parse(load)
+						const load = fs.readFileSync(localePath);
+						return JSON.parse(load);
 					} catch (ex) {
-						console.error(ex)
-						this.app.exit(-1)
+						console.error(ex);
+						this.app.exit(-1);
 					}
 				} else {
-					return DEFAULT_LOCALE
+					return DEFAULT_LOCALE;
 				}
 			} else {
-				return DEFAULT_LOCALE
+				return DEFAULT_LOCALE;
 			}
 		}
 	}
@@ -116,24 +116,24 @@ class LocalizationManager {
 	 */
 	getString(location) {
 		if (location) {
-			let phrase
-			const positions = location.split('.')
+			let phrase;
+			const positions = location.split('.');
 			for (let position of positions) {
 				try {
 					if (phrase) {
-						phrase = phrase[position]
+						phrase = phrase[position];
 					} else {
-						phrase = this.localization[position]
+						phrase = this.localization[position];
 					}
 				} catch (ex) {
-					console.error(ex)
-					this.app.exit(-1)
+					console.error(ex);
+					this.app.exit(-1);
 				}
 			}
 
-			return phrase
+			return phrase;
 		} else {
-			throw 'Localization Manager: Falta localización del texto'
+			throw 'Localization Manager: Falta localización del texto';
 		}
 	}
 
@@ -141,27 +141,28 @@ class LocalizationManager {
 	 * Obtener lista de localizaciones
 	 */
 	getLocalizationList() {
-		const files = fs.readdirSync(LOCALE_DIR, { withFileTypes: true })
-			.filter(file => !file.isDirectory())
-			.filter(file => file.name.includes('.json'))
-			.map(file => file.name)
-		
-		let locals = []
+		const files = fs
+			.readdirSync(LOCALE_DIR, { withFileTypes: true })
+			.filter((file) => !file.isDirectory())
+			.filter((file) => file.name.includes('.json'))
+			.map((file) => file.name);
+
+		let locals = [];
 		for (let file of files) {
-			const location = path.join(LOCALE_DIR, file)
+			const location = path.join(LOCALE_DIR, file);
 			try {
-				const read = fs.readFileSync(location)
-				const parts = file.split('.')
-				locals.push({ 
+				const read = fs.readFileSync(location);
+				const parts = file.split('.');
+				locals.push({
 					locale: parts[0],
 					localeName: JSON.parse(read).localization
-				})
+				});
 			} catch (ex) {
-				console.error(ex)
+				console.error(ex);
 			}
 		}
 
-		return locals
+		return locals;
 	}
 
 	/**
@@ -169,7 +170,7 @@ class LocalizationManager {
 	 * @return {string} Localización actual
 	 */
 	getActualLocale() {
-		return this.localeConfig
+		return this.localeConfig;
 	}
 
 	/**
@@ -180,21 +181,25 @@ class LocalizationManager {
 	setLocale(locale) {
 		if (locale) {
 			try {
-				const data = JSON.stringify({
-					localization: locale
-				}, null, 2)
-				fs.writeFileSync(LOCALE_CONFIG_DIR, data)
+				const data = JSON.stringify(
+					{
+						localization: locale
+					},
+					null,
+					2
+				);
+				fs.writeFileSync(LOCALE_CONFIG_DIR, data);
 
-				return true
+				return true;
 			} catch (ex) {
 				// Log
-				console.error(ex)
-				return false
+				console.error(ex);
+				return false;
 			}
 		} else {
-			throw 'Localization Manager: Falta localización a cambiar'
+			throw 'Localization Manager: Falta localización a cambiar';
 		}
 	}
 }
 
-module.exports = LocalizationManager
+module.exports = LocalizationManager;
