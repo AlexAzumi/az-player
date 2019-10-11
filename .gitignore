@@ -5,7 +5,7 @@
 /assets/css/
 
 # Fuentes descargadas
-/fonts
+/assets/fonts
 
 # Versiones pre-compiladas
 /dist
