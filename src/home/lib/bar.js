@@ -188,6 +188,9 @@ class Bar {
 	 * Establecer menú de localizaciones
 	 */
 	setLocalizationMenu() {
+		if (document.getElementById('submenu-locals').children.length > 0) {
+			return
+		}
 		const list = localization.getLocalizationList()
 		for (let locale of list) {
 			const element = document.createElement('li')

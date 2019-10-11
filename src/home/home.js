@@ -92,15 +92,14 @@ ipc.on('loaded-songs', (event, playlist) => {
 			windowControl.setLoadingScreen(false)
 		}
 		player.stopSong()
-		player = null
+	} else {
+		// Instanciar reproductor
+		player = new Player(playlist, localization)
+		// Instanciar barra
+		new Bar(player, windowControl, localization)
+		// Instanciar búsqueda
+		new Search(player)
 	}
-	
-	// Instanciar reproductor
-	player = new Player(playlist, localization)
-	// Instanciar barra
-	new Bar(player, windowControl, localization)
-	// Instanciar búsqueda
-	new Search(player)
 
 	/*
 	 * Regitrar teclas de media
