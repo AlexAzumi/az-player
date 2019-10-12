@@ -1,20 +1,25 @@
 // Dependencias
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, remote } = require('electron');
 const { dialog } = require('electron').remote;
 const angular = require('angular');
 const LozalizationManager = require('../../localization');
-
 // Localización
 const localization = new LozalizationManager();
-
+// Ventana
+const window = remote.getCurrentWindow();
+// Elementos
+const submenus = document.querySelectorAll('.submenu');
 // Scopes
-let updateBoxScope;
+let updateBoxScope, loadingScreenScope;
 
 /*
  * Controladores
  */
 
-// Caja de actualización
+/**
+ * Caja de actualizaciones
+ * @param $scope
+ */
 function updateController($scope) {
 	// Asignar scope
 	updateBoxScope = $scope;
@@ -37,7 +42,10 @@ function updateController($scope) {
 	};
 }
 
-// Barra de menú
+/**
+ * Barra de menú
+ * @param $scope
+ */
 function menuBarController($scope) {
 	// Localización
 	$scope.menu = {
@@ -59,17 +67,84 @@ function menuBarController($scope) {
 			about: localization.getString('menu.help.about')
 		}
 	};
+	// Banderas
+	$scope.isSubmenuOpen = false;
+	// Eventos
+	$scope.openMenu = function (event, target) {
+		// Ocultar subemnus
+		$scope.hideSubmenus();
+		// Mostrar submenú
+		$scope.isSubmenuOpen = true;
+		const el = document.getElementById(target);
+		el.style.display = 'block';
+	};
+	$scope.menuMouseOver = function (event) {
+		if (event.target.classList.contains('menu-item')) {
+			// Ocultar subemnus
+			$scope.hideSubmenus();
+			// Se tenía abierto un submenú previamente
+			if ($scope.isSubmenuOpen) {
+				event.target.click();
+			}
+		}
+	};
+	$scope.submenuElementClick = function (event) {
+		// Ocultar submenus
+		$scope.hideSubmenus();
+		$scope.isSubmenuOpen = false;
+		// Realizar acción
+		switch (event.target.getAttribute('action')) {
+			case 'updateDatabase': {
+				loadingScreenScope.$apply(function () {
+					loadingScreenScope.showLoadingScreen = true;
+				});
+				ipcRenderer.send('refresh-database');
+				break;
+			};
+			case 'exit': {
+				window.close();
+				break;
+			};
+			default: {
+				console.log('Acción desconocida');
+				break;
+			};
+		}
+	};
+	$scope.hideSubmenus = function () {
+		if ($scope.isSubmenuOpen) {
+			for (let submenu of submenus) {
+				submenu.style.display = 'none';
+			}
+		}
+	};
+	// Asignar eventos
+	for (let submenu of submenus) {
+		for (let item of submenu.children) {
+			item.addEventListener('click', $scope.submenuElementClick);
+		}
+	}
 }
 
-// Pantalla de carga
+/**
+ * Pantalla de carga
+ * @param $scope
+ */
 function loadingScreenController($scope) {
+	// Asignar scope
+	loadingScreenScope = $scope;
+	// Bandera
+	$scope.showLoadingScreen = false;
 	// Localización
 	$scope.loadingScreen = {
 		message: localization.getString('loadingScreen.message')
 	};
 }
 
-// Reproductor de música
+/**
+ * Reproductor de música
+ * @param $scope
+ */
 function playerController($scope) {
 	// Localización
 	$scope.player = {

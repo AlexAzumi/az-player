@@ -5,13 +5,12 @@ const { remote } = require('electron');
 const ipc = require('electron').ipcRenderer;
 const package = require('../../package.json');
 // Librerías
-const Bar = require('./lib/bar');
 const LocalizationManager = require('../localization');
 const Player = require('./lib/player');
 const Search = require('./lib/search');
 const Window = require('./lib/window');
 // Angular
-require('./lib/playerApp');
+const { set } = require('./lib/playerApp');
 // Config
 const config = require('../../config.json');
 // Controladores de AngularJS
@@ -57,6 +56,7 @@ let player;
  * Recibir canciones del proceso principal
  */
 ipc.on('loaded-songs', (event, playlist) => {
+	console.log(set)
 	if (player !== undefined || player === null) {
 		if (windowControl.isLoadingScreenActive) {
 			windowControl.setLoadingScreen(false);
@@ -68,7 +68,7 @@ ipc.on('loaded-songs', (event, playlist) => {
 		// Instanciar reproductor
 		player = new Player(playlist, localization);
 		// Instanciar barra
-		new Bar(player, windowControl, localization);
+		//new Bar(player, windowControl, localization);
 		// Instanciar búsqueda
 		new Search(player);
 	}

@@ -37,26 +37,32 @@
 		<nav ng-controller="menuBarController" class="bar">
 			<!-- Menú de inicio -->
 			<div class="menu">
-				<li id="homeMenu" class="menu-item" submenu="home">{{menu.home.title}}</li>
+				<li
+					ng-click="openMenu($event, 'submenu-home')"
+					ng-mouseover="menuMouseOver($event)"
+					class="menu-item">{{menu.home.title}}</li>
 				<div class="submenu" id="submenu-home">
-					<li class="submenu-item separator" id="updateDatabaseButton">
-						<span id="updateDatabaseText">{{menu.home.updateDatabase}}</span>
+					<li class="submenu-item separator" action="updateDatabase">
+						<span>{{menu.home.updateDatabase}}</span>
 						<span class="shortcut">Ctrl+U</span>
 					</li>
-					<li class="submenu-item" id="exitAppButton">{{menu.home.exit}}</li>
+					<li class="submenu-item" action="exit">{{menu.home.exit}}</li>
 				</div>
 			</div>
 
 			<!-- Menú de ordenamiento -->
 			<div class="menu">
-				<li id="sortMenu" class="menu-item" submenu="order">{{menu.sort.title}}</li>
-				<div class="submenu" id="submenu-order">
-					<li class="submenu-item" id="sortArtistButton">
-						<span id="orderByArtist">{{menu.sort.byArtist}}</span> 
+				<li
+					ng-click="openMenu($event, 'submenu-sort')"
+					ng-mouseover="menuMouseOver($event)"
+					class="menu-item">{{menu.sort.title}}</li>
+				<div class="submenu" id="submenu-sort">
+					<li class="submenu-item" action="sortByArtist">
+						<span>{{menu.sort.byArtist}}</span> 
 						<span class="shortcut">Ctrl+1</span>
 					</li>
-					<li class="submenu-item" id="sortTitleButton">
-						<span id="orderByTitle">{{menu.sort.byTitle}}</span>
+					<li class="submenu-item" action="sortByTitle">
+						<span>{{menu.sort.byTitle}}</span>
 						<span class="shortcut">Ctrl+2</span>
 					</li>
 				</div>
@@ -64,17 +70,23 @@
 
 			<!-- Menú de ordenamiento -->
 			<div class="menu">
-				<li id="localizationMenu" class="menu-item" submenu="locals">{{menu.localizationText}}</li>
+				<li
+					ng-click="openMenu($event, 'submenu-locals')"
+					ng-mouseover="menuMouseOver($event)"
+					class="menu-item">{{menu.localizationText}}</li>
 				<div class="submenu" id="submenu-locals"></div>
 			</div>
 
 			<!-- Menú de ayuda -->
 			<div class="menu">
-				<li id="helpMenu" class="menu-item" submenu="help">{{menu.help.title}}</li>
+				<li
+					ng-click="openMenu($event, 'submenu-help')"
+					ng-mouseover="menuMouseOver($event)"
+					class="menu-item">{{menu.help.title}}</li>
 				<div class="submenu" id="submenu-help">
-					<li class="submenu-item separator" id="refreshButton">{{menu.help.refreshWindow}}</li>
-					<li class="submenu-item separator" id="donateButton">{{menu.help.donate}}</li>
-					<li class="submenu-item" id="aboutButton">
+					<li class="submenu-item separator" action="refreshWindow">{{menu.help.refreshWindow}}</li>
+					<li class="submenu-item separator" action="donate">{{menu.help.donate}}</li>
+					<li class="submenu-item" action="openAbout">
 						<span id="aboutButtonText">{{menu.help.about}}</span>
 						<span class="shortcut">F1</span>
 					</li>
@@ -98,7 +110,7 @@
 		<!-- Pantalla de carga -->
 		<div
 			ng-controller="loadingScreenController"
-			id="loadingScreen"
+			ng-class="{show: showLoadingScreen}"
 			class="procesing-beatmaps">
 			<div class="loading">
 				<h1 id="loadingMessage" class="display-4 mb-4">{{loadingScreen.message}}</h1>
