@@ -2,15 +2,25 @@
 const { ipcRenderer, remote } = require('electron');
 const { dialog } = require('electron').remote;
 const angular = require('angular');
+// Módulos personales
 const LozalizationManager = require('../../localization');
+const Player = require('./player');
+const Search = require('./search');
 // Localización
 const localization = new LozalizationManager();
 // Ventana
 const window = remote.getCurrentWindow();
 // Elementos
 const submenus = document.querySelectorAll('.submenu');
+// Iconos
+const maximizeIcons = {
+	maximize: '<i class="fas fa-window-maximize fa-fw"></i>',
+	unmaximize: '<i class="far fa-window-maximize fa-fw"></i>'
+};
 // Scopes
 let updateBoxScope, loadingScreenScope;
+// Reproductor
+let player;
 
 /*
  * Controladores
@@ -118,6 +128,21 @@ function menuBarController($scope) {
 			}
 		}
 	};
+	$scope.minimizeWindow = function () {
+		window.minimize();
+	};
+	$scope.maximizeWindow = function (event) {
+		if (window.isMaximized()) {
+			event.target.innerHTML = maximizeIcons.maximize;
+			window.unmaximize();
+		} else {
+			event.target.innerHTML = maximizeIcons.unmaximize;
+			window.maximize();
+		}
+	};
+	$scope.closeWindow = function () {
+		window.close();
+	}
 	// Asignar eventos
 	for (let submenu of submenus) {
 		for (let item of submenu.children) {
@@ -162,6 +187,56 @@ angular
 	.controller('loadingScreenController', loadingScreenController)
 	.controller('menuBarController', menuBarController)
 	.controller('playerController', playerController);
+
+/**
+ * IPC
+ */
+ipcRenderer.on('loaded-songs', (event, playlist) => {
+	// Verificar si el reproductor fue previamente instanciado
+	if (player !== undefined || player === null) {
+		// Pantalla de carga activa
+		if (loadingScreenScope.showLoadingScreen) {
+			loadingScreenScope.$apply(function () {
+				loadingScreenScope.showLoadingScreen = false;
+			});
+		}
+		// Dentener
+		player.stop();
+		player.playlist = player.sortPlaylist(playlist, player.config.order);
+		player.addSongsToContainer(player.playlist);
+	}
+	// Crear reproductor y búsqueda
+	player = new Player(playlist, localization);
+	new Search(player);
+
+	/*
+	 * Regitrar teclas de media
+	 */
+	remote.globalShortcut.register('MediaPlayPause', () => {
+		player.playPauseSong();
+	});
+	remote.globalShortcut.register('MediaNextTrack', () => {
+		player.playNextSong();
+	});
+	remote.globalShortcut.register('MediaPreviousTrack', () => {
+		player.playPreviousSong();
+	});
+});
+
+// Anterior
+ipcRenderer.on('previous-button', () => {
+	player.playPreviousSong();
+});
+
+// Reproducir/pausar
+ipcRenderer.on('play-button', () => {
+	player.playPauseSong();
+});
+
+// Siguiente
+ipcRenderer.on('next-button', () => {
+	player.playNextSong();
+});
 
 /*
  * Actualizaciones automáticas

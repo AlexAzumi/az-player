@@ -27,6 +27,11 @@ html {
 	overflow: hidden;
 }
 
+.fas,
+.far {
+	pointer-events: none;
+}
+
 /*
  * Barra de menú
  */

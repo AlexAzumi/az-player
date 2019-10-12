@@ -95,13 +95,13 @@
 
 			<!-- Botones -->
 			<div class="buttons-menu">
-				<div class="button" id="minimizeButton">
+				<div class="button" ng-click="minimizeWindow()">
 					<i class="fas fa-window-minimize fa-fw"></i>
 				</div>
-				<div class="button" id="maximizeButton">
+				<div class="button" ng-click="maximizeWindow($event)">
 					<i class="fas fa-window-maximize fa-fw"></i>
 				</div>
-				<div class="button" id="closeButton">
+				<div class="button" ng-click="closeWindow()">
 					<i class="fas fa-window-close fa-fw"></i>
 				</div>
 			</div>
