@@ -74,7 +74,16 @@
 					ng-click="openMenu($event, 'submenu-locals')"
 					ng-mouseover="menuMouseOver($event)"
 					class="menu-item">{{menu.localizationText}}</li>
-				<div class="submenu" id="submenu-locals"></div>
+				<div class="submenu" id="submenu-locals">
+					<li
+						class="submenu-item"
+						ng-repeat="local in localizations"
+						ng-click="submenuElementClick($event)"
+						action="changeLocalization"
+						locale="{{local.locale}}">
+						{{local.localeName}}
+					</li>
+				</div>
 			</div>
 
 			<!-- Menú de ayuda -->

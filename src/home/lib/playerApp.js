@@ -1,7 +1,8 @@
 // Dependencias
-const { ipcRenderer, remote } = require('electron');
+const { ipcRenderer, remote, shell } = require('electron');
 const { dialog } = require('electron').remote;
 const angular = require('angular');
+const Mousetrap = require('mousetrap');
 // Módulos personales
 const LozalizationManager = require('../../localization');
 const Player = require('./player');
@@ -99,26 +100,83 @@ function menuBarController($scope) {
 		}
 	};
 	$scope.submenuElementClick = function (event) {
+		// Acción
+		let action;
 		// Ocultar submenus
 		$scope.hideSubmenus();
 		$scope.isSubmenuOpen = false;
+		if (event.code) {
+			switch (event.code) {
+				case 'F1': {
+					action = 'openAbout';
+					break;
+				}
+				case 'keyU': {
+					action = 'updateDatabse';
+					break;
+				}
+				case 'Digit1': {
+					action = 'sortByArtist';
+					break;
+				}
+				case 'Digit2': {
+					action = 'sortByTitle';
+					break;
+				}
+				default: {
+					throw `Acción no establecida: ${event.code}`;
+				}
+			}
+		}
+		else {
+			action = event.target.getAttribute('action');
+		}
 		// Realizar acción
-		switch (event.target.getAttribute('action')) {
+		console.log(action);
+		switch (action) {
 			case 'updateDatabase': {
 				loadingScreenScope.$apply(function () {
 					loadingScreenScope.showLoadingScreen = true;
 				});
 				ipcRenderer.send('refresh-database');
 				break;
-			};
+			}
 			case 'exit': {
 				window.close();
 				break;
 			};
+			case 'sortByArtist': {
+				player.sortPlaylist(player.playlist, 'artist');
+				player.addSongsToContainer(player.playlist);
+				break;
+			}
+			case 'sortByTitle': {
+				player.sortPlaylist(player.playlist, 'title');
+				player.addSongsToContainer(player.playlist);
+				break;
+			}
+			case 'refreshWindow': {
+				window.reload();
+				break;
+			}
+			case 'donate': {
+				shell.openExternal('https://ko-fi.com/alexazumi');
+				break;
+			}
+			case 'openAbout': {
+				ipcRenderer.send('open-about');
+				break;
+			}
+			case 'changeLocalization': {
+				const locale = event.target.getAttribute('locale');
+				localization.setLocale(locale);
+				window.reload();
+				break;
+			}
 			default: {
 				console.log('Acción desconocida');
 				break;
-			};
+			}
 		}
 	};
 	$scope.hideSubmenus = function () {
@@ -142,13 +200,20 @@ function menuBarController($scope) {
 	};
 	$scope.closeWindow = function () {
 		window.close();
-	}
+	};
+	// Obtener localizaciones
+	$scope.localizations = localization.getLocalizationList();
 	// Asignar eventos
 	for (let submenu of submenus) {
 		for (let item of submenu.children) {
 			item.addEventListener('click', $scope.submenuElementClick);
 		}
 	}
+	// Asignar shortcuts
+	Mousetrap.bind('ctrl+u', $scope.submenuElementClick);
+	Mousetrap.bind('ctrl+1', $scope.submenuElementClick);
+	Mousetrap.bind('ctrl+2', $scope.submenuElementClick);
+	Mousetrap.bind('f1', $scope.submenuElementClick);
 }
 
 /**
@@ -201,7 +266,7 @@ ipcRenderer.on('loaded-songs', (event, playlist) => {
 			});
 		}
 		// Dentener
-		player.stop();
+		player.stopSong();
 		player.playlist = player.sortPlaylist(playlist, player.config.order);
 		player.addSongsToContainer(player.playlist);
 	}
