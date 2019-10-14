@@ -10,15 +10,8 @@
 		"sass": "sass assets/scss/styles.scss assets/css/styles.css --style compressed",
 		"sass:dev": "sass assets/scss/styles.scss assets/css/styles.css --watch",
 		"get-fonts": "get-google-fonts -o \"./assets/fonts\" -i \"https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap\"",
-		"build": "npm run sass && electron-builder --win",
+		"build": "npm run sass && electron-builder",
 		"release": "npm run sass && electron-builder --publish always"
-	},
-	"build": {
-		"win": {
-			"publish": [
-				"github"
-			]
-		}
 	},
 	"sentryDSN": null,
 	"keywords": [],
@@ -37,6 +30,7 @@
 		"bootstrap": "^4.3.1",
 		"electron": "^6.0.12",
 		"electron-builder": "^21.2.0",
+		"electron-rebuild": "^1.8.6",
 		"electron-reload": "^1.5.0",
 		"sass": "^1.23.0"
 	},
@@ -45,6 +39,7 @@
 		"@sentry/electron": "^0.17.4",
 		"angular": "^1.7.8",
 		"electron-is-dev": "^1.1.0",
+		"electron-log": "^3.0.8",
 		"electron-updater": "^4.1.2",
 		"get-google-fonts": "^1.2.0",
 		"jquery": "^3.4.1",

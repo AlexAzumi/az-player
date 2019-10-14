@@ -132,7 +132,7 @@ function menuBarController($scope) {
 			action = event.target.getAttribute('action');
 		}
 		// Realizar acción
-		console.log(action);
+		console.log('Acción:', action);
 		switch (action) {
 			case 'updateDatabase': {
 				loadingScreenScope.$apply(function () {

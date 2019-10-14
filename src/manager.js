@@ -1,11 +1,16 @@
 // Dependencias
 const { dialog, app } = require('electron');
+const log = require('electron-log');
 const fs = require('fs');
 const LineByLine = require('n-readlines');
 const path = require('path');
 const sentry = require('@sentry/electron');
 
 const LocalizationManager = require('./localization');
+
+log.catchErrors({
+	showDialog: true
+});
 
 class Manager {
 	/**
