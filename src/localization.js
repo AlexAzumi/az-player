@@ -141,11 +141,14 @@ class LocalizationManager {
 	 * Obtener lista de localizaciones
 	 */
 	getLocalizationList() {
-		const files = fs
-			.readdirSync(LOCALE_DIR, { withFileTypes: true })
-			.filter((file) => !file.isDirectory())
-			.filter((file) => file.name.includes('.json'))
-			.map((file) => file.name);
+		let files = fs.readdirSync(LOCALE_DIR, { withFileTypes: true });
+		// Verificar si es un Dirent
+		if (typeof files[0] === 'object') {
+			files = files.map(file => file.name);
+		}
+		// Filtrar archivos encontrados
+		files.filter(file => !fs.lstatSync(path.join(LOCALE_DIR, file)).isDirectory())
+			.filter(file => file.includes('.json'))
 
 		let locals = [];
 		for (let file of files) {
