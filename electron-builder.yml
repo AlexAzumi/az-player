@@ -1,0 +1,19 @@
+# Directorios
+directories:
+  output: dist
+
+# Configuración del instalador
+nsisWeb:
+  oneClick: false
+
+# Compilación de binarios de Windows
+win:
+  # Objetivo de compilación
+  target:
+    - target: nsis-web
+      arch:
+        - x64
+        - ia32
+# Publicación
+publish:
+  - github

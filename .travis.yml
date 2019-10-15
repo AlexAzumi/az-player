@@ -1,35 +1,31 @@
 matrix:
   include:
-    - os: linux
-      services: docker
-      language: generic
-
+  - os: linux
+    services: docker
+    language: generic
 cache:
   directories:
-    - node_modules
-    - $HOME/.cache/electron
-    - $HOME/.cache/electron-builder
-
-branches:
-  only:
-    - master
-
-script:
-  - |
-    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-      docker run --rm \
-        -e GH_TOKEN=${GH_TOKEN} \
-        -v ${PWD}:/project \
-        -v ~/.cache/electron:/root/.cache/electron \
-        -v ~/.cache/electron-builder:/root/.cache/electron-builder \
-        electronuserland/builder:wine \
-        /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn get-fonts && yarn release --win --x64 -c.extraMetadata.sentryDSN=${SENTRY_DSN}"
-    else
-      yarn release
-    fi
-before_cache:
-  - rm -rf $HOME/.cache/electron-builder/wine
-
+  - node_modules
+  - "$HOME/.cache/electron"
+  - "$HOME/.cache/electron-builder"
 branches:
   except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
+  - "/^v\\d+\\.\\d+\\.\\d+$/"
+script:
+- |
+  if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+    docker run --rm \
+      -e GH_TOKEN=${GH_TOKEN} \
+      -v ${PWD}:/project \
+      -v ~/.cache/electron:/root/.cache/electron \
+      -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+      electronuserland/builder:wine \
+      /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn get-fonts && yarn release --win --x64 -c.extraMetadata.sentryDSN=${SENTRY_DSN}"
+  else
+    yarn release
+  fi
+before_cache:
+- rm -rf $HOME/.cache/electron-builder/wine
+notifications:
+  slack:
+    secure: AzolV0q4II6naHWueGMSjsjtEPi3LKI8oXXvd/rtRI7nbbTQc5lxKwpQNYG5zd2cEidoSkhUczkUcCt+f30Z3l1EJtKzqBapeyuzdmxroAYH92yGiuy7jV49PrtctfpPToEtu/Pzxq/SwXtOn4+8LD1ulM7fgyK8MO7uUutD9YLDqAfeHv4bMvbPSpXiMHPQ9pbOFZJsiSQdkb3G0LVXJHaF+VO0dcpgnfNkPPv4eSQn/GCMGjxf2ImsANi3AOLkYgp2pt/gv6MYvz64ibiESFRwH3qE4fetguy6J+kODiZMaKEvdit0dFV0s29NTGKuoGvZrgRG6tJqR8I/d+R9HDWq1p6+EIhHegZ75zkmFwcaXDPWPqi5lU0inMX0TOq1h5FuEDEUrFyqKJicONyrK0ntR0akUMCSZM7gWoEHVSNnJe+w4m2O6vTVK4tdsUuWqjy47fDJmv5hCS0Z0BZnmDLxkgAXjrAWFTTeU54/dfr0VfR0kLGPMflPZSval3cLCxW3iOTvOIoeLiHAjwu9yrTcyPjiShVkXTsKaBNXr3RwgMzsWIR7cwOvvrCnXyP23zpHP3tO6Oqnc3VDNcoJDxM/Q0TOKMT5HPrqKZbmf6nycEOG9NkF4Ax4kKUHBc4Xux4phoMChF5oULkyS1ap0+wpJuuyVYztNILpO7aLvEM=

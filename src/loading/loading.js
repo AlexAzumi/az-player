@@ -1,0 +1,3 @@
+// Dependencias
+require('./lib/loadingApp');
+

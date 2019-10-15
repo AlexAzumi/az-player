@@ -1,112 +1,176 @@
 // Dependencias
-const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron')
-const { autoUpdater } = require('electron-updater')
-const fs = require('fs')
-const path = require('path')
-const sentry = require('@sentry/electron')
-const isDev = require('electron-is-dev')
+const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
+const { autoUpdater } = require('electron-updater');
+const fs = require('fs');
+const path = require('path');
+const sentry = require('@sentry/electron');
+const isDev = require('electron-is-dev');
 
 // Manager
-const Manager = require('./src/manager')
+const Manager = require('./src/manager');
 
 // Directorio del usuario
-const homeDir = require('os').homedir()
+const homeDir = require('os').homedir();
 
 // Información de la applicación
-const package = require('./package.json')
+const package = require('./package.json');
+const config = require('./config.json');
 
 /*
  * Configuración del actualizador automático
  */
-autoUpdater.autoDownload = false
+autoUpdater.autoDownload = false;
 
 /*
  * Configuración del entorno
  */
 if (isDev) {
-	console.warn('Live reload activado')
-	require('electron-reload')(__dirname)
-}
-else {
-	sentry.init({ dsn: package.sentryDSN })
+	console.warn('Live reload activado');
+	require('electron-reload')(__dirname);
+} else if (config.sentry.enabled) {
+	sentry.init({ dsn: package.sentryDSN });
 }
 
 /*
  * Manager
  */
-let manager = new Manager(app)
+let manager;
 
 /*
  * Base de datos
  */
 const database = {
-	location: path.join(homeDir, 'osu-player', 'database.json'),
-	folder: path.join(homeDir, 'osu-player')
-}
+	location: path.join(homeDir, 'az-player', 'database.json'),
+	folder: path.join(homeDir, 'az-player')
+};
+const disclaimerAcceptRoute = path.join(homeDir, 'az-player', 'disclaimer.json');
+// Icono de la aplicación
+const appIcon = path.join(__dirname, 'assets/icons/win/icon.ico');
 
 // Información de base de datos
-let songsData = {}
+let songsData = {};
 
 /*
  * Ventanas
  */
 
 // Reproductor
-let playerWindow
+let playerWindow;
 // Pantalla de carga
-let loadingScreen
+let loadingScreen;
 // Sobre el programa
-let aboutWindow
+let aboutWindow;
+// Aviso de privacidad
+let disclaimerWindow;
 
 /**
  * Iniciar aplicación
  */
 function startApp() {
-	// Si la base de datos existe
-	if (fs.existsSync(database.location)) {
-		// Cargar base de datos
-		songsData = manager.loadDatabase(database.location)
-		// Abrir ventana
-		createMainWindow()
-	}
-	else {
-		// Repetir hasta seleccionar carpeta correcta
-		do {
-			songsData.gameLocation = manager.selectGameFolder()
-		} while (!manager.searchSongsFolder(songsData.gameLocation))
-
-		// Abrir pantalla de carga
-		showLoadingScreen()
+	// Verificar si el usuario aceptó el aviso de privacidad
+	if (fs.existsSync(disclaimerAcceptRoute)) {
+		startPlayer();
+	} else {
+		openDisclaimer();
 	}
 }
 
 // Aplicación lista
-app.on('ready', startApp)
+app.on('ready', startApp);
 
 // Todas las ventanas han sido cerradas
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+	if (process.platform !== 'darwin') {
+		app.quit();
+	}
+});
 
 // Ventana activa
 app.on('activate', () => {
-  if (playerWindow === null) {
-    startApp()
-  }
-})
+	if (playerWindow === null) {
+		startApp();
+	}
+});
 
 // Cambiar título
 ipcMain.on('change-player-title', (event, title) => {
-	playerWindow.setTitle(`${title} | osu! player`)
-})
+	playerWindow.setTitle(`${title} | az! player`);
+});
 
 // Refrescar base de datos
-ipcMain.on('refresh-database', refreshDatabase)
+ipcMain.on('refresh-database', refreshDatabase);
 
 // Abrir about
-ipcMain.on('open-about', openAbout)
+ipcMain.on('open-about', openAbout);
+
+// Aviso de privacidad aceptado
+ipcMain.on('accepted-disclaimer', acceptedDisclaimer);
+
+/**
+ * Crear archivo de disclaimer
+ */
+function acceptedDisclaimer() {
+	// Buscar carpeta
+	if (!fs.existsSync(database.folder)){
+		fs.mkdirSync(database.folder);
+	}
+	// Crear achivo
+	const file = JSON.stringify({
+		acceptedDisclaimer: true
+	}, null, 2);
+
+	try {
+		fs.writeFileSync(disclaimerAcceptRoute, file);
+		startPlayer();
+	} catch (ex) {
+		dialog.showErrorBox('¡Excepción!', ex.message);
+	}
+
+	// Cerrar ventana
+	disclaimerWindow.close();
+}
+
+/**
+ * Iniciar reproductor
+ */
+function startPlayer() {
+	// Instanciar manager
+	manager = new Manager(app);
+	// Si la base de datos existe
+	if (fs.existsSync(database.location)) {
+		// Cargar base de datos
+		songsData = manager.loadDatabase(database.location);
+		// Abrir ventana
+		createMainWindow();
+	} else {
+		// Repetir hasta seleccionar carpeta correcta
+		do {
+			songsData.gameLocation = manager.selectGameFolder();
+		} while (!manager.searchSongsFolder(songsData.gameLocation));
+
+		// Abrir pantalla de carga
+		showLoadingScreen();
+	}
+}
+
+/**
+ * Abrir aviso de privacidad
+ */
+function openDisclaimer() {
+	disclaimerWindow = new BrowserWindow({
+		height: 350,
+		width: 350,
+		frame: false,
+		resizable: false,
+		webPreferences: {
+			nodeIntegration: true
+		}
+	});
+	// Establecer icono
+	disclaimerWindow.setIcon(appIcon);
+	// Cargar página
+	disclaimerWindow.loadFile('src/disclaimer/disclaimer.html');
+}
 
 /**
  * Abrir ventana de información
@@ -114,7 +178,7 @@ ipcMain.on('open-about', openAbout)
 function openAbout() {
 	// Verificar si está abierta
 	if (aboutWindow !== undefined && aboutWindow !== null) {
-		return
+		return;
 	}
 
 	// Crear ventana
@@ -127,20 +191,20 @@ function openAbout() {
 		webPreferences: {
 			nodeIntegration: true
 		}
-	})
+	});
 	// Cargar página
-	aboutWindow.loadFile('src/about/about.html')
+	aboutWindow.loadFile('src/about/about.html');
 	// Evento de ventana cerrada
 	aboutWindow.on('closed', () => {
-		aboutWindow = null
-	})
+		aboutWindow = null;
+	});
 }
 
 /**
  * Enviar datos al reproductor
  */
 function sendDataToPlayer() {
-	playerWindow.webContents.send('loaded-songs', songsData.songs)
+	playerWindow.webContents.send('loaded-songs', songsData.songs);
 }
 
 /**
@@ -155,28 +219,28 @@ function showLoadingScreen() {
 		webPreferences: {
 			nodeIntegration: true
 		}
-	})
+	});
 	// Cargar página
-	loadingScreen.loadFile('src/loading/loading.html')
+	loadingScreen.loadFile('src/loading/loading.html');
 
 	// Al cargar obtener canciones
 	loadingScreen.webContents.on('did-finish-load', () => {
 		// Listar carpetas dentro de "Songs"
-		songList = manager.listSongsFolder(path.join(songsData.gameLocation, 'Songs'))
+		songList = manager.listSongsFolder(path.join(songsData.gameLocation, 'Songs'));
 		// Obtener información
-		songsData.songs = manager.getSongsData(path.join(songsData.gameLocation, 'Songs'))
+		songsData.songs = manager.getSongsData(path.join(songsData.gameLocation, 'Songs'));
 		// Escribir a archivo
-		manager.createDatabase(database, songsData)
+		manager.createDatabase(database, songsData);
 		// Crear ventana de reproductor
-		createMainWindow()
+		createMainWindow();
 
 		// Cerrar pantalla de carga
-		loadingScreen.close()
-	})
+		loadingScreen.close();
+	});
 	// Evento de ventana cerrada
 	loadingScreen.on('closed', () => {
-		loadingScreen = null
-	})
+		loadingScreen = null;
+	});
 }
 
 /**
@@ -184,23 +248,28 @@ function showLoadingScreen() {
  */
 function createMainWindow() {
 	// Crear ventana
-  playerWindow = new BrowserWindow({
-    width: 1280,
-    height: 720,
-    webPreferences: {
-      nodeIntegration: true
+	playerWindow = new BrowserWindow({
+		width: 1280,
+		height: 720,
+		webPreferences: {
+			nodeIntegration: true
 		},
 		minHeight: 720,
 		minWidth: 600,
-		frame: false
-  })
-	
+		frame: false,
+		show: false
+	});
+
 	// Cargar el archivo
-  playerWindow.loadFile('src/home/home.html')
+	playerWindow.loadFile('src/home/home.html');
+
+	playerWindow.once('ready-to-show', () => {
+		playerWindow.show();
+	});
 
 	// Abrir herramientas de desarrollador
 	if (isDev) {
-		playerWindow.webContents.openDevTools()
+		playerWindow.webContents.openDevTools();
 	}
 
 	// Establecer iconos
@@ -208,45 +277,45 @@ function createMainWindow() {
 		{
 			tooltip: 'Anterior',
 			icon: path.join(__dirname, 'assets/icons/previous.png'),
-			click () {
-				playerWindow.webContents.send('previous-button')
+			click() {
+				playerWindow.webContents.send('previous-button');
 			}
 		},
 		{
 			tooltip: 'Reproducir',
 			icon: path.join(__dirname, `assets/icons/play.png`),
-			click () {
-				playerWindow.webContents.send('play-button')
+			click() {
+				playerWindow.webContents.send('play-button');
 			}
 		},
 		{
 			tooltip: 'Siguiente',
 			icon: path.join(__dirname, 'assets/icons/next.png'),
-			click () {
-				playerWindow.webContents.send('next-button')
+			click() {
+				playerWindow.webContents.send('next-button');
 			}
 		}
-	])
+	]);
 
-	Menu.setApplicationMenu(null)
+	Menu.setApplicationMenu(null);
 
 	// Establecer icono
-	playerWindow.setIcon(path.join(__dirname, 'assets/icons/win/icon.ico'))
+	playerWindow.setIcon(appIcon);
 
-  // Emitido cuando la ventana es cerrada
-  playerWindow.on('closed', () => {
-    playerWindow = null
-	})
+	// Emitido cuando la ventana es cerrada
+	playerWindow.on('closed', () => {
+		playerWindow = null;
+	});
 
 	// Enviar contenido cuando termine de cargar el contenido
 	playerWindow.webContents.on('did-finish-load', () => {
 		// Enviar información
-		sendDataToPlayer()
+		sendDataToPlayer();
 		// Verificar actualizaciones
 		if (!isDev) {
-			autoUpdater.checkForUpdates()
+			autoUpdater.checkForUpdates();
 		}
-	})
+	});
 }
 
 /**
@@ -254,35 +323,31 @@ function createMainWindow() {
  */
 function refreshDatabase() {
 	// Cargar dirección
-	const file = fs.readFileSync(database.location)
-	songsData = JSON.parse(file)
-	console.log(songsData.gameLocation)
+	const file = fs.readFileSync(database.location);
+	songsData = JSON.parse(file);
+	console.log(songsData.gameLocation);
 
 	// Verificar carpeta
 	if (manager.searchSongsFolder(songsData.gameLocation)) {
 		// Liste de carpetas
-		songList = manager.listSongsFolder(path.join(songsData.gameLocation, 'Songs'))
+		songList = manager.listSongsFolder(path.join(songsData.gameLocation, 'Songs'));
 		// Obtener información
-		songsData.songs = manager.getSongsData(path.join(songsData.gameLocation, 'Songs'))
+		songsData.songs = manager.getSongsData(path.join(songsData.gameLocation, 'Songs'));
 		// Escribir a archivo
-		manager.createDatabase(database, songsData)
+		manager.createDatabase(database, songsData);
 
 		// Enviar datos
-		sendDataToPlayer()
-	}
-	else {
+		sendDataToPlayer();
+	} else {
 		// Reportar a Sentry
 		sentry.withScope((scope) => {
 			// Extras
-			scope.setExtra('Base de datos', songsData.gameLocation)
+			scope.setExtra('Base de datos', songsData.gameLocation);
 			// Reportar
-			sentry.captureMessage('La carpeta "Songs" no existe o fue cambiada de dirección')
-		})
+			sentry.captureMessage('La carpeta "Songs" no existe o fue cambiada de dirección');
+		});
 		// Mostrar error
-		dialog.showErrorBox(
-			'Error #AZ002',
-			'La carpeta "Songs" no existe o fue cambiada de dirección'
-		)
+		dialog.showErrorBox('Error #AZ002', 'La carpeta "Songs" no existe o fue cambiada de dirección');
 	}
 }
 
@@ -292,26 +357,26 @@ function refreshDatabase() {
 
 // Actualización disponible
 autoUpdater.on('update-available', () => {
-	playerWindow.webContents.send('update-available')
-})
+	playerWindow.webContents.send('update-available');
+});
 
 // Error al actualizar
 autoUpdater.on('error', (error) => {
-	playerWindow.webContents.send('update-error', error)
-})
+	playerWindow.webContents.send('update-error', error);
+});
 
 // Actualización descargada
 autoUpdater.on('update-downloaded', () => {
-	playerWindow.webContents.send('update-downloaded')
-})
+	playerWindow.webContents.send('update-downloaded');
+});
 
 /*
  * Acciones recibidas desde render
  */
 ipcMain.on('update-accepted', () => {
-	autoUpdater.downloadUpdate()
-})
+	autoUpdater.downloadUpdate();
+});
 
 ipcMain.on('quit-and-install', () => {
-	autoUpdater.quitAndInstall()
-})
+	autoUpdater.quitAndInstall();
+});

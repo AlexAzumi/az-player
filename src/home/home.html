@@ -4,151 +4,191 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>osu! player</title>
+	<title>az! player</title>
 
 	<!-- CSP -->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self';">
 
 	<!-- Estilos -->
 	<link rel="stylesheet" href="../../assets/css/styles.css">
 	<link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css">
-	<link rel="stylesheet" href="../../fonts/fonts.css">
+	<link rel="stylesheet" href="../../assets/fonts/fonts.css">
 </head>
 <body>
-	<!-- Cuadro de actualizaciones -->
-	<div id="updateBox" class="d-none update-box flex-column bg-dark text-light rounded p-3">
-		<p class="mb-2">¡Nueva actualización disponible!</p>
-		<div class="btn-group">
-			<button id="declineUpdateBtn" class="btn btn-light">Más tarde</button>
-			<button id="acceptUpdateBtn" class="btn btn-success">Actualizar</button>
-		</div>
-	</div>
-
-	<!-- Barra -->
-	<nav class="bar">
-		<!-- Menú de inicio -->
-		<div class="menu">
-			<li class="menu-item" submenu="home">Inicio</li>
-			<div class="submenu" id="submenu-home">
-				<li class="submenu-item separator" id="updateDatabaseButton">
-					Actualizar lista de canciones <span class="shortcut">Ctrl+U</span>
-				</li>
-				<li class="submenu-item" id="exitAppButton">Salir</li>
+	<div ng-app="angularApp" ng-csp>
+		<!-- Cuadro de actualizaciones -->
+		<div
+			ng-controller="updateController"
+			ng-class="{show: showBox}"
+			id="updateBox"
+			class="d-none update-box flex-column bg-dark text-light rounded p-3">
+			<p id="updateBoxTitle" class="mb-2">{{update.box.title}}</p>
+			<div class="btn-group">
+				<button
+					ng-click="clickLater($event)"
+					class="btn btn-light">{{update.laterBtn}}</button>
+				<button
+					ng-click="clickUpdate()"
+					class="btn btn-success">{{update.updateBtn}}</button>
 			</div>
 		</div>
 
-		<!-- Menú de ordenamiento -->
-		<div class="menu">
-			<li class="menu-item" submenu="order">Ordenar canciones</li>
-			<div class="submenu" id="submenu-order">
-				<li class="submenu-item" id="sortArtistButton">
-					Por artista <span class="shortcut">Ctrl+1</span>
-				</li>
-				<li class="submenu-item" id="sortTitleButton">
-					Por título
-					<span class="shortcut">Ctrl+2</span>
-				</li>
-			</div>
-		</div>
-
-		<!-- Menú de ordenamiento -->
-		<div class="menu">
-			<li class="menu-item" submenu="help">Ayuda</li>
-			<div class="submenu" id="submenu-help">
-				<li class="submenu-item separator" id="refreshButton">Refrescar ventana</li>
-				<li class="submenu-item separator" id="donateButton">Donar al proyecto</li>
-				<li class="submenu-item" id="aboutButton">
-					Acerca de osu player! <span class="shortcut">F1</span>
-				</li>
-			</div>
-		</div>
-
-		<!-- Botones -->
-		<div class="buttons-menu">
-			<div class="button" id="minimizeButton">
-				<i class="fas fa-window-minimize fa-fw"></i>
-			</div>
-			<div class="button" id="maximizeButton">
-				<i class="fas fa-window-maximize fa-fw"></i>
-			</div>
-			<div class="button" id="closeButton">
-				<i class="fas fa-window-close fa-fw"></i>
-			</div>
-		</div>
-	</nav>
-
-	<!-- Pantalla de carga -->
-	<div id="loadingScreen" class="procesing-beatmaps">
-		<div class="loading">
-			<h1 class="display-4 mb-4">Procesando beatmaps</h1>
-			<i class="fas fa-spinner fa-6x fa-pulse text-primary"></i>
-		</div>
-	</div>
-
-	<!-- Contenedor -->
-	<div class="container-fluid">
-		<!-- App -->
-		<div class="row">
-			<!-- Reproducción -->
-			<div id="player" class="player col-md-8">
-				<div id="songTitleContainer" class="title-container p-3">
-					<h2 class="song-title mb-0" id="songTitle">¡Bienvenido/a!</h2>
-				</div>
-				<!-- Panel -->
-				<div id="playerPanel" class="player-panel">
-					<!-- Timespan -->
-					<input id="playerRange" class="seekbar" type="range" max="100" min="0" value="0">
-					<!-- Volumen -->
-					<div id="playerVolumeContainer" class="volume-container">
-						<input id="playerVolume" class="volume" type="range" min="0" max="100" value="100" step="1" title="Volumen">
-						<p id="volumeText" class="volume-text"></p>
-					</div>
-					<!-- Controles -->
-					<div class="d-flex h-100 justify-content-center align-items-center">
-						<!-- Anterior -->
-						<div
-							id="previousBtn"
-							class="control-btn"
-							title="Canción anterior">
-							<i class="fas fa-step-backward fa-2x"></i>
-						</div>
-						<!-- Reproducir/pausar -->
-						<div
-							id="playPauseBtn"
-							class="control-btn mx-4"
-							title="Reproducir/pausar">
-							<i class="fas fa-play fa-2x"></i>
-						</div>
-						<!-- Siguiente -->
-						<div
-							id="nextBtn"
-							class="control-btn"
-							title="Siguiente canción">
-							<i class="fas fa-step-forward fa-2x"></i>
-						</div>
-					</div>
-					<!-- Otros controles -->
-					<div id="otherControls" class="extra-buttons d-flex align-items-center">
-						<div
-							id="randomBtn"
-							class="control-btn not-hover-color"
-							title="Reproducción aleatoria">
-							<i class="fas fa-random fa-2x"></i>
-						</div>
-					</div>
+		<!-- Barra -->
+		<nav ng-controller="menuBarController" class="bar">
+			<!-- Menú de inicio -->
+			<div class="menu">
+				<li
+					ng-click="openMenu($event, 'submenu-home')"
+					ng-mouseover="menuMouseOver($event)"
+					class="menu-item">{{menu.home.title}}</li>
+				<div class="submenu" id="submenu-home">
+					<li class="submenu-item separator" action="updateDatabase">
+						<span>{{menu.home.updateDatabase}}</span>
+						<span class="shortcut">Ctrl+U</span>
+					</li>
+					<li class="submenu-item" action="exit">{{menu.home.exit}}</li>
 				</div>
 			</div>
-			<!-- Lista de canciones -->
-			<div class="col-md-4 px-0">
-				<!-- Cuadro de búsqueda -->
-				<div id="songsListTitle" class="search-box">
-					<i class="fas fa-search fa-xs search-icon"></i>
-					<input id="searchInput" class="search-input form-control" type="search" placeholder="Buscar">
+
+			<!-- Menú de ordenamiento -->
+			<div class="menu">
+				<li
+					ng-click="openMenu($event, 'submenu-sort')"
+					ng-mouseover="menuMouseOver($event)"
+					class="menu-item">{{menu.sort.title}}</li>
+				<div class="submenu" id="submenu-sort">
+					<li class="submenu-item" action="sortByArtist">
+						<span>{{menu.sort.byArtist}}</span> 
+						<span class="shortcut">Ctrl+1</span>
+					</li>
+					<li class="submenu-item" action="sortByTitle">
+						<span>{{menu.sort.byTitle}}</span>
+						<span class="shortcut">Ctrl+2</span>
+					</li>
+				</div>
+			</div>
+
+			<!-- Menú de ordenamiento -->
+			<div class="menu">
+				<li
+					ng-click="openMenu($event, 'submenu-locals')"
+					ng-mouseover="menuMouseOver($event)"
+					class="menu-item">{{menu.localizationText}}</li>
+				<div class="submenu" id="submenu-locals">
+					<li
+						class="submenu-item"
+						ng-repeat="local in localizations"
+						ng-click="submenuElementClick($event)"
+						action="changeLocalization"
+						locale="{{local.locale}}">
+						{{local.localeName}}
+					</li>
+				</div>
+			</div>
+
+			<!-- Menú de ayuda -->
+			<div class="menu">
+				<li
+					ng-click="openMenu($event, 'submenu-help')"
+					ng-mouseover="menuMouseOver($event)"
+					class="menu-item">{{menu.help.title}}</li>
+				<div class="submenu" id="submenu-help">
+					<li class="submenu-item separator" action="refreshWindow">{{menu.help.refreshWindow}}</li>
+					<li class="submenu-item separator" action="donate">{{menu.help.donate}}</li>
+					<li class="submenu-item" action="openAbout">
+						<span id="aboutButtonText">{{menu.help.about}}</span>
+						<span class="shortcut">F1</span>
+					</li>
+				</div>
+			</div>
+
+			<!-- Botones -->
+			<div class="buttons-menu">
+				<div class="button" ng-click="minimizeWindow()">
+					<i class="fas fa-window-minimize fa-fw"></i>
+				</div>
+				<div class="button" ng-click="maximizeWindow($event)">
+					<i class="fas fa-window-maximize fa-fw"></i>
+				</div>
+				<div class="button" ng-click="closeWindow()">
+					<i class="fas fa-window-close fa-fw"></i>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Pantalla de carga -->
+		<div
+			ng-controller="loadingScreenController"
+			ng-class="{show: showLoadingScreen}"
+			class="procesing-beatmaps">
+			<div class="loading">
+				<h1 id="loadingMessage" class="display-4 mb-4">{{loadingScreen.message}}</h1>
+				<i class="fas fa-spinner fa-6x fa-pulse text-primary"></i>
+			</div>
+		</div>
+
+		<!-- Contenedor -->
+		<div class="container-fluid">
+			<!-- App -->
+			<div ng-controller="playerController" class="row">
+				<!-- Reproducción -->
+				<div id="player" class="player col-md-8">
+					<div id="songTitleContainer" class="title-container p-3">
+						<h2 class="song-title mb-0" id="songTitle">{{player.welcome}}</h2>
+					</div>
+					<!-- Panel -->
+					<div id="playerPanel" class="player-panel">
+						<!-- Timespan -->
+						<input id="playerRange" class="seekbar" type="range" max="100" min="0" value="0">
+						<!-- Volumen -->
+						<div id="playerVolumeContainer" class="volume-container">
+							<input id="playerVolume" class="volume" type="range" min="0" max="100" value="100" step="1">
+							<p id="volumeText" class="volume-text"></p>
+						</div>
+						<!-- Controles -->
+						<div class="d-flex h-100 justify-content-center align-items-center">
+							<!-- Anterior -->
+							<div
+								id="previousBtn"
+								class="control-btn">
+								<i class="fas fa-step-backward fa-2x"></i>
+							</div>
+							<!-- Reproducir/pausar -->
+							<div
+								id="playPauseBtn"
+								class="control-btn mx-4"
+								title="Reproducir/pausar">
+								<i class="fas fa-play fa-2x"></i>
+							</div>
+							<!-- Siguiente -->
+							<div
+								id="nextBtn"
+								class="control-btn">
+								<i class="fas fa-step-forward fa-2x"></i>
+							</div>
+						</div>
+						<!-- Otros controles -->
+						<div id="otherControls" class="extra-buttons d-flex align-items-center">
+							<div
+								id="randomBtn"
+								class="control-btn not-hover-color">
+								<i class="fas fa-random fa-2x"></i>
+							</div>
+						</div>
+					</div>
 				</div>
 				<!-- Lista de canciones -->
-				<div id="songsList" class="songs-list"></div>
-				<!-- Mensaje sin resultados -->
-				<p id="noResults" class="d-none search-no-results text-center">Sin resultados</p>
+				<div class="col-md-4 px-0">
+					<!-- Cuadro de búsqueda -->
+					<div id="songsListTitle" class="search-box">
+						<i class="fas fa-search fa-xs search-icon"></i>
+						<input id="searchInput" class="search-input form-control" type="search" placeholder="{{search.placeholder}}">
+					</div>
+					<!-- Lista de canciones -->
+					<div id="songsList" class="songs-list"></div>
+					<!-- Mensaje sin resultados -->
+					<p id="noResults" class="d-none search-no-results text-center">{{search.noResults}}</p>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -27,6 +27,12 @@ html {
 	overflow: hidden;
 }
 
+.fa,
+.fas,
+.far {
+	pointer-events: none;
+}
+
 /*
  * Barra de menú
  */
@@ -81,6 +87,10 @@ html {
 				// Elemento de shortcut
 				.shortcut {
 					padding-left: 1rem;
+				}
+
+				span {
+					pointer-events: none;
 				}
 			}
 
@@ -174,7 +184,6 @@ html {
 		padding-right: 1.5rem;
 		padding-top: 0.25rem;
 		position: relative;
-		transition: background-color 250ms;
 
 		// Hover
 		&:hover {
@@ -273,7 +282,7 @@ html {
  * Reproductor
  */
 .player {
-	background: url('../img/background.jpg');
+	background: url('../img/background.png');
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -331,7 +340,6 @@ html {
 			-webkit-appearance: none;
 			box-shadow: -100vw 0 0 100vw $primary;
 			cursor: pointer;
-			transition: 150ms;
 			width: 0;
 		}
 
@@ -345,8 +353,7 @@ html {
 	// Botones
 	.control-btn {
 		display: inline-block;
-		color: $gray-500;
-		transition: color 250ms;
+		color: $gray-400;
 
 		// Hover
 		&:hover {
@@ -386,7 +393,6 @@ html {
 			cursor: pointer;
 			height: 20px;
 			outline: none;
-			transition: opacity 200ms;
 			margin-right: 0.5rem;
 			max-width: 200px;
 	
@@ -395,7 +401,6 @@ html {
 				-webkit-appearance: none;
 				box-shadow: -100vw 0 0 100vw $secondary;
 				cursor: pointer;
-				transition: 150ms;
 				background: $light;
 				height: 25px;
 				width: 10px;
@@ -489,5 +494,39 @@ html {
 	// Texto de carga
 	.loading-text {
 		font-family: 'Nunito Sans', sans-serif;
+	}
+}
+
+/*
+ * Aviso de privacidad
+ */
+.disclaimer {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+
+	// Título
+	.title {
+		align-items: center;
+		display: flex;
+		height: 4rem;
+		justify-content: center;
+		margin-bottom: 0;
+	}
+
+	// Mensaje
+	.message {
+		flex-grow: 1;
+		overflow-y: auto;
+		padding: 0.5rem;
+		text-align: justify;
+		white-space: pre-wrap;
+	}
+
+	// Botones de acción
+	.actions {
+		height: 4rem;
+		padding: 0.5rem;
+		width: 100%;
 	}
 }

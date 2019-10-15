@@ -1,7 +1,7 @@
 {
-	"name": "osu-player",
-	"productName": "osu! player",
-	"version": "0.5.1",
+	"name": "az-player",
+	"productName": "az! player",
+	"version": "0.6.0",
 	"description": "Reproductor de beatmaps de osu!",
 	"main": "main.js",
 	"scripts": {
@@ -9,16 +9,9 @@
 		"dev": "electron .",
 		"sass": "sass assets/scss/styles.scss assets/css/styles.css --style compressed",
 		"sass:dev": "sass assets/scss/styles.scss assets/css/styles.css --watch",
-		"get-fonts": "get-google-fonts -i \"https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap\"",
-		"build": "npm run sass && electron-builder --win",
+		"get-fonts": "get-google-fonts -o \"./assets/fonts\" -i \"https://fonts.googleapis.com/css?family=Nunito+Sans:400,700|Source+Sans+Pro&display=swap\"",
+		"build": "npm run sass && electron-builder",
 		"release": "npm run sass && electron-builder --publish always"
-	},
-	"build": {
-		"win": {
-			"publish": [
-				"github"
-			]
-		}
 	},
 	"sentryDSN": null,
 	"keywords": [],
@@ -26,26 +19,30 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/AlexAzumi/osu-player-v2.git"
+		"url": "git+https://github.com/AlexAzumi/az-player.git"
 	},
 	"bugs": {
-		"url": "https://github.com/AlexAzumi/osu-player-v2/issues",
+		"url": "https://github.com/AlexAzumi/az-player/issues",
 		"email": "alejandro-hdez115@outlook.com"
 	},
-	"homepage": "https://github.com/AlexAzumi/osu-player-v2",
+	"homepage": "https://github.com/AlexAzumi/az-player",
 	"devDependencies": {
 		"bootstrap": "^4.3.1",
-		"electron": "^6.0.11",
+		"electron": "^6.0.12",
 		"electron-builder": "^21.2.0",
+		"electron-rebuild": "^1.8.6",
 		"electron-reload": "^1.5.0",
 		"sass": "^1.23.0"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^5.11.2",
 		"@sentry/electron": "^0.17.4",
+		"angular": "^1.7.8",
 		"electron-is-dev": "^1.1.0",
+		"electron-log": "^3.0.8",
 		"electron-updater": "^4.1.2",
 		"get-google-fonts": "^1.2.0",
+		"jquery": "^3.4.1",
 		"mousetrap": "^1.6.3",
 		"n-readlines": "^1.0.0",
 		"slash": "^3.0.0"

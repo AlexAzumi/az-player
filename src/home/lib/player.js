@@ -1,12 +1,12 @@
 // Dependencias
-const { dialog } = require('electron').remote
-const ipc = require('electron').ipcRenderer
-const fs = require('fs')
-const slash = require('slash')
-const path = require('path')
+const { dialog } = require('electron').remote;
+const ipc = require('electron').ipcRenderer;
+const fs = require('fs');
+const slash = require('slash');
+const path = require('path');
 
 // Sentry
-const Sentry = require('@sentry/electron')
+const Sentry = require('@sentry/electron');
 
 /*
  * Reproductor
@@ -15,76 +15,81 @@ class Player {
 	/**
 	 * Constructor
 	 * @param playlist Lista de canciones
+	 * @param localizationManager Controlador de localización
 	 */
-	constructor(playlist) {
+	constructor(playlist, localizationManager) {
+		// Localización
+		this.localization = localizationManager;
 		// Instanciar reproductor
-		this.musicPlayer = new Audio()
+		this.musicPlayer = new Audio();
 		// Aplicar configuración
 		this.config = {
 			tickTime: 250,
 			volume: localStorage.getItem('volume') ? localStorage.getItem('volume') : 100,
 			random: localStorage.getItem('random') ? JSON.parse(localStorage.getItem('random')) : false,
 			order: localStorage.getItem('order') ? localStorage.getItem('order') : 'title'
-		}
+		};
 		// Mostrar configuración
-		console.log('%cConfiguración', 'color: purple; font-size: 1.3em;', this.config)
+		console.log('%cConfiguración', 'color: purple; font-size: 1.3em;', this.config);
 
 		// Ordenar canciones
-		this.playlist = this.sortPlaylist(playlist, this.config.order)
+		this.playlist = this.sortPlaylist(playlist, this.config.order);
 
 		// Canciones terminadas
-		this.endedSongs = []
+		this.endedSongs = [];
 		// Canción actual (ID)
-		this.currentSong = 0
+		this.currentSong = 0;
 		// Canción lista
-		this.readySong = true
+		this.readySong = true;
 		// Objeto de volumen
-		this.volume = []
+		this.volume = [];
 		// Tiempo de espera
-		this.previousTime = 3.0
+		this.previousTime = 3.0;
+		// Estado del reproductor
+		this.neverPlayed = true;
 
 		/*
 		 * Obtener DOM
 		 */
 		// Reproductor
-		this.playerElement = document.getElementById('player')
-		this.songTitle = document.getElementById('songTitle')
-		this.songTitleContainer = document.getElementById('songTitleContainer')
-		this.songsListElement = document.getElementById('songsList')
+		this.playerElement = document.getElementById('player');
+		this.songTitle = document.getElementById('songTitle');
+		this.songTitleContainer = document.getElementById('songTitleContainer');
+		this.songsListElement = document.getElementById('songsList');
 		// Botones del reproductor
-		this.playPauseBtn = document.getElementById('playPauseBtn')
-		this.nextBtn = document.getElementById('nextBtn')
-		this.previousBtn = document.getElementById('previousBtn')
-		this.randomBtn = document.getElementById('randomBtn')
+		this.playPauseBtn = document.getElementById('playPauseBtn');
+		this.nextBtn = document.getElementById('nextBtn');
+		this.previousBtn = document.getElementById('previousBtn');
+		this.randomBtn = document.getElementById('randomBtn');
 		// Barra de reproducción y volumen
-		this.seekBar = document.getElementById('playerRange')
-		this.volume.bar = document.getElementById('playerVolume')
-		this.volume.text = document.getElementById('volumeText')
+		this.seekBar = document.getElementById('playerRange');
+		this.volume.bar = document.getElementById('playerVolume');
+		this.volume.text = document.getElementById('volumeText');
 		// Búsqueda
-		this.searchInput = document.getElementById('searchInput')
-		this.noResults = document.getElementById('noResults')
+		this.searchInput = document.getElementById('searchInput');
+		this.noResults = document.getElementById('noResults');
 
 		// Agregar en la lista
-		this.addSongsToContainer(playlist)
+		this.addSongsToContainer(playlist);
 
 		/*
 		 * Aplicar configuraciones
 		 */
 		// Asignar volumen
-		this.musicPlayer.volume = this.config.volume / 100
-		this.volume.bar.value = this.config.volume
-		this.volume.text.innerText = `${this.config.volume}%`
+		this.musicPlayer.volume = this.config.volume / 100;
+		this.volume.bar.value = this.config.volume;
+		this.volume.text.innerText = `${this.config.volume}%`;
 
 		// Aplicar reproducción aleatoria
 		if (this.config.random) {
-			this.randomBtn.classList.add('active')
+			this.randomBtn.classList.add('active');
 		}
 
 		// Asignar eventos
-		this.assignEvents()
+		this.assignEvents();
 
 		// Actualización de la barra de reproducción
-		setInterval(this.updateSeekBar.bind(this), this.config.tickTime)
+		setInterval(this.updateSeekBar.bind(this), this.config.tickTime);
 	}
 
 	/**
@@ -96,29 +101,29 @@ class Player {
 		switch (sort) {
 			// Ordenar por título
 			case 'title':
-				localStorage.setItem('order', 'title')
+				localStorage.setItem('order', 'title');
 
 				return playlist.sort((a, b) => {
 					if (a.title.toLowerCase() > b.title.toLowerCase()) {
-						return 1
+						return 1;
 					} else {
-						return -1
+						return -1;
 					}
-				})
+				});
 			// Ordenar por artista
 			case 'artist':
-				localStorage.setItem('order', 'artist')
+				localStorage.setItem('order', 'artist');
 
 				return playlist.sort((a, b) => {
 					if (a.artist.toLowerCase() > b.artist.toLowerCase()) {
-						return 1
+						return 1;
 					} else {
-						return -1
+						return -1;
 					}
-				})
+				});
 			// Orden sin especificar
 			default:
-				console.warn('Orden sin especificar')
+				console.warn('Orden sin especificar');
 				break;
 		}
 	}
@@ -131,53 +136,52 @@ class Player {
 	addSongsToContainer(playlist) {
 		// Vaciar lista
 		while (this.songsListElement.firstChild) {
-			this.songsListElement.removeChild(this.songsListElement.firstChild)
+			this.songsListElement.removeChild(this.songsListElement.firstChild);
 		}
 
 		// Asignar ID
-		let songID = 0
+		let songID = 0;
 
 		// Pasar por cada canción
 		for (let song of playlist) {
 			// Crear elemento
-			const songElement = document.createElement('div')
-			songElement.classList.add('song')
-			songElement.innerText = `${song.title} - `
+			const songElement = document.createElement('div');
+			songElement.classList.add('song');
+			songElement.innerText = `${song.title} - `;
 			// Crear subelemento de artista
-			const songArtist = document.createElement('span')
-			songArtist.innerHTML = song.artist
-			songArtist.classList.add('artist')
+			const songArtist = document.createElement('span');
+			songArtist.innerHTML = song.artist;
+			songArtist.classList.add('artist');
 			// Combinar elementos
-			songElement.appendChild(songArtist)
+			songElement.appendChild(songArtist);
 
 			// Icono de reproducción
-			const playIcon = document.createElement('i')
-			playIcon.classList.add('fa', 'fa-play', 'position-absolute', 'play-icon')
+			const playIcon = document.createElement('i');
+			playIcon.classList.add('fa', 'fa-play', 'position-absolute', 'play-icon');
 
 			// Establecer id
-			songElement.setAttribute('song-path', path.join(song.path, song.musicFile))
-			songElement.setAttribute('song-title', song.title)
-			songElement.setAttribute('song-artist', song.artist)
-			songElement.id = songID
-			
+			songElement.setAttribute('song-path', path.join(song.path, song.audio));
+			songElement.setAttribute('song-title', song.title);
+			songElement.setAttribute('song-artist', song.artist);
+			songElement.id = songID;
+
 			if (song.background !== 'NONE') {
-				songElement.setAttribute('song-background', path.join(song.path, song.background))
-			}
-			else {
-				songElement.setAttribute('song-background', 'NONE')
+				songElement.setAttribute('song-background', path.join(song.path, song.background));
+			} else {
+				songElement.setAttribute('song-background', 'NONE');
 			}
 
 			// Agregar listener
-			songElement.addEventListener('click', this.playSelectedSong.bind(this))
+			songElement.addEventListener('click', this.playSelectedSong.bind(this));
 
 			// Agregar en elemento
-			songElement.appendChild(playIcon)
+			songElement.appendChild(playIcon);
 
 			// Agregar en lista
-			this.songsListElement.appendChild(songElement)
+			this.songsListElement.appendChild(songElement);
 
 			// Aumentar id
-			songID++
+			songID++;
 		}
 	}
 
@@ -188,82 +192,80 @@ class Player {
 		// Verificar si está listo
 		if (!this.readySong) {
 			// Registrar en consola
-			console.warn('La canción aún no ha terminado de cargar')
-			return
+			console.warn('La canción aún no ha terminado de cargar');
+			return;
 		}
 
 		// Obtener elemento
-		const songElement = this.getSongElement(songID)
+		const songElement = this.getSongElement(songID);
 		// Extraer información
-		const songTitle = songElement.getAttribute('song-title')
-		const songArtist = songElement.getAttribute('song-artist')
-		const songPath = songElement.getAttribute('song-path')
-		const songBackground = songElement.getAttribute('song-background')
-		this.currentSong = songElement.id
+		const songTitle = songElement.getAttribute('song-title');
+		const songArtist = songElement.getAttribute('song-artist');
+		const songPath = songElement.getAttribute('song-path');
+		const songBackground = songElement.getAttribute('song-background');
+		this.currentSong = songElement.id;
 
 		// Verificar si existe el audio
 		if (fs.existsSync(songPath)) {
 			// Cambiar bandera
-			this.readySong = false
-			this.musicPlayer.src = songPath
+			this.readySong = false;
+			this.musicPlayer.src = songPath;
 		} else {
 			// Mostrar error
 			dialog.showMessageBox({
-				title: 'Error',
-				message: 'No existe el audio de la canción',
+				title: this.localization.getString('player.songNotFound.title'),
+				message: this.localization.getString('player.songNotFound.message'),
 				type: 'error'
-			})
+			});
 			// Capturar a sentry
 			Sentry.withScope((scope) => {
 				// Asignar scope
-				scope.setLevel('warning')
-				scope.setExtra('src', songPath)
+				scope.setLevel('warning');
+				scope.setExtra('src', songPath);
 				// Enviar
-				Sentry.captureMessage('Audio no encontrado')
-			})
+				Sentry.captureMessage('Audio no encontrado');
+			});
 
-			return
+			return;
 		}
 		// Eliminar otras clases activas
 		this.songsListElement.querySelectorAll('.active').forEach((element) => {
-			element.classList.remove('active')
-		})
+			element.classList.remove('active');
+		});
 		// Ocultar icono
 		this.songsListElement.querySelectorAll('.play-icon').forEach((element) => {
-			element.classList.remove('play-icon-show')
-		})
+			element.classList.remove('play-icon-show');
+		});
 
 		// Establecer como activo
-		songElement.classList.add('active')
+		songElement.classList.add('active');
 		// Mostrar icono
-		songElement.childNodes[2].classList.add('play-icon-show')
-		
+		songElement.childNodes[2].classList.add('play-icon-show');
+
 		// Establecer fondo del reproductor
 		if (songBackground !== 'NONE') {
 			if (fs.existsSync(songBackground)) {
-				this.playerElement.style.backgroundImage = `url("${slash(songBackground)}")`
+				this.playerElement.style.backgroundImage = `url("${slash(songBackground)}")`;
+			} else {
+				this.playerElement.style.backgroundImage = 'url("../../assets/img/background.png")';
 			}
-			else {
-				this.playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")'
-			}
-		}
-		else {
-			this.playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")'
+		} else {
+			this.playerElement.style.backgroundImage = 'url("../../assets/img/background.png")';
 		}
 
 		// Actualizar información mostrada
-		this.updateInfo(songTitle, songArtist)
-		
+		this.updateInfo(songTitle, songArtist);
+
 		// Reproducir
-		this.musicPlayer.currentTime = 0
-		const playPromise = this.musicPlayer.play()
+		this.musicPlayer.currentTime = 0;
+		const playPromise = this.musicPlayer.play();
 
 		// Esperar promesa
 		if (playPromise !== undefined) {
 			playPromise.then(() => {
 				// Cambiar bandera
-				this.readySong = true
-			})
+				this.readySong = true;
+			});
 		}
 	}
 
@@ -273,7 +275,7 @@ class Player {
 	 * @return Elemento de la canción
 	 */
 	getSongElement(id) {
-		return document.getElementById(id)
+		return document.getElementById(id);
 	}
 
 	/**
@@ -283,42 +285,47 @@ class Player {
 	 */
 	updateInfo(title, artist) {
 		// Establecer título de la ventana
-		this.changeWindowTitle(`${title} - ${artist}`)
+		this.changeWindowTitle(`${title} - ${artist}`);
 
 		// Mostrar título
-		this.songTitle.innerText = `${title} - `
+		this.songTitle.innerText = `${title} - `;
 		// Crear subtítulo con artista y establecer valores
-		const artistElement = document.createElement('span')
-		artistElement.classList.add('song-artist')
-		artistElement.innerHTML = artist
+		const artistElement = document.createElement('span');
+		artistElement.classList.add('song-artist');
+		artistElement.innerHTML = artist;
 		// Unir elementos
-		this.songTitle.appendChild(artistElement)
-		
+		this.songTitle.appendChild(artistElement);
+
 		// Verificar el tamaño del título
 		if (this.songTitle.clientWidth > this.songTitleContainer.offsetWidth) {
 			// Obtener diferencia
-			let diff = (this.songTitle.clientWidth - this.songTitleContainer.offsetWidth) + 32 /* TODO: Cambiar 32 a un calculo del padding */
+			let diff =
+				this.songTitle.clientWidth -
+				this.songTitleContainer.offsetWidth +
+				32; /* TODO: Cambiar 32 a un calculo del padding */
 			// Verificar si la animación ya está corriendo
 			if (this.titleAnimation !== undefined && this.titleAnimation.playState === 'running') {
 				// Cancelar la animación
-				this.titleAnimation.cancel()
+				this.titleAnimation.cancel();
 			}
 
 			// Crear animación
-			this.titleAnimation = this.songTitle.animate([
-				{ transform: 'translateX(0px)' },
-				{ transform: `translateX(-${diff}px)` },
-				{ transform: 'translateX(0px)' }
-			], {
-				duration: 8000 * (diff / 70), /* TODO: Ajustar valores */
-				iterations: Infinity
-			})
-		}
-		else {
-				// Verificar si la animación ya está corriendo
+			this.titleAnimation = this.songTitle.animate(
+				[
+					{ transform: 'translateX(0px)' },
+					{ transform: `translateX(-${diff}px)` },
+					{ transform: 'translateX(0px)' }
+				],
+				{
+					duration: 8000 * (diff / 70) /* TODO: Ajustar valores */,
+					iterations: Infinity
+				}
+			);
+		} else {
+			// Verificar si la animación ya está corriendo
 			if (this.titleAnimation !== undefined && this.titleAnimation.playState === 'running') {
 				// Cancelar la animación
-				this.titleAnimation.cancel()
+				this.titleAnimation.cancel();
 			}
 		}
 	}
@@ -328,7 +335,7 @@ class Player {
 	 * @param {string} newTitle Nuevo título de la ventana
 	 */
 	changeWindowTitle(newTitle) {
-		ipc.send('change-player-title', newTitle)
+		ipc.send('change-player-title', newTitle);
 	}
 
 	/* Eventos */
@@ -339,11 +346,11 @@ class Player {
 	 */
 	playSelectedSong(event) {
 		// Establecer canción actual
-		this.currentSong = event.srcElement.id
+		this.currentSong = event.srcElement.id;
 		// Vaciar lista de canciones ya reproducidas
-		this.endedSongs = []
+		this.endedSongs = [];
 		// Iniciar canción
-		this.startSong(event.srcElement.id)
+		this.startSong(event.srcElement.id);
 	}
 
 	/**
@@ -353,11 +360,10 @@ class Player {
 	playerStatusChanged(event) {
 		// ¿Está reproduciendo?
 		if (event.type === 'play') {
-			this.playPauseBtn.innerHTML = '<i class="fas fa-pause fa-2x"></i>'
-		}
-		// ¿Está pausado?
-		else if (event.type === 'pause') {
-			this.playPauseBtn.innerHTML = '<i class="fas fa-play fa-2x"></i>'
+			this.playPauseBtn.innerHTML = '<i class="fas fa-pause fa-2x"></i>';
+		} else if (event.type === 'pause') {
+			// ¿Está pausado?
+			this.playPauseBtn.innerHTML = '<i class="fas fa-play fa-2x"></i>';
 		}
 	}
 
@@ -371,11 +377,11 @@ class Player {
 			title: 'Error',
 			message: 'Se ha generado un error al intentar reproducir el audio',
 			type: 'error'
-		})
+		});
 		// Log
-		console.error(error)
+		console.error(error);
 		// Capturar por Sentry
-		Sentry.captureEvent(error)
+		Sentry.captureEvent(error);
 	}
 
 	/**
@@ -383,7 +389,7 @@ class Player {
 	 */
 	playNextSong() {
 		// Regresar barra a cero
-		this.seekBar.value = 0
+		this.seekBar.value = 0;
 
 		// Verificar si hay más canciones
 		if (this.currentSong < this.playlist.length - 1) {
@@ -392,44 +398,41 @@ class Player {
 				// Reproducción al azar activada
 				if (this.config.random) {
 					// Agregar a lista de canciones reproducidas
-					this.endedSongs.push(this.currentSong)
+					this.endedSongs.push(this.currentSong);
 					if (this.endedSongs.length < this.playlist.length) {
-						let nextSong
+						let nextSong;
 						while (nextSong === undefined) {
 							// Bandera
-							let alreadyPlayed = false
+							let alreadyPlayed = false;
 							// Número al azar
-							let selectedSong = Math.floor(Math.random() * this.playlist.length)
+							let selectedSong = Math.floor(Math.random() * this.playlist.length);
 							// Verificar numero por número
 							for (let song of this.endedSongs) {
 								if (song === selectedSong) {
-									alreadyPlayed = true
+									alreadyPlayed = true;
 								}
 							}
 							// Asignar valores
 							if (!alreadyPlayed) {
-								nextSong = selectedSong
+								nextSong = selectedSong;
 							}
 						}
-						this.currentSong = nextSong
-					} 
-					else {
+						this.currentSong = nextSong;
+					} else {
 						// Vaciar lista de canciones
-						this.endedSongs = []
+						this.endedSongs = [];
 						// Número al azar
-						this.currentSong = Math.floor(Math.random() * this.playlist.length)
+						this.currentSong = Math.floor(Math.random() * this.playlist.length);
 					}
-				}
-				else {
-					this.currentSong++
+				} else {
+					this.currentSong++;
 				}
 			}
-		}
-		else {
-			this.currentSong = 0
+		} else {
+			this.currentSong = 0;
 		}
 		// Iniciar canción
-		this.startSong(this.currentSong)
+		this.startSong(this.currentSong);
 	}
 
 	/**
@@ -439,35 +442,32 @@ class Player {
 		// Verificar si retroceder en vez de cambiar
 		if (this.musicPlayer.currentTime > this.previousTime) {
 			// Regresar al inicio
-			this.musicPlayer.currentTime = 0
+			this.musicPlayer.currentTime = 0;
 			// Terminar método
-			return
+			return;
 		}
 
 		// Verificar si está reproduciendo aleatoriamente
 		if (this.config.random) {
 			// Existen canciones anteriormente reproducidas
 			if (this.endedSongs.length > 0) {
-				this.currentSong = this.endedSongs.pop()
-			}
-			else {
+				this.currentSong = this.endedSongs.pop();
+			} else {
 				// Regresar al inicio
-				this.currentSong = 0
+				this.currentSong = 0;
 			}
-		}
-		else {
+		} else {
 			// Verificar si hay más canciones
 			if (this.currentSong > 0) {
-				this.currentSong--
-			}
-			else {
+				this.currentSong--;
+			} else {
 				// Regresar al inicio
-				this.currentSong = 0
+				this.currentSong = 0;
 			}
 		}
 
 		// Iniciar canción
-		this.startSong(this.currentSong)
+		this.startSong(this.currentSong);
 	}
 
 	/**
@@ -477,33 +477,32 @@ class Player {
 	setRandomStatus(event) {
 		// Activar/desactivar bandera
 		if (this.config.random) {
-			this.config.random = false
-			event.srcElement.parentElement.classList.remove('active')
-		}
-		else {
-			this.config.random = true
-			event.srcElement.parentElement.classList.add('active')
+			this.config.random = false;
+			event.srcElement.parentElement.classList.remove('active');
+		} else {
+			this.config.random = true;
+			event.srcElement.parentElement.classList.add('active');
 		}
 		// Guardar
-		localStorage.setItem('random', this.config.random)
+		localStorage.setItem('random', this.config.random);
 	}
 
 	/**
 	 * Reproducir o pausar canción
 	 */
 	playPauseSong() {
-		if (this.musicPlayer.readyState == 0) {
+		if (this.musicPlayer.readyState == 0 && this.neverPlayed) {
 			// Iniciar canción
-			this.startSong(this.currentSong)
-			return
+			this.startSong(this.currentSong);
+			this.neverPlayed = false;
+			return;
 		}
 		// La canción está pausada
 		if (this.musicPlayer.paused) {
-			this.musicPlayer.play()
-		}
-		// Canción reproduciendo
-		else {
-			this.musicPlayer.pause()
+			this.musicPlayer.play();
+		} else {
+			// Canción reproduciendo
+			this.musicPlayer.pause();
 		}
 	}
 
@@ -511,14 +510,20 @@ class Player {
 	 * Detener canción
 	 */
 	stopSong() {
+		// Restaurar estado
+		this.endedSongs = [];
+		this.currentSong = 0;
+		this.readySong = true;
+		this.neverPlayed = true;
+
 		// Pausar
-		this.musicPlayer.pause()
+		this.musicPlayer.pause();
 		// Regresar al inicio
-		this.musicPlayer.currentTime = 0
+		this.musicPlayer.currentTime = 0;
 		// Regresar al fondo inicial
-		this.playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")'
+		this.playerElement.style.backgroundImage = 'url("../../assets/img/background.png")';
 		// Establecer mensaje inicial
-		this.songTitle.innerText = '¡Bienvenido/a!'
+		this.songTitle.innerText = this.localization.getString('player.welcome');
 	}
 
 	/**
@@ -526,12 +531,12 @@ class Player {
 	 */
 	changeVolume() {
 		// Obtener valor
-		this.config.volume = this.volume.bar.value
+		this.config.volume = this.volume.bar.value;
 		// Asignar volumen
-		this.musicPlayer.volume = this.config.volume / 100
-		this.volume.text.innerText = `${this.volume.bar.value}%`
+		this.musicPlayer.volume = this.config.volume / 100;
+		this.volume.text.innerText = `${this.volume.bar.value}%`;
 		// Guardar
-		localStorage.setItem('volume', this.config.volume)
+		localStorage.setItem('volume', this.config.volume);
 	}
 
 	/**
@@ -541,7 +546,7 @@ class Player {
 		// Verificar si se está reproduciendo una canción
 		if (!this.musicPlayer.ended) {
 			// Actualizar barra
-			this.seekBar.value = this.musicPlayer.currentTime
+			this.seekBar.value = this.musicPlayer.currentTime;
 		}
 	}
 
@@ -550,35 +555,35 @@ class Player {
 	 */
 	assignEvents() {
 		// Reproducir una canción
-		this.musicPlayer.addEventListener('play', this.playerStatusChanged.bind(this))
+		this.musicPlayer.addEventListener('play', this.playerStatusChanged.bind(this));
 		// Pausar una canción
-		this.musicPlayer.addEventListener('pause', this.playerStatusChanged.bind(this))
+		this.musicPlayer.addEventListener('pause', this.playerStatusChanged.bind(this));
 		// Metadata cargada
 		this.musicPlayer.addEventListener('loadedmetadata', () => {
-			this.currentSongDuration = this.musicPlayer.duration
-			this.seekBar.max = this.currentSongDuration
-		})
+			this.currentSongDuration = this.musicPlayer.duration;
+			this.seekBar.max = this.currentSongDuration;
+		});
 		// Canción terminada
-		this.musicPlayer.addEventListener('ended', this.playNextSong.bind(this))
+		this.musicPlayer.addEventListener('ended', this.playNextSong.bind(this));
 		// Error generado en el reproductor
-		this.musicPlayer.addEventListener('error', this.showPlayerError.bind(this))
-		
+		this.musicPlayer.addEventListener('error', this.showPlayerError.bind(this));
+
 		// Reproducir o pausar canción
-		this.playPauseBtn.addEventListener('click', this.playPauseSong.bind(this))
+		this.playPauseBtn.addEventListener('click', this.playPauseSong.bind(this));
 		// Reproducir siguiente canción
-		this.nextBtn.addEventListener('click', this.playNextSong.bind(this))
+		this.nextBtn.addEventListener('click', this.playNextSong.bind(this));
 		// Reproducir canción anterior
-		this.previousBtn.addEventListener('click', this.playPreviousSong.bind(this))
+		this.previousBtn.addEventListener('click', this.playPreviousSong.bind(this));
 		// Botón de reproducción aleatoria
-		this.randomBtn.addEventListener('click', this.setRandomStatus.bind(this))
+		this.randomBtn.addEventListener('click', this.setRandomStatus.bind(this));
 
 		// Cambiar punto de reproducción
 		this.seekBar.addEventListener('input', () => {
-			this.musicPlayer.currentTime = this.seekBar.value
-		})
+			this.musicPlayer.currentTime = this.seekBar.value;
+		});
 		// Cambiar volumen
-		this.volume.bar.addEventListener('input', this.changeVolume.bind(this))
+		this.volume.bar.addEventListener('input', this.changeVolume.bind(this));
 	}
 }
 
-module.exports = Player
+module.exports = Player;
