@@ -247,10 +247,10 @@ class Player {
 			if (fs.existsSync(songBackground)) {
 				this.playerElement.style.backgroundImage = `url("${slash(songBackground)}")`;
 			} else {
-				this.playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")';
+				this.playerElement.style.backgroundImage = 'url("../../assets/img/background.png")';
 			}
 		} else {
-			this.playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")';
+			this.playerElement.style.backgroundImage = 'url("../../assets/img/background.png")';
 		}
 
 		// Actualizar información mostrada
@@ -521,7 +521,7 @@ class Player {
 		// Regresar al inicio
 		this.musicPlayer.currentTime = 0;
 		// Regresar al fondo inicial
-		this.playerElement.style.backgroundImage = 'url("../../assets/img/background.jpg")';
+		this.playerElement.style.backgroundImage = 'url("../../assets/img/background.png")';
 		// Establecer mensaje inicial
 		this.songTitle.innerText = this.localization.getString('player.welcome');
 	}
