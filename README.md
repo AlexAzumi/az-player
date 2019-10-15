@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.com/AlexAzumi/az-player.svg?branch=master)](https://travis-ci.com/AlexAzumi/az-player)
 ![GitHub](https://img.shields.io/github/license/alexazumi/az-player)
 
-`Aplicación disponible sólo para S.O. Windows 64-bits`
+`Aplicación disponible sólo para Windows`
 
 Decarga la última versión haciendo clic [en este enlace](https://github.com/AlexAzumi/az-player/releases/latest)
 
