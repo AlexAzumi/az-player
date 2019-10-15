@@ -62,5 +62,11 @@
 		"author": "Author",
 		"repository": "GitHub repository",
 		"close": "Close"
+	},
+	"disclaimer": {
+		"title": "Disclaimer",
+		"message": "az! player will collect information from errors and exceptions. Everything will be sent to sentry.io servers anonymously.\n\nIn order to continue you will need accept this disclaimer.",
+		"acceptBtn": "Accept",
+		"denyBtn": "Deny"
 	}
 }

@@ -495,3 +495,37 @@ html {
 		font-family: 'Nunito Sans', sans-serif;
 	}
 }
+
+/*
+ * Aviso de privacidad
+ */
+.disclaimer {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+
+	// Título
+	.title {
+		align-items: center;
+		display: flex;
+		height: 4rem;
+		justify-content: center;
+		margin-bottom: 0;
+	}
+
+	// Mensaje
+	.message {
+		flex-grow: 1;
+		overflow-y: auto;
+		padding: 0.5rem;
+		text-align: justify;
+		white-space: pre-wrap;
+	}
+
+	// Botones de acción
+	.actions {
+		height: 4rem;
+		padding: 0.5rem;
+		width: 100%;
+	}
+}

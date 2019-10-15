@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+
+	<!-- CSP -->
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'">
+
+	<!-- Estilos -->
+	<link rel="stylesheet" href="../../assets/css/styles.css">
+	<link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css">
+	<link rel="stylesheet" href="../../assets/fonts/fonts.css">
+</head>
+<body ng-app="disclaimerApp" ng-csp>
+	<div class="disclaimer" ng-controller="disclaimerController">
+		<h2 class="bg-dark text-light title">{{disclaimer.title}}</h2>
+		<p class="message">{{disclaimer.message}}</p>
+		<div class="btn-group bg-dark actions">
+			<button class="btn btn-danger" ng-click="deny()">{{disclaimer.denyBtn}}</button>
+			<button class="btn btn-success" ng-click="accept()">{{disclaimer.acceptBtn}}</button>
+		</div>
+	</div>
+	<!-- Scripts -->
+	<script>
+		require('./disclaimer.js');
+	</script>
+</body>
+</html>

@@ -62,5 +62,11 @@
 		"author": "Autor",
 		"repository": "Repositorio en GitHub",
 		"close": "Cerrar"
+	},
+	"disclaimer": {
+		"title": "Aviso de privacidad",
+		"message": "az! player colectará información sobre los errores y exepciones generadas al usar este programa. Toda la información será enviada a los servidores de sentry.io anónimamente. \n\nPara continuar es necesario aceptar las politicas de privacidad.",
+		"acceptBtn": "Aceptar",
+		"denyBtn": "Denegar"
 	}
 }

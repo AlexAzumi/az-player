@@ -43,6 +43,9 @@ const database = {
 	location: path.join(homeDir, 'az-player', 'database.json'),
 	folder: path.join(homeDir, 'az-player')
 };
+const disclaimerAcceptRoute = path.join(homeDir, 'az-player', 'disclaimer.json');
+// Icono de la aplicación
+const appIcon = path.join(__dirname, 'assets/icons/win/icon.ico');
 
 // Información de base de datos
 let songsData = {};
@@ -57,27 +60,18 @@ let playerWindow;
 let loadingScreen;
 // Sobre el programa
 let aboutWindow;
+// Aviso de privacidad
+let disclaimerWindow;
 
 /**
  * Iniciar aplicación
  */
 function startApp() {
-	// Instanciar manager
-	manager = new Manager(app);
-	// Si la base de datos existe
-	if (fs.existsSync(database.location)) {
-		// Cargar base de datos
-		songsData = manager.loadDatabase(database.location);
-		// Abrir ventana
-		createMainWindow();
+	// Verificar si el usuario aceptó el aviso de privacidad
+	if (fs.existsSync(disclaimerAcceptRoute)) {
+		startPlayer();
 	} else {
-		// Repetir hasta seleccionar carpeta correcta
-		do {
-			songsData.gameLocation = manager.selectGameFolder();
-		} while (!manager.searchSongsFolder(songsData.gameLocation));
-
-		// Abrir pantalla de carga
-		showLoadingScreen();
+		openDisclaimer();
 	}
 }
 
@@ -108,6 +102,75 @@ ipcMain.on('refresh-database', refreshDatabase);
 
 // Abrir about
 ipcMain.on('open-about', openAbout);
+
+// Aviso de privacidad aceptado
+ipcMain.on('accepted-disclaimer', acceptedDisclaimer);
+
+/**
+ * Crear archivo de disclaimer
+ */
+function acceptedDisclaimer() {
+	// Buscar carpeta
+	if (!fs.existsSync(database.folder)){
+		fs.mkdirSync(database.folder);
+	}
+	// Crear achivo
+	const file = JSON.stringify({
+		acceptedDisclaimer: true
+	}, null, 2);
+
+	try {
+		fs.writeFileSync(disclaimerAcceptRoute, file);
+		startPlayer();
+	} catch (ex) {
+		dialog.showErrorBox('¡Excepción!', ex.message);
+	}
+
+	// Cerrar ventana
+	disclaimerWindow.close();
+}
+
+/**
+ * Iniciar reproductor
+ */
+function startPlayer() {
+	// Instanciar manager
+	manager = new Manager(app);
+	// Si la base de datos existe
+	if (fs.existsSync(database.location)) {
+		// Cargar base de datos
+		songsData = manager.loadDatabase(database.location);
+		// Abrir ventana
+		createMainWindow();
+	} else {
+		// Repetir hasta seleccionar carpeta correcta
+		do {
+			songsData.gameLocation = manager.selectGameFolder();
+		} while (!manager.searchSongsFolder(songsData.gameLocation));
+
+		// Abrir pantalla de carga
+		showLoadingScreen();
+	}
+}
+
+/**
+ * Abrir aviso de privacidad
+ */
+function openDisclaimer() {
+	disclaimerWindow = new BrowserWindow({
+		height: 350,
+		width: 350,
+		frame: false,
+		resizable: false,
+		webPreferences: {
+			nodeIntegration: true
+		}
+	});
+	// Establecer icono
+	disclaimerWindow.setIcon(appIcon);
+	// Cargar página
+	disclaimerWindow.loadFile('src/disclaimer/disclaimer.html');
+}
 
 /**
  * Abrir ventana de información
@@ -237,7 +300,7 @@ function createMainWindow() {
 	Menu.setApplicationMenu(null);
 
 	// Establecer icono
-	playerWindow.setIcon(path.join(__dirname, 'assets/icons/win/icon.ico'));
+	playerWindow.setIcon(appIcon);
 
 	// Emitido cuando la ventana es cerrada
 	playerWindow.on('closed', () => {
