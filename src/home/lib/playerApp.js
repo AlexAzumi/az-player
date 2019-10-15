@@ -209,11 +209,21 @@ function menuBarController($scope) {
 			item.addEventListener('click', $scope.submenuElementClick);
 		}
 	}
+	$scope.exitSubmenu = function (event) {
+		const target = event.target.classList.value;
+		if ($scope.isSubmenuOpen && !target.includes('menu-item', 'submenu-item')) {
+			$scope.hideSubmenus();
+			$scope.isSubmenuOpen = false;
+		}
+	};
 	// Asignar shortcuts
 	Mousetrap.bind('ctrl+u', $scope.submenuElementClick);
 	Mousetrap.bind('ctrl+1', $scope.submenuElementClick);
 	Mousetrap.bind('ctrl+2', $scope.submenuElementClick);
 	Mousetrap.bind('f1', $scope.submenuElementClick);
+	Mousetrap.bind('esc', $scope.exitSubmenu);
+	// Evento de clic
+	document.addEventListener('click', $scope.exitSubmenu);
 }
 
 /**
