@@ -280,9 +280,11 @@ ipcRenderer.on('loaded-songs', (event, playlist) => {
 		player.playlist = player.sortPlaylist(playlist, player.config.order);
 		player.addSongsToContainer(player.playlist);
 	}
-	// Crear reproductor y búsqueda
-	player = new Player(playlist, localization);
-	new Search(player);
+	else {
+		// Crear reproductor y búsqueda
+		player = new Player(playlist, localization);
+		new Search(player);
+	}
 
 	/*
 	 * Regitrar teclas de media

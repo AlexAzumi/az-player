@@ -1,7 +1,7 @@
 {
 	"name": "az-player",
 	"productName": "az! player",
-	"version": "0.6.0",
+	"version": "0.6.1",
 	"description": "Reproductor de beatmaps de osu!",
 	"main": "main.js",
 	"scripts": {
