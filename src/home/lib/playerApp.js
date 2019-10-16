@@ -50,6 +50,7 @@ function updateController($scope) {
 	};
 	$scope.clickUpdate = function() {
 		$scope.showBox = false;
+		ipcRenderer.send('update-accepted');
 	};
 }
 
