@@ -176,7 +176,8 @@ class Manager {
 		song.path = folderPath;
 		// Buscar archivos
 		for (let file of files) {
-			if (file.includes('.osu') || file.includes('.OSU')) {
+			const checkFile = RegExp(/.osu$/, 'i');
+			if (checkFile.test(file)) {
 				// Bandera
 				let isNextBG = false;
 				// Crear liner
@@ -242,7 +243,7 @@ class Manager {
 						isNextBG = true;
 					}
 
-					if (song.artist && song.audio && song.background && song.path && song.title) {
+					if (this.completedSong(song)) {
 						return song;
 					}
 				}
@@ -250,11 +251,29 @@ class Manager {
 				if (isNextBG) {
 					song.background = 'NONE';
 				}
-				// Dejar de buscar archivos en carpeta
-				return song;
+
+				if (this.completedSong(song)) {
+					// Dejar de buscar archivos en carpeta
+					return song;
+				} else {
+					continue;
+				}
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Verificar si la información de la canción está completa
+	 * @param song Información de la canción
+	 */
+	completedSong(song) {
+		// Verificar campos
+		if (song.artist && song.audio && song.background && song.path && song.title) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
