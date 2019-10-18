@@ -147,17 +147,13 @@ class Player {
 			// Crear elemento
 			const songElement = document.createElement('div');
 			songElement.classList.add('song');
-			songElement.innerText = `${song.title} - `;
+			songElement.innerText = `${song.title}`;
 			// Crear subelemento de artista
 			const songArtist = document.createElement('span');
 			songArtist.innerHTML = song.artist;
 			songArtist.classList.add('artist');
 			// Combinar elementos
 			songElement.appendChild(songArtist);
-
-			// Icono de reproducción
-			const playIcon = document.createElement('i');
-			playIcon.classList.add('fa', 'fa-play', 'position-absolute', 'play-icon');
 
 			// Establecer id
 			songElement.setAttribute('song-path', path.join(song.path, song.audio));
@@ -173,9 +169,6 @@ class Player {
 
 			// Agregar listener
 			songElement.addEventListener('click', this.playSelectedSong.bind(this));
-
-			// Agregar en elemento
-			songElement.appendChild(playIcon);
 
 			// Agregar en lista
 			this.songsListElement.appendChild(songElement);
@@ -239,8 +232,6 @@ class Player {
 
 		// Establecer como activo
 		songElement.classList.add('active');
-		// Mostrar icono
-		songElement.childNodes[2].classList.add('play-icon-show');
 
 		// Establecer fondo del reproductor
 		if (songBackground !== 'NONE') {

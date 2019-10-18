@@ -152,10 +152,10 @@ html {
  */
 .songs-list {
 	background-color: whitesmoke;
-	//border-bottom: 3px solid $gray-600;
 	border-left: 3px solid $gray-600;
 	height: calc(100vh - (70px + 40px));
 	list-style: none;
+	overflow-x: hidden;
 	overflow-y: auto;
 	user-select: none;
 
@@ -177,13 +177,17 @@ html {
 	 */
 	.song {
 		background-color: $gray-300;
-		margin-bottom: 3px;
 		font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+		margin-bottom: 3px;
+		overflow: hidden;
 		padding-bottom: 0.25rem;
 		padding-left: 0.5rem;
 		padding-right: 1.5rem;
 		padding-top: 0.25rem;
 		position: relative;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		transition: background-color 150ms ease-in;
 
 		// Hover
 		&:hover {
@@ -198,6 +202,7 @@ html {
 
 		// Artista
 		.artist {
+			display: block;
 			color: $gray-600;
 			pointer-events: none;
 		}
@@ -210,19 +215,6 @@ html {
 		// Última canción
 		&:last-of-type {
 			margin-bottom: 0;
-		}
-
-		// Icono de reproducción
-		.play-icon {
-			display: none !important;
-			margin-top: -8px;
-			right: 8px;
-			top: 50%;
-
-			// Mostrar icono
-			&-show {
-				display: block !important;
-			}
 		}
 	}
 }
