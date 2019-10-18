@@ -478,10 +478,10 @@ class Player {
 		// Activar/desactivar bandera
 		if (this.config.random) {
 			this.config.random = false;
-			event.srcElement.parentElement.classList.remove('active');
+			event.srcElement.classList.remove('active');
 		} else {
 			this.config.random = true;
-			event.srcElement.parentElement.classList.add('active');
+			event.srcElement.classList.add('active');
 		}
 		// Guardar
 		localStorage.setItem('random', this.config.random);
