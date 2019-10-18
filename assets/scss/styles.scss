@@ -282,7 +282,7 @@ html {
  * Reproductor
  */
 .player {
-	background: url('../img/background.png');
+	background-image: url('../img/background.png');
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -290,6 +290,7 @@ html {
 	padding-left: 0;
 	padding-right: 0;
 	position: relative;
+	transition: background-image 250ms ease-in-out;
 
 	// Contenedor del título
 	.title-container {
