@@ -249,7 +249,12 @@ function loadingScreenController($scope) {
 function playerController($scope) {
 	// Localización
 	$scope.player = {
-		welcome: localization.getString('player.welcome')
+		welcome: localization.getString('player.welcome'),
+		volume: localization.getString('player.volume'),
+		previousBtn: localization.getString('player.previousBtn'),
+		playPauseBtn: localization.getString('player.playPauseBtn'),
+		nextBtn: localization.getString('player.nextBtn'),
+		shuffleBtn: localization.getString('player.shuffleBtn')
 	};
 	$scope.search = {
 		placeholder: localization.getString('search.placeholder'),

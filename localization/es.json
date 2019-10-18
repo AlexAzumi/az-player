@@ -47,7 +47,7 @@
 		"previousBtn": "Canción anterior",
 		"playPauseBtn": "Reproducir/pausar",
 		"nextBtn": "Siguiente canción",
-		"suffleBtn": "Reproducción aleatoria",
+		"shuffleBtn": "Reproducción aleatoria",
 		"songNotFound": {
 			"title": "Error",
 			"message": "Archivo de audio no encontrado"

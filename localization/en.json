@@ -47,7 +47,7 @@
 		"previousBtn": "Previous song",
 		"playPauseBtn": "Play/pause",
 		"nextBtn": "Next song",
-		"suffleBtn": "Suffle",
+		"shuffleBtn": "Shuffle",
 		"songNotFound": {
 			"title": "Error",
 			"message": "Audio file not found"
