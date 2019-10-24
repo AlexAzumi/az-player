@@ -218,17 +218,17 @@ class Manager {
 					// Título encontrado
 					if (line.includes('Title:')) {
 						line = line.replace('Title:', '');
-						line = this.deleteSpecialCharacter(line);
+						line = line.trim();
 						song.title = line;
 					} else if (line.includes('Artist:')) {
 						// Artista encontrado
 						line = line.replace('Artist:', '');
-						line = this.deleteSpecialCharacter(line);
+						line = line.trim();
 						song.artist = line;
 					} else if (line.includes('AudioFilename:')) {
 						// Nombre de audio encontrado
 						line = line.replace('AudioFilename: ', '');
-						line = this.deleteSpecialCharacter(line);
+						line = line.trim();
 						song.audio = line;
 					} else if (isNextBG) {
 						// Crear regex
@@ -274,14 +274,6 @@ class Manager {
 		} else {
 			return false;
 		}
-	}
-
-	/**
-	 * Eliminar caracteres especiales
-	 * @param string text 
-	 */
-	deleteSpecialCharacter(text) {
-		return text.replace(/\r/, '');
 	}
 }
 
