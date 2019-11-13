@@ -5,7 +5,11 @@ const os = require('os');
 const path = require('path');
 
 const DEFAULT_LOCALE = 'en';
-const LOCALE_CONFIG_DIR = path.join(os.homedir(), 'az-player', 'localization.json');
+const LOCALE_CONFIG_DIR = path.join(
+	os.homedir(),
+	'az-player',
+	'localization.json'
+);
 const LOCALE_DIR = path.join(__dirname, '../localization');
 
 class LocalizationManager {
@@ -23,7 +27,9 @@ class LocalizationManager {
 		this.localization = this.getLocaleFile(LOCALE_DIR);
 
 		// Log
-		console.log(`Locale: ${this.locale} | Configured locale: ${this.localeConfig}`);
+		console.log(
+			`Locale: ${this.locale} | Configured locale: ${this.localeConfig}`
+		);
 	}
 
 	/**
@@ -147,8 +153,9 @@ class LocalizationManager {
 			files = files.map(file => file.name);
 		}
 		// Filtrar archivos encontrados
-		files.filter(file => !fs.lstatSync(path.join(LOCALE_DIR, file)).isDirectory())
-			.filter(file => file.includes('.json'))
+		files
+			.filter(file => !fs.lstatSync(path.join(LOCALE_DIR, file)).isDirectory())
+			.filter(file => file.includes('.json'));
 
 		let locals = [];
 		for (let file of files) {

@@ -31,11 +31,13 @@ class Window {
 			const window = remote.getCurrentWindow();
 			if (window.isMaximized()) {
 				// Cambiar icono
-				this.maximizeButton.innerHTML = '<i class="fas fa-window-maximize fa-fw"></i>';
+				this.maximizeButton.innerHTML =
+					'<i class="fas fa-window-maximize fa-fw"></i>';
 				window.unmaximize();
 			} else {
 				// Cambiar icono
-				this.maximizeButton.innerHTML = '<i class="far fa-window-maximize fa-fw"></i>';
+				this.maximizeButton.innerHTML =
+					'<i class="far fa-window-maximize fa-fw"></i>';
 				window.maximize();
 			}
 		});

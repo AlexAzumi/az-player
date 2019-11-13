@@ -1,49 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Acerca de az! player</title>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Acerca de az! player</title>
 
-	<!-- CSP -->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+		<!-- CSP -->
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
 
-	<!-- Estilos -->
-	<link rel="stylesheet" href="../../assets/css/styles.css">
-	<link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css">
-	<link rel="stylesheet" href="../../assets/fonts/fonts.css">
-</head>
-<body class="bg-dark">
-	<div ng-app="aboutApp" ng-csp>
-		<div ng-controller="aboutController" class="info-box">
-			<!-- Logo -->
-			<img class="img-fluid" src="../../assets/img/logo.png" alt="Logo">
-	
-			<!-- Versión del programa -->
-			<div class="about-info mt-4 mb-2 mx-3">
-				<span id="versionTag">{{about.version}}</span>
-				<span class="subtext" id="appVersion">{{version}}</span>
+		<!-- Estilos -->
+		<link rel="stylesheet" href="../../assets/css/styles.css" />
+		<link
+			rel="stylesheet"
+			href="../../node_modules/@fortawesome/fontawesome-free/css/all.css"
+		/>
+		<link rel="stylesheet" href="../../assets/fonts/fonts.css" />
+	</head>
+	<body class="bg-dark">
+		<div ng-app="aboutApp" ng-csp>
+			<div ng-controller="aboutController" class="info-box">
+				<!-- Logo -->
+				<img class="img-fluid" src="../../assets/img/logo.png" alt="Logo" />
+
+				<!-- Versión del programa -->
+				<div class="about-info mt-4 mb-2 mx-3">
+					<span id="versionTag">{{about.version}}</span>
+					<span class="subtext" id="appVersion">{{version}}</span>
+				</div>
+
+				<!-- Creador -->
+				<div class="about-info mb-2 mx-3">
+					<span id="authorTag">{{about.author}}</span>
+					<span class="subtext" id="appAuthor">{{author}}</span>
+				</div>
+
+				<!-- Repositorio -->
+				<div
+					ng-click="openRepository()"
+					class="about-info repository mb-4 mx-3"
+				>
+					<span id="repositoryTag">{{about.repository}}</span>
+					<i class="fab fa-github ml-1"></i>
+				</div>
+
+				<!-- Botón de cerrar -->
+				<button ng-click="closeWindow()" class="btn btn-primary mx-3 mb-3">
+					{{about.close}}
+				</button>
 			</div>
-	
-			<!-- Creador -->
-			<div class="about-info mb-2 mx-3">
-				<span id="authorTag">{{about.author}}</span>
-				<span class="subtext" id="appAuthor">{{author}}</span>
-			</div>
-	
-			<!-- Repositorio -->
-			<div ng-click="openRepository()" class="about-info repository mb-4 mx-3">
-				<span id="repositoryTag">{{about.repository}}</span>
-				<i class="fab fa-github ml-1"></i>
-			</div>
-			
-			<!-- Botón de cerrar -->
-			<button ng-click="closeWindow()" class="btn btn-primary mx-3 mb-3">{{about.close}}</button>
 		</div>
-	</div>
 
-	<!-- Scripts -->
-	<script src="about.js"></script>
-</body>
+		<!-- Scripts -->
+		<script src="about.js"></script>
+	</body>
 </html>

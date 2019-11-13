@@ -25,7 +25,7 @@ class Search {
 	 */
 	searchSongs() {
 		// Filtrar
-		let searchResults = this.player.playlist.filter((song) => {
+		let searchResults = this.player.playlist.filter(song => {
 			const title = song.title.toLowerCase();
 			const artist = song.artist.toLowerCase();
 			if (
@@ -38,7 +38,10 @@ class Search {
 			}
 		});
 
-		searchResults = this.player.sortPlaylist(searchResults, this.player.config.order);
+		searchResults = this.player.sortPlaylist(
+			searchResults,
+			this.player.config.order
+		);
 
 		// Verificar resultados
 		if (searchResults.length > 0) {

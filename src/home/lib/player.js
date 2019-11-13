@@ -25,12 +25,22 @@ class Player {
 		// Aplicar configuración
 		this.config = {
 			tickTime: 250,
-			volume: localStorage.getItem('volume') ? localStorage.getItem('volume') : 100,
-			random: localStorage.getItem('random') ? JSON.parse(localStorage.getItem('random')) : false,
-			order: localStorage.getItem('order') ? localStorage.getItem('order') : 'title'
+			volume: localStorage.getItem('volume')
+				? localStorage.getItem('volume')
+				: 100,
+			random: localStorage.getItem('random')
+				? JSON.parse(localStorage.getItem('random'))
+				: false,
+			order: localStorage.getItem('order')
+				? localStorage.getItem('order')
+				: 'title'
 		};
 		// Mostrar configuración
-		console.log('%cConfiguración', 'color: purple; font-size: 1.3em;', this.config);
+		console.log(
+			'%cConfiguración',
+			'color: purple; font-size: 1.3em;',
+			this.config
+		);
 
 		// Ordenar canciones
 		this.playlist = this.sortPlaylist(playlist, this.config.order);
@@ -162,7 +172,10 @@ class Player {
 			songElement.id = songID;
 
 			if (song.background !== 'NONE') {
-				songElement.setAttribute('song-background', path.join(song.path, song.background));
+				songElement.setAttribute(
+					'song-background',
+					path.join(song.path, song.background)
+				);
 			} else {
 				songElement.setAttribute('song-background', 'NONE');
 			}
@@ -211,7 +224,7 @@ class Player {
 				type: 'error'
 			});
 			// Capturar a sentry
-			Sentry.withScope((scope) => {
+			Sentry.withScope(scope => {
 				// Asignar scope
 				scope.setLevel('warning');
 				scope.setExtra('src', songPath);
@@ -222,11 +235,11 @@ class Player {
 			return;
 		}
 		// Eliminar otras clases activas
-		this.songsListElement.querySelectorAll('.active').forEach((element) => {
+		this.songsListElement.querySelectorAll('.active').forEach(element => {
 			element.classList.remove('active');
 		});
 		// Ocultar icono
-		this.songsListElement.querySelectorAll('.play-icon').forEach((element) => {
+		this.songsListElement.querySelectorAll('.play-icon').forEach(element => {
 			element.classList.remove('play-icon-show');
 		});
 
@@ -236,12 +249,16 @@ class Player {
 		// Establecer fondo del reproductor
 		if (songBackground !== 'NONE') {
 			if (fs.existsSync(songBackground)) {
-				this.playerElement.style.backgroundImage = `url("${slash(songBackground)}")`;
+				this.playerElement.style.backgroundImage = `url("${slash(
+					songBackground
+				)}")`;
 			} else {
-				this.playerElement.style.backgroundImage = 'url("../../assets/img/background.png")';
+				this.playerElement.style.backgroundImage =
+					'url("../../assets/img/background.png")';
 			}
 		} else {
-			this.playerElement.style.backgroundImage = 'url("../../assets/img/background.png")';
+			this.playerElement.style.backgroundImage =
+				'url("../../assets/img/background.png")';
 		}
 
 		// Actualizar información mostrada
@@ -295,7 +312,10 @@ class Player {
 				this.songTitleContainer.offsetWidth +
 				32; /* TODO: Cambiar 32 a un calculo del padding */
 			// Verificar si la animación ya está corriendo
-			if (this.titleAnimation !== undefined && this.titleAnimation.playState === 'running') {
+			if (
+				this.titleAnimation !== undefined &&
+				this.titleAnimation.playState === 'running'
+			) {
 				// Cancelar la animación
 				this.titleAnimation.cancel();
 			}
@@ -314,7 +334,10 @@ class Player {
 			);
 		} else {
 			// Verificar si la animación ya está corriendo
-			if (this.titleAnimation !== undefined && this.titleAnimation.playState === 'running') {
+			if (
+				this.titleAnimation !== undefined &&
+				this.titleAnimation.playState === 'running'
+			) {
 				// Cancelar la animación
 				this.titleAnimation.cancel();
 			}
@@ -396,7 +419,9 @@ class Player {
 							// Bandera
 							let alreadyPlayed = false;
 							// Número al azar
-							let selectedSong = Math.floor(Math.random() * this.playlist.length);
+							let selectedSong = Math.floor(
+								Math.random() * this.playlist.length
+							);
 							// Verificar numero por número
 							for (let song of this.endedSongs) {
 								if (song === selectedSong) {
@@ -512,7 +537,8 @@ class Player {
 		// Regresar al inicio
 		this.musicPlayer.currentTime = 0;
 		// Regresar al fondo inicial
-		this.playerElement.style.backgroundImage = 'url("../../assets/img/background.png")';
+		this.playerElement.style.backgroundImage =
+			'url("../../assets/img/background.png")';
 		// Establecer mensaje inicial
 		this.songTitle.innerText = this.localization.getString('player.welcome');
 	}
@@ -546,9 +572,15 @@ class Player {
 	 */
 	assignEvents() {
 		// Reproducir una canción
-		this.musicPlayer.addEventListener('play', this.playerStatusChanged.bind(this));
+		this.musicPlayer.addEventListener(
+			'play',
+			this.playerStatusChanged.bind(this)
+		);
 		// Pausar una canción
-		this.musicPlayer.addEventListener('pause', this.playerStatusChanged.bind(this));
+		this.musicPlayer.addEventListener(
+			'pause',
+			this.playerStatusChanged.bind(this)
+		);
 		// Metadata cargada
 		this.musicPlayer.addEventListener('loadedmetadata', () => {
 			this.currentSongDuration = this.musicPlayer.duration;
@@ -564,7 +596,10 @@ class Player {
 		// Reproducir siguiente canción
 		this.nextBtn.addEventListener('click', this.playNextSong.bind(this));
 		// Reproducir canción anterior
-		this.previousBtn.addEventListener('click', this.playPreviousSong.bind(this));
+		this.previousBtn.addEventListener(
+			'click',
+			this.playPreviousSong.bind(this)
+		);
 		// Botón de reproducción aleatoria
 		this.randomBtn.addEventListener('click', this.setRandomStatus.bind(this));
 

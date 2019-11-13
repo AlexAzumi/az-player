@@ -43,7 +43,11 @@ const database = {
 	location: path.join(homeDir, 'az-player', 'database.json'),
 	folder: path.join(homeDir, 'az-player')
 };
-const disclaimerAcceptRoute = path.join(homeDir, 'az-player', 'disclaimer.json');
+const disclaimerAcceptRoute = path.join(
+	homeDir,
+	'az-player',
+	'disclaimer.json'
+);
 // Icono de la aplicación
 const appIcon = path.join(__dirname, 'assets/icons/win/icon.ico');
 
@@ -111,13 +115,17 @@ ipcMain.on('accepted-disclaimer', acceptedDisclaimer);
  */
 function acceptedDisclaimer() {
 	// Buscar carpeta
-	if (!fs.existsSync(database.folder)){
+	if (!fs.existsSync(database.folder)) {
 		fs.mkdirSync(database.folder);
 	}
 	// Crear achivo
-	const file = JSON.stringify({
-		acceptedDisclaimer: true
-	}, null, 2);
+	const file = JSON.stringify(
+		{
+			acceptedDisclaimer: true
+		},
+		null,
+		2
+	);
 
 	try {
 		fs.writeFileSync(disclaimerAcceptRoute, file);
@@ -226,9 +234,13 @@ function showLoadingScreen() {
 	// Al cargar obtener canciones
 	loadingScreen.webContents.on('did-finish-load', () => {
 		// Listar carpetas dentro de "Songs"
-		songList = manager.listSongsFolder(path.join(songsData.gameLocation, 'Songs'));
+		songList = manager.listSongsFolder(
+			path.join(songsData.gameLocation, 'Songs')
+		);
 		// Obtener información
-		songsData.songs = manager.getSongsData(path.join(songsData.gameLocation, 'Songs'));
+		songsData.songs = manager.getSongsData(
+			path.join(songsData.gameLocation, 'Songs')
+		);
 		// Escribir a archivo
 		manager.createDatabase(database, songsData);
 		// Crear ventana de reproductor
@@ -330,9 +342,13 @@ function refreshDatabase() {
 	// Verificar carpeta
 	if (manager.searchSongsFolder(songsData.gameLocation)) {
 		// Liste de carpetas
-		songList = manager.listSongsFolder(path.join(songsData.gameLocation, 'Songs'));
+		songList = manager.listSongsFolder(
+			path.join(songsData.gameLocation, 'Songs')
+		);
 		// Obtener información
-		songsData.songs = manager.getSongsData(path.join(songsData.gameLocation, 'Songs'));
+		songsData.songs = manager.getSongsData(
+			path.join(songsData.gameLocation, 'Songs')
+		);
 		// Escribir a archivo
 		manager.createDatabase(database, songsData);
 
@@ -340,14 +356,19 @@ function refreshDatabase() {
 		sendDataToPlayer();
 	} else {
 		// Reportar a Sentry
-		sentry.withScope((scope) => {
+		sentry.withScope(scope => {
 			// Extras
 			scope.setExtra('Base de datos', songsData.gameLocation);
 			// Reportar
-			sentry.captureMessage('La carpeta "Songs" no existe o fue cambiada de dirección');
+			sentry.captureMessage(
+				'La carpeta "Songs" no existe o fue cambiada de dirección'
+			);
 		});
 		// Mostrar error
-		dialog.showErrorBox('Error #AZ002', 'La carpeta "Songs" no existe o fue cambiada de dirección');
+		dialog.showErrorBox(
+			'Error #AZ002',
+			'La carpeta "Songs" no existe o fue cambiada de dirección'
+		);
 	}
 }
 
@@ -361,7 +382,7 @@ autoUpdater.on('update-available', () => {
 });
 
 // Error al actualizar
-autoUpdater.on('error', (error) => {
+autoUpdater.on('error', error => {
 	playerWindow.webContents.send('update-error', error);
 });
 

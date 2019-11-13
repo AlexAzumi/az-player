@@ -82,7 +82,7 @@ function menuBarController($scope) {
 	// Banderas
 	$scope.isSubmenuOpen = false;
 	// Eventos
-	$scope.openMenu = function (event, target) {
+	$scope.openMenu = function(event, target) {
 		// Ocultar subemnus
 		$scope.hideSubmenus();
 		// Mostrar submenú
@@ -90,7 +90,7 @@ function menuBarController($scope) {
 		const el = document.getElementById(target);
 		el.style.display = 'block';
 	};
-	$scope.menuMouseOver = function (event) {
+	$scope.menuMouseOver = function(event) {
 		if (event.target.classList.contains('menu-item')) {
 			// Ocultar subemnus
 			$scope.hideSubmenus();
@@ -100,7 +100,7 @@ function menuBarController($scope) {
 			}
 		}
 	};
-	$scope.submenuElementClick = function (event) {
+	$scope.submenuElementClick = function(event) {
 		// Acción
 		let action;
 		// Ocultar submenus
@@ -128,15 +128,14 @@ function menuBarController($scope) {
 					throw `Acción no establecida: ${event.code}`;
 				}
 			}
-		}
-		else {
+		} else {
 			action = event.target.getAttribute('action');
 		}
 		// Realizar acción
 		console.log('Acción:', action);
 		switch (action) {
 			case 'updateDatabase': {
-				loadingScreenScope.$apply(function () {
+				loadingScreenScope.$apply(function() {
 					loadingScreenScope.showLoadingScreen = true;
 				});
 				ipcRenderer.send('refresh-database');
@@ -145,7 +144,7 @@ function menuBarController($scope) {
 			case 'exit': {
 				window.close();
 				break;
-			};
+			}
 			case 'sortByArtist': {
 				player.sortPlaylist(player.playlist, 'artist');
 				player.addSongsToContainer(player.playlist);
@@ -180,17 +179,17 @@ function menuBarController($scope) {
 			}
 		}
 	};
-	$scope.hideSubmenus = function () {
+	$scope.hideSubmenus = function() {
 		if ($scope.isSubmenuOpen) {
 			for (let submenu of submenus) {
 				submenu.style.display = 'none';
 			}
 		}
 	};
-	$scope.minimizeWindow = function () {
+	$scope.minimizeWindow = function() {
 		window.minimize();
 	};
-	$scope.maximizeWindow = function (event) {
+	$scope.maximizeWindow = function(event) {
 		if (window.isMaximized()) {
 			event.target.innerHTML = maximizeIcons.maximize;
 			window.unmaximize();
@@ -199,7 +198,7 @@ function menuBarController($scope) {
 			window.maximize();
 		}
 	};
-	$scope.closeWindow = function () {
+	$scope.closeWindow = function() {
 		window.close();
 	};
 	// Obtener localizaciones
@@ -210,7 +209,7 @@ function menuBarController($scope) {
 			item.addEventListener('click', $scope.submenuElementClick);
 		}
 	}
-	$scope.exitSubmenu = function (event) {
+	$scope.exitSubmenu = function(event) {
 		const target = event.target.classList.value;
 		if ($scope.isSubmenuOpen && !target.includes('menu-item', 'submenu-item')) {
 			$scope.hideSubmenus();
@@ -277,7 +276,7 @@ ipcRenderer.on('loaded-songs', (event, playlist) => {
 	if (player !== undefined || player === null) {
 		// Pantalla de carga activa
 		if (loadingScreenScope.showLoadingScreen) {
-			loadingScreenScope.$apply(function () {
+			loadingScreenScope.$apply(function() {
 				loadingScreenScope.showLoadingScreen = false;
 			});
 		}
@@ -285,8 +284,7 @@ ipcRenderer.on('loaded-songs', (event, playlist) => {
 		player.stopSong();
 		player.playlist = player.sortPlaylist(playlist, player.config.order);
 		player.addSongsToContainer(player.playlist);
-	}
-	else {
+	} else {
 		// Crear reproductor y búsqueda
 		player = new Player(playlist, localization);
 		new Search(player);
@@ -349,7 +347,10 @@ ipcRenderer.on('update-downloaded', () => {
 		title: localization.getString('update.updateDownloaded.title'),
 		message: localization.getString('update.updateDownloaded.message'),
 		type: 'question',
-		buttons: [ localization.getString('update.acceptBtn'), localization.getString('update.laterBtn') ]
+		buttons: [
+			localization.getString('update.acceptBtn'),
+			localization.getString('update.laterBtn')
+		]
 	});
 	// Actualización aceptada
 	if (response == 0) {

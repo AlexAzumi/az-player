@@ -31,7 +31,7 @@ class Manager {
 		// Solicitar carpeta al usuario
 		const folder = dialog.showOpenDialogSync({
 			title: this.localization.getString('openFolderDialog.title'),
-			properties: [ 'openDirectory' ]
+			properties: ['openDirectory']
 		});
 		// Carpeta seleccionada
 		if (folder !== undefined) {
@@ -43,7 +43,7 @@ class Manager {
 
 	/**
 	 * Verifica si existe la carpeta de canciones
-	 * @param {string} gameLocation 
+	 * @param {string} gameLocation
 	 * @return Se encontró la carpeta o no
 	 */
 	searchSongsFolder(gameLocation) {
@@ -68,8 +68,8 @@ class Manager {
 		// Buscar y filtrar directorios
 		return fs
 			.readdirSync(songsLocation, { withFileTypes: true })
-			.filter((dir) => dir.isDirectory())
-			.map((dir) => dir.name);
+			.filter(dir => dir.isDirectory())
+			.map(dir => dir.name);
 	}
 
 	/**
@@ -193,7 +193,7 @@ class Manager {
 				} catch (ex) {
 					console.log(ex);
 					// Reportar a sentry
-					sentry.withScope((scope) => {
+					sentry.withScope(scope => {
 						// Añadir extras
 						scope.setExtra('Archivo', filePath);
 						// Mandar excepción
@@ -269,7 +269,13 @@ class Manager {
 	 */
 	completedSong(song) {
 		// Verificar campos
-		if (song.artist && song.audio && song.background && song.path && song.title) {
+		if (
+			song.artist &&
+			song.audio &&
+			song.background &&
+			song.path &&
+			song.title
+		) {
 			return true;
 		} else {
 			return false;

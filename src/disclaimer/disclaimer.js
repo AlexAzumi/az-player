@@ -21,13 +21,14 @@ function disclaimerController($scope) {
 		denyBtn: localization.getString('disclaimer.denyBtn')
 	};
 	// Métodos
-	$scope.deny = function () {
+	$scope.deny = function() {
 		window.close();
-	}
-	$scope.accept = function () {
+	};
+	$scope.accept = function() {
 		ipcRenderer.send('accepted-disclaimer');
 	};
 }
 
-angular.module('disclaimerApp', [])
+angular
+	.module('disclaimerApp', [])
 	.controller('disclaimerController', disclaimerController);
