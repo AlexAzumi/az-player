@@ -178,11 +178,8 @@ class Manager {
 		for (let file of files) {
 			const checkFile = RegExp(/.osu$/, 'i');
 			if (checkFile.test(file)) {
-				// Bandera
 				let isNextBG = false;
-				// Crear liner
 				let liner;
-				// Log
 				console.log(`Archivo .osu encontrado! ${file}`);
 				// Dirección del archivo
 				let filePath = path.join(song.path, file);
@@ -207,9 +204,7 @@ class Manager {
 				let line;
 				// Leer archivo linea por línea
 				while (line !== false) {
-					// Leer línea
 					line = liner.next();
-					// Verificar si existe una línea
 					if (!line) {
 						break;
 					}
@@ -265,7 +260,12 @@ class Manager {
 
 	/**
 	 * Verificar si la información de la canción está completa
-	 * @param song Información de la canción
+	 * @param {Object} song - Información de la canción
+	 * @param {string} song.artist - Artista de la canción
+	 * @param {string} song.title - Título de la canción
+	 * @param {string} song.background - Nombre del fondo
+	 * @param {string} song.path - Dirección de la canción
+	 * @param {string} song.audio - Nombre del archivo del audio
 	 */
 	completedSong(song) {
 		// Verificar campos

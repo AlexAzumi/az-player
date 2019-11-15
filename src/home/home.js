@@ -1,5 +1,5 @@
 // Dependencias
-const { init, showReportDialog } = require('@sentry/electron');
+const { init } = require('@sentry/electron');
 const { remote } = require('electron');
 const package = require('../../package.json');
 // Angular
@@ -12,15 +12,7 @@ const config = require('../../config.json');
  */
 if (config.sentry.enabled) {
 	init({
-		dsn: package.sentryDSN,
-		beforeSend(event) {
-			// Verificar si es una exepción
-			if (event.exception) {
-				showReportDialog();
-			}
-
-			return event;
-		}
+		dsn: package.sentryDSN
 	});
 }
 

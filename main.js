@@ -1,6 +1,7 @@
 // Dependencias
 const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const { Worker } = require('worker_threads');
 const fs = require('fs');
 const path = require('path');
 const sentry = require('@sentry/electron');

@@ -34,7 +34,7 @@ class LocalizationManager {
 
 	/**
 	 * Obtener localización
-	 * @param {Electron.App} app Aplicación de Electron
+	 * @param {Electron.App} app - Aplicación de Electron
 	 * @returns {string} Localización
 	 */
 	getLocale(app) {
@@ -43,7 +43,7 @@ class LocalizationManager {
 
 	/**
 	 * Obtener configuración de localización
-	 * @param {string} localizationDir Ubicación de la configuración
+	 * @param {string} localizationDir - Ubicación de la configuración
 	 */
 	getLocaleConfig(localizationDir) {
 		if (fs.existsSync(localizationDir)) {
@@ -81,7 +81,8 @@ class LocalizationManager {
 
 	/**
 	 * Obtener datos de archivo de localización
-	 * @return Datos de localización
+	 * @param {string} localesDir - Localización de los archivos de localización
+	 * @returns Datos de localización
 	 */
 	getLocaleFile(localesDir) {
 		let localePath = path.join(localesDir, `${this.localeConfig}.json`);
@@ -118,7 +119,8 @@ class LocalizationManager {
 
 	/**
 	 * Obtener cadena en localización
-	 * @param {string} location Localización de la cadena
+	 * @param {string} location - Localización de la cadena
+	 * @returns {string} Cadena de localización
 	 */
 	getString(location) {
 		if (location) {
@@ -145,6 +147,7 @@ class LocalizationManager {
 
 	/**
 	 * Obtener lista de localizaciones
+	 * @returns {Object[]} Localizaciones disposnibles
 	 */
 	getLocalizationList() {
 		let files = fs.readdirSync(LOCALE_DIR, { withFileTypes: true });
@@ -177,7 +180,7 @@ class LocalizationManager {
 
 	/**
 	 * Obtener localización actual
-	 * @return {string} Localización actual
+	 * @returns {string} Localización actual
 	 */
 	getActualLocale() {
 		return this.localeConfig;
@@ -186,7 +189,7 @@ class LocalizationManager {
 	/**
 	 * Establecer localización
 	 * @param {string} locale Nombre corto de localización
-	 * @return {boolean} Se realizó el cambio o no
+	 * @returns {boolean} Se realizó el cambio o no
 	 */
 	setLocale(locale) {
 		if (locale) {

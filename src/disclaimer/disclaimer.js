@@ -11,6 +11,7 @@ const window = remote.getCurrentWindow();
 
 /**
  * Controlador
+ * @param {Object} $scope - Scope del controlador
  */
 function disclaimerController($scope) {
 	// Localización
