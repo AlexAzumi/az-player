@@ -4,9 +4,9 @@
 @import '../../node_modules/bootstrap/scss/mixins';
 
 // Colores
-$primary: #E91E63;
-$secondary: #FF9800;
-$info: #1976D2;
+$primary: #e91e63;
+$secondary: #ffa724;
+$info: #1976d2;
 
 // Variables
 $scrollbar-width: 12px;
@@ -15,9 +15,9 @@ $navbar-height: 40px;
 
 // Tema
 $theme-colors: (
-	"primary": $primary,
-	"secondary": $secondary,
-	"info": $info
+	'primary': $primary,
+	'secondary': $secondary,
+	'info': $info
 );
 
 // Bootstrap
@@ -187,7 +187,6 @@ html {
 		position: relative;
 		text-overflow: ellipsis;
 		white-space: nowrap;
-		transition: background-color 150ms ease-in;
 
 		// Hover
 		&:hover {
@@ -221,11 +220,17 @@ html {
 
 // No resultados
 .search-no-results {
-	font-size: 1.5em;
+	color: $gray-600;
+	font-size: 1.7em;
 	left: 0;
+	pointer-events: none;
 	position: absolute;
 	right: 0;
-	top: 80px;
+	top: 5rem;
+
+	.message {
+		margin-bottom: 0.5rem;
+	}
 }
 
 // Caja de búsqueda
@@ -248,18 +253,18 @@ html {
 
 	// Campo de texto
 	.search-input {
-		border: 0;
 		border-radius: 2rem;
+		border: 0;
 		padding-left: 2.5rem;
 	}
 
 	// Icono
 	.search-icon {
-		position: absolute;
+		border-right: 1px solid $gray-500;
 		color: $gray-500;
 		left: 2rem;
-		padding-right: 0.3rem;
-		border-right: 1px solid $gray-500;
+		padding-right: 0.45rem;
+		position: absolute;
 	}
 }
 
@@ -360,7 +365,7 @@ html {
 		top: 0;
 		right: 25px;
 		height: 100%;
-	
+
 		// Botón activo
 		.active {
 			color: $secondary;
@@ -377,7 +382,7 @@ html {
 		position: absolute;
 		top: 50%;
 		width: 33.33%;
-	
+
 		// Barra de volumen
 		.volume {
 			-webkit-appearance: none;
@@ -388,7 +393,7 @@ html {
 			outline: none;
 			margin-right: 0.5rem;
 			max-width: 200px;
-	
+
 			// Scroll
 			&::-webkit-slider-thumb {
 				-webkit-appearance: none;
@@ -399,7 +404,7 @@ html {
 				width: 10px;
 			}
 		}
-		
+
 		// Volumen en texto
 		.volume-text {
 			color: $light;
@@ -459,17 +464,17 @@ html {
 		justify-content: center;
 		padding: 0.3rem 0.5rem;
 		transition: background-color 250ms;
-	
+
 		// Campos de información
 		.subtext {
 			padding-left: 0.25rem;
 			font-weight: normal;
 		}
-	
+
 		// Repositorio en GitHub
 		&.repository {
 			font-weight: normal;
-	
+
 			&:hover {
 				cursor: pointer;
 				background-color: rgba($color: $secondary, $alpha: 0.7);
