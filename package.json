@@ -37,7 +37,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
     "@sentry/electron": "^0.17.4",
-    "angular": "^1.7.9",
+    "angular": "^1.8.0",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^3.0.8",
     "electron-updater": "^4.1.2",
