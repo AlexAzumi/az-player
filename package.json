@@ -28,7 +28,7 @@
   "homepage": "https://github.com/AlexAzumi/az-player",
   "devDependencies": {
     "bootstrap": "^4.3.1",
-    "electron": "^6.0.12",
+    "electron": "^18.3.7",
     "electron-builder": "^21.2.0",
     "electron-rebuild": "^1.8.6",
     "electron-reload": "^1.5.0",
